@@ -1,4 +1,4 @@
-package anton.mankovsky.locomotive_depot_logbook;
+package anton.mankovsky.locomotivedepotlogbook;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

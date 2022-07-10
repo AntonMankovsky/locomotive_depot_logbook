@@ -1,4 +1,4 @@
-package anton.mankovsky.locomotive_depot_logbook;
+package anton.mankovsky.locomotivedepotlogbook;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
