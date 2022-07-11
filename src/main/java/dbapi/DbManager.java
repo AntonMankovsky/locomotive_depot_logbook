@@ -78,19 +78,3 @@ public abstract interface DbManager {
   public abstract void deleteRepairPeriodsRows(String[] modelName);
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
