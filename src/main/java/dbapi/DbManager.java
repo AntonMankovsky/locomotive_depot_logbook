@@ -72,9 +72,9 @@ public abstract interface DbManager {
   public abstract void setRepairPeriodCell(int rowId, int columnIndex);
   
   /**
-   * Delete rows from repair period table.
-   * @param modelName array of models that should be deleted
+   * Returns all model names from repair periods table.
+   * @return unique model names
    */
-  public abstract void deleteRepairPeriodsRows(String[] modelName);
+  public abstract String[] deleteRepairPeriodsRows();
   
 }

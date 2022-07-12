@@ -53,9 +53,9 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void deleteRepairPeriodsRows(String[] modelName) {
+  public String[] deleteRepairPeriodsRows() {
     // TODO Auto-generated method stub
-
+    return null;
   }
 
 }
