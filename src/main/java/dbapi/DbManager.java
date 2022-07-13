@@ -20,9 +20,9 @@ public abstract interface DbManager {
    * If the value of particular nullable cell is SQL {@code NULL}, it would be replaced with empty 
    * string in resulting list. 
    * <br>
-   * Therefore, for any column except {@code loco_model_id} and {@code loco_number} (indices 0 and
-   * 1 in list), there is only two possible values: empty string or string in format
-   * {@code "dd/MM/yyyy"}.
+   * Therefore, for any column except {@code loco_model_id}, {@code loco_number} and {@code notes}
+   * (indices 0, 1 and 14 in list), there is only two possible values: empty string or string in
+   * format {@code "dd/MM/yyyy"}.
    */
   public abstract Map<Integer, List<String>> getAllRepairRecords();
   

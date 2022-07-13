@@ -20,12 +20,16 @@ public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
   private SqliteConnection connection;
   private Map<String, List<Integer>> repairPeriodsTableData;
+  private Map<Integer, List<String>> repairRecordsTableData;
   
   @Autowired
   public DbManagerSqliteImp(final SqliteConnection connection) {
     this.connection = connection;
     repairPeriodsTableData = loadDataFromRepairPeriodsTable();
+    repairRecordsTableData = loadDataFromRepairRecordsTable();
   }
+  
+//========================== Methods for repair records table ==========================
 
   @Override
   public Map<Integer, List<String>> getAllRepairRecords() {
@@ -93,6 +97,7 @@ public class DbManagerSqliteImp implements DbManager {
         repairPeriods.add(resultSet.getInt("three_current_repair"));
         repairPeriods.add(resultSet.getInt("medium_repair"));
         repairPeriods.add(resultSet.getInt("overhaul"));
+        
         data.put(resultSet.getString("loco_model_name"), repairPeriods);
       }
       
@@ -108,13 +113,63 @@ public class DbManagerSqliteImp implements DbManager {
     return data;
   }
   
+  private Map<Integer, List<String>> loadDataFromRepairRecordsTable() {
+    final Map<Integer, List<String>> data = new HashMap<>();
+    final List<String> repairRecords = new ArrayList<>(15);
+    try (final PreparedStatement fetchData =
+        connection.getConnection().prepareStatement(SqlCommands.RT_ALL_DATA);) {
+      final ResultSet resultSet = fetchData.executeQuery();
+      while (resultSet.next()) {
+        repairRecords.clear();
+        repairRecords.add(resultSet.getString("loco_model_name"));
+        repairRecords.add(resultSet.getString("loco_number"));
+        repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
+        repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
+        repairRecords.add(validateString(resultSet.getString("next_three_maintenance")));
+        repairRecords.add(validateString(resultSet.getString("last_three_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_three_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_two_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_two_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_one_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_one_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_medium_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_medium_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_overhaul")));
+        repairRecords.add(validateString(resultSet.getString("next_overhaul")));
+        repairRecords.add(validateString(resultSet.getString("notes")));
+        
+        data.put(resultSet.getInt("id"), repairRecords);
+      }
+      
+      logger.info("Successfully loaded data from repair records table at instantiating DbManager: "
+          + data);
+    } catch (final SQLException e) {
+      final String logString = "Unable to establish connection with database.\n"
+          + "SQLException was occured at attempt to initialize DbManager instance: \n"
+          + "can`t load data from repair records table.";
+      logger.fatal(logString);
+      e.printStackTrace();
+    }
+    
+    return data;
+  }
+  
+  private String validateString(final String tempString) {
+    return tempString != null ? tempString : "";
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("DbManagerSqliteImp [repairPeriodsTableData=");
+    builder.append("DbManagerSqliteImp [connection=");
+    builder.append(connection);
+    builder.append(", repairPeriodsTableData=");
     builder.append(repairPeriodsTableData);
+    builder.append(", repairRecordsTableData=");
+    builder.append(repairRecordsTableData);
     builder.append("]");
     return builder.toString();
   }
+  
   
 }

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS repair_records(
 	id INTEGER NOT NULL PRIMARY KEY,
-	loco_model_id INTEGER NOT NULL,
+	loco_model_name TEXT NOT NULL,
 	loco_number TEXT NOT NULL,
 	
 	last_three_maintenance TEXT,
@@ -23,5 +23,5 @@ CREATE TABLE IF NOT EXISTS repair_records(
 	
 	notes TEXT,
 	
-	FOREIGN KEY(loco_model_id) REFERENCES repair_periods(id)
+	FOREIGN KEY(loco_model_name) REFERENCES repair_periods(loco_model_name)
 	);
