@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,10 +19,16 @@ import org.springframework.stereotype.Service;
 @Profile("SqliteDb")
 public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
+  private final Map<String, List<Integer>> repairPeriodsTableData;
+  private final Map<Integer, List<String>> repairRecordsTableData;
   private SqliteConnection connection;
-  private Map<String, List<Integer>> repairPeriodsTableData;
-  private Map<Integer, List<String>> repairRecordsTableData;
   
+  /**
+   * Gives methods for working with database.
+   * <br>
+   * Any data manipulation must be done only through methods of this object.
+   * @param connection to the database
+   */
   @Autowired
   public DbManagerSqliteImp(final SqliteConnection connection) {
     this.connection = connection;
@@ -33,8 +40,7 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public Map<Integer, List<String>> getAllRepairRecords() {
-    // TODO Auto-generated method stub
-    return null;
+    return repairRecordsTableData;
   }
 
   @Override
@@ -59,8 +65,7 @@ public class DbManagerSqliteImp implements DbManager {
   
   @Override
   public Map<String, List<Integer>> getAllRepairPeriodData() {
-    // TODO Auto-generated method stub
-    return null;
+    return repairPeriodsTableData;
   }
 
   @Override
@@ -76,9 +81,8 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public String[] deleteRepairPeriodsRows() {
-    // TODO Auto-generated method stub
-    return null;
+  public String[] getAllModelNames() {
+    return (String[]) repairPeriodsTableData.keySet().toArray();
   }
   
 // ====================================== Utility methods ======================================

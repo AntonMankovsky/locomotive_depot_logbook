@@ -2,6 +2,7 @@ package dbapi;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides functionality for working with database.
@@ -22,7 +23,7 @@ public abstract interface DbManager {
    * <br>
    * Therefore, for any column except {@code loco_model_id}, {@code loco_number} and {@code notes}
    * (indices 0, 1 and 14 in list), there is only two possible values: empty string or string in
-   * format {@code "dd/MM/yyyy"}.
+   * format {@code "dd.MM.yyyy"}.
    */
   public abstract Map<Integer, List<String>> getAllRepairRecords();
   
@@ -75,6 +76,6 @@ public abstract interface DbManager {
    * Returns all model names from repair periods table.
    * @return unique model names
    */
-  public abstract String[] deleteRepairPeriodsRows();
+  public abstract String[] getAllModelNames();
   
 }

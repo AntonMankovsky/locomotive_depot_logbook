@@ -37,4 +37,13 @@ public class SqlCommands {
       + "    repair_records.notes\n"
       + "    FROM repair_records, repair_periods\n"
       + "    WHERE repair_periods.loco_model_name=repair_records.loco_model_name;";
+  
+  /**
+   * Get max id from records table.
+   */
+  public static final String RT_MAX_ID = "SELECT *\n"
+      + "    FROM repair_records\n"
+      + "    ORDER BY id DESC\n"
+      + "    LIMIT 1;";
 }
+
