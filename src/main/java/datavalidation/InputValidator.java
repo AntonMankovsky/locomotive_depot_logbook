@@ -30,8 +30,8 @@ public class InputValidator {
   /**
    * Validates repair record.
    * <p>
-   * {@code loco_model_name} (index 0) should have corresponding entity in 
-   * {@code repair_periods table.}
+   * {@code loco_model_name} (index 0) should have corresponding model name in 
+   * {@code repair_periods table} and may not be null. 
    * <br>
    * {@code loco_number} (index 1) may not be null, empty, or contain anything except digits.
    * <br>
@@ -62,6 +62,11 @@ public class InputValidator {
    */
   public void validateRepairRecordModelName(final String modelName) throws 
                                                                         IllegalArgumentException {
+    if (modelName == null) {
+      logger.warn(modelName + " failed model name validation: it may not be NULL");
+      throw new IllegalArgumentException("Invalid locomotive model name: it have to be not NULL");
+    }
+    
     for (String validName : dbManager.getAllModelNames()) {
       if (modelName.equals(validName)) {
         logger.info(modelName + " passed model name validation.");
@@ -166,6 +171,65 @@ public class InputValidator {
       logger.warn(logString);
       throw new IllegalArgumentException("Invalid dates par: " + logString);
   }
+  }
+  
+  /**
+   * Validates row with model name and repair periods.
+   * <p>
+   * Model name must be non-empty unique string and may not be NULL.
+   * <p>
+   * Period of any repair must be positive integer.
+   * @param modelName to validate
+   * @param repairPeriods to validate
+   * @throws IllegalArgumentException if validation fails
+   */
+  public void validateModelPeriods(final String modelName,final List<Integer> repairPeriods) throws
+                                                                         IllegalArgumentException {
+    validateRepairPeriodsModelName(modelName);
+    for (int period : repairPeriods) {
+      validateRepairPeriod(period);
+    }
+  }
+  
+  /**
+   * Validates locomotive model name.
+   * <p>
+   * Model name must be non-empty unique string and may not be NULL.
+   * @param modelName to validate
+   * @throws IllegalArgumentException if validation fails
+   */
+  public void validateRepairPeriodsModelName(final String modelName) throws 
+                                                                        IllegalArgumentException {
+    if (modelName == null || modelName.equals("")) {
+      logger.warn(modelName + " failed model name validation: it can not be empty or NULL");
+      throw new IllegalArgumentException("Invalid locomotive model name: cannot be empty or NULL");
+    }
+    
+    for (String name : dbManager.getAllModelNames()) {
+      if (modelName.equals(name)) {
+        final String logString = modelName + " failed model name validation: model with the same\n"
+            + " name already exists.";
+        logger.warn(logString);
+        throw new IllegalArgumentException("Not unique model name: " + modelName);
+      }
+    }
+    logger.info(modelName + " passed model name validation.");
+  }
+  
+  /**
+   * Validates repair period value.
+   * <p>
+   * Repair period must be a positive integer.
+   * @param period value to validate
+   * @throws IllegalArgumentException if period is not a positive number
+   */
+  public void validateRepairPeriod(final int period) throws IllegalArgumentException {
+    if (period > 0) {
+      logger.info("Repair period value " + period +  " passed the validation.");
+    } else {
+      logger.info("Repair period value " + period + " failed validation cause it`s not positive" );
+      throw new IllegalArgumentException("Repair period " + period + " is not a positive number");
+    }
   }
   
   @Override

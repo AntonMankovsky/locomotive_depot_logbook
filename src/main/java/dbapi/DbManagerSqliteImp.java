@@ -111,8 +111,8 @@ public class DbManagerSqliteImp implements DbManager {
           + data);
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
-          + "SQLException was occured at attempt to initialize DbManager instance: \n"
-          + "can`t load data from repair periods table.";
+          + "SQLException was occured at attempt load data from repair periods table: "
+          + e.getMessage();
       logger.fatal(logString);
       e.printStackTrace();
     }
@@ -147,8 +147,7 @@ public class DbManagerSqliteImp implements DbManager {
         data.put(resultSet.getInt("id"), repairRecords);
       }
       
-      logger.info("Successfully loaded data from repair records table at instantiating DbManager: "
-          + data);
+      logger.info("Successfully loaded data from repair records table: " + data);
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
           + "SQLException was occured at attempt to initialize DbManager instance: \n"
