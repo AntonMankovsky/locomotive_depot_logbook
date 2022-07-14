@@ -69,7 +69,7 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void setRepairRecordCell(final int rowId, final int columnIndex) {
+  public void setRepairRecordCell(final int rowId, final int columnIndex, final String value) {
     // TODO Auto-generated method stub
 
   }
@@ -97,7 +97,7 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void setRepairPeriodCell(int rowId, int columnIndex) {
+  public void setRepairPeriodCell(final String modelName, final int columnIndex, final int value) {
     // TODO Auto-generated method stub
 
   }

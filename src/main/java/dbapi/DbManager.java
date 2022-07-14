@@ -40,8 +40,9 @@ public abstract interface DbManager {
    * Set value of particular cell in repair records table.
    * @param rowId as row coordinate
    * @param columnIndex as column coordinate
+   * @param value to set
    */
-  public abstract void setRepairRecordCell(int rowId, int columnIndex);
+  public abstract void setRepairRecordCell(int rowId, int columnIndex, String value);
   
   /**
    * Delete rows from repair record table.
@@ -72,10 +73,11 @@ public abstract interface DbManager {
   
   /**
    * Set value of particular cell in repair periods table.
-   * @param rowId as row coordinate
+   * @param modelName as row coordinate
    * @param columnIndex as column coordinate
+   * @param value to set
    */
-  public abstract void setRepairPeriodCell(int rowId, int columnIndex);
+  public abstract void setRepairPeriodCell(String modelName, int columnIndex, int value);
   
   /**
    * Returns all model names from repair periods table.
