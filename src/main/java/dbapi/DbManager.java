@@ -28,12 +28,13 @@ public abstract interface DbManager {
   public abstract Map<Integer, List<String>> getAllRepairRecords();
   
   /**
-   * Create new row in repair records table.
+   * Create new row in repair records table. 
    * <p>
    * @param rowToInsert represents new repair record for database. 
    * Locomotive model and number (indices 0 and 1) could not be {@code NULL} or empty string.
+   * @return false if operation fails
    */
-  public abstract void insertNewRepairRecord(List<String> rowToInsert);
+  public abstract boolean insertNewRepairRecord(List<String> rowToInsert);
   
   /**
    * Set value of particular cell in repair records table.

@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import exceptions.IdAlreadyExistsException;
+
 @Service
 @Profile("SqliteDb")
 public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
   private Map<String, List<Integer>> repairPeriodsTableData;
-  private final Map<Integer, List<String>> repairRecordsTableData;
+  private Map<Integer, List<String>> repairRecordsTableData;
   private SqliteConnection connection;
   
   /**
@@ -43,13 +45,31 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void insertNewRepairRecord(List<String> rowToInsert) {
-    // TODO Auto-generated method stub
-
+  public boolean insertNewRepairRecord(final List<String> rowToInsert) {
+    try (final PreparedStatement insertRow =
+          connection.getConnection().prepareStatement(SqlCommands.RT_INSERT_ROW);) {
+      for (int j = 0; j < rowToInsert.size(); j++) {
+        insertRow.setString(j + 1, rowToInsert.get(j));
+      }
+      insertRow.executeUpdate();
+    } catch (final SQLException e) {
+      logger.error("Row was not inserted in repair records table: " + rowToInsert
+          + "Error: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+    logger.info("Row was succesfully inserted in repair records database table: " + rowToInsert);
+    try {
+      updateRepairRecordsMapWithLastInsertedRow(rowToInsert);
+    } catch (SQLException | IdAlreadyExistsException e) {
+      rebuildRepairRecordsTableData();
+      // TO DO: update GUI representation of data (although this is extremely rare case)
+    }
+    return true;
   }
 
   @Override
-  public void setRepairRecordCell(int rowId, int columnIndex) {
+  public void setRepairRecordCell(final int rowId, final int columnIndex) {
     // TODO Auto-generated method stub
 
   }
@@ -93,7 +113,7 @@ public class DbManagerSqliteImp implements DbManager {
     final Map<String, List<Integer>> data = new HashMap<>();
     final List<Integer> repairPeriods = new ArrayList<>(6);
     try (final PreparedStatement fetchData =
-        connection.getConnection().prepareStatement(SqlCommands.PT_ALL_DATA);) {
+        connection.getConnection().prepareStatement(SqlCommands.PT_ALL_DATA)) {
       final ResultSet resultSet = fetchData.executeQuery();
       while (resultSet.next()) {
         repairPeriods.clear();
@@ -123,7 +143,7 @@ public class DbManagerSqliteImp implements DbManager {
     final Map<Integer, List<String>> data = new HashMap<>();
     final List<String> repairRecords = new ArrayList<>(15);
     try (final PreparedStatement fetchData =
-        connection.getConnection().prepareStatement(SqlCommands.RT_ALL_DATA);) {
+        connection.getConnection().prepareStatement(SqlCommands.RT_ALL_DATA)) {
       final ResultSet resultSet = fetchData.executeQuery();
       while (resultSet.next()) {
         repairRecords.clear();
@@ -161,6 +181,38 @@ public class DbManagerSqliteImp implements DbManager {
   
   private String validateString(final String tempString) {
     return tempString != null ? tempString : "";
+  }
+  
+  private void updateRepairRecordsMapWithLastInsertedRow(final List<String> row)
+                                                   throws IdAlreadyExistsException, SQLException {
+    try (final PreparedStatement getMaxId =
+        connection.getConnection().prepareStatement(SqlCommands.RT_MAX_ID)) {
+      final int id = getMaxId.executeQuery().getInt("id");
+      if (repairPeriodsTableData.containsKey(id)) {
+        final String logString = "Error on attempt to update repair records map data structure\n"
+            + " with new inserted row: the row with id" + id + "already exists. \n"
+            + "This could lead to inconsistent data. Row that was not add to map: " + row;
+        logger.error(logString);
+        throw new IdAlreadyExistsException("id already exists in internal data structure: " + id);
+      } else {
+        repairRecordsTableData.put(id, row);
+        logger.info("Internal data structure was succesfully updated: " + id + ":" + row);
+      }
+    } catch (final SQLException e) {
+      final String logString = "SQLException was occured at attempt to update repair records map: "
+          + e.getMessage();
+      logger.warn(logString);
+      throw e;
+    }
+  }
+  
+  /**
+   * GUI representation of {@code repairRecordsTableData} must be updated after performing this
+   * operation.
+   */
+  private void rebuildRepairRecordsTableData() {
+    repairRecordsTableData = loadDataFromRepairRecordsTable();
+    logger.info("Data structure with repair records data was updated with latest database data.");
   }
 
   @Override
