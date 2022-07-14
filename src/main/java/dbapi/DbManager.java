@@ -48,8 +48,9 @@ public abstract interface DbManager {
   /**
    * Delete rows from repair record table.
    * @param rowId array of rows that should be deleted
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract void deleteRepairRecords(int[] rowId);
+  public abstract boolean deleteRepairRecords(int[] rowId);
   
   // Methods for repair periods table
   

@@ -4,10 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +80,7 @@ public class DbManagerSqliteImp implements DbManager {
       repairRecordsTableData.get(rowId).set(columnIndex, value);
       return true;
     } catch (final SQLException e) {
-      logger.error("Failed to update " + rowId + " row " + columnIndex + " column with value: " 
+      logger.error("Failed to update " + rowId + " row " + columnIndex + " column with value " 
           + value + ": " + e.getMessage());
       e.printStackTrace();
       return false;
@@ -88,9 +88,29 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void deleteRepairRecords(int[] rowId) {
-    // TODO Auto-generated method stub
-
+  public boolean deleteRepairRecords(int[] rowId) {
+    for (int row : rowId) {
+      try {
+        deleteRepairRecordRow(row);
+        repairRecordsTableData.remove(row);
+      } catch (final SQLException e) {
+        logger.error("Failed to delete row with id " + row + " from repair_records table: "
+            + e.getMessage());
+        e.printStackTrace();
+        return false;
+      }
+    }
+    logger.info("Rows " + Arrays.toString(rowId)
+          + " was succesfully deleted from repair_records table");
+    return true;
+  }
+  
+  private void deleteRepairRecordRow(final int rowId) throws SQLException {
+    final String sqlStatement = "DELETE FROM repair_records WHERE id = " + rowId;
+    try (final PreparedStatement deleteRow =
+        connection.getConnection().prepareStatement(sqlStatement)) {
+      deleteRow.executeUpdate();
+    }
   }
 
   // ========================== Methods for repair periods table ==========================
