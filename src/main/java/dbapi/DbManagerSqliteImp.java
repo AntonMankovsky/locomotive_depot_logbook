@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Profile("SqliteDb")
 public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
-  private final Map<String, List<Integer>> repairPeriodsTableData;
+  private Map<String, List<Integer>> repairPeriodsTableData;
   private final Map<Integer, List<String>> repairRecordsTableData;
   private SqliteConnection connection;
   
@@ -32,7 +32,6 @@ public class DbManagerSqliteImp implements DbManager {
   @Autowired
   public DbManagerSqliteImp(final SqliteConnection connection) {
     this.connection = connection;
-    repairPeriodsTableData = loadDataFromRepairPeriodsTable();
     repairRecordsTableData = loadDataFromRepairRecordsTable();
   }
   
@@ -64,7 +63,10 @@ public class DbManagerSqliteImp implements DbManager {
   // ========================== Methods for repair periods table ==========================
   
   @Override
-  public Map<String, List<Integer>> getAllRepairPeriodData() {
+  public Map<String, List<Integer>> getAllRepairPeriodData(final boolean wasInitialized) {
+    if (wasInitialized == false) {
+      repairPeriodsTableData = loadDataFromRepairPeriodsTable();
+    }
     return repairPeriodsTableData;
   }
 

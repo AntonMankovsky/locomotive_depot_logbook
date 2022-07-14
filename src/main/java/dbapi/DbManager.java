@@ -50,12 +50,16 @@ public abstract interface DbManager {
   
   // Methods for repair periods table
   
-  /**
-   * Returns all data from repair periods table.
-   * @return map with model names as keys and other columns in list of integers as values from 
-   * repair periods database table.
-   */
-  public abstract Map<String, List<Integer>> getAllRepairPeriodData();
+/**
+ * Returns all data from repair periods table.
+ * <p>
+ * The table is meant to be used rarely so it should build GUI components and load data only when
+ * user opens Model Frame.
+ * @param wasInitialized for lazy loading
+ * @return map with model names as keys and other columns in list of integers as values from
+ * repair periods database table.
+ */
+  public abstract Map<String, List<Integer>> getAllRepairPeriodData(boolean wasInitialized);
   
   /**
    * Create new row in repair periods table.
@@ -77,5 +81,4 @@ public abstract interface DbManager {
    * @return unique model names
    */
   public abstract String[] getAllModelNames();
-  
 }

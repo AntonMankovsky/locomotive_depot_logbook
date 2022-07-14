@@ -23,12 +23,25 @@ public class ModelsFrame extends JFrame {
   private JMenu modelMenu;
   private JTable repairPeriodsTable;
   private JPanel repairPeriodsTablePane;
+  private boolean wasInitialized = false;
   
   public ModelsFrame(final GuiManager guiManager, final DbManager dbManager) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
-    createAndShowGui();
+  }
+  
+  /**
+   * Initialize GUI and data on first call.
+   */
+  @Override
+  public void setVisible(final boolean b) {
+    if (b && wasInitialized == false) {
+      dbManager.getAllRepairPeriodData(false);
+      createAndShowGui();
+      wasInitialized = true;
+    }
+    super.setVisible(b);
   }
   
   private void createAndShowGui() {
