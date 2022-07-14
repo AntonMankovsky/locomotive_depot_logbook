@@ -32,7 +32,7 @@ public abstract interface DbManager {
    * <p>
    * @param rowToInsert represents new repair record for database. 
    * Locomotive model and number (indices 0 and 1) could not be {@code NULL} or empty string.
-   * @return false if operation fails
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
   public abstract boolean insertNewRepairRecord(List<String> rowToInsert);
   
@@ -41,8 +41,9 @@ public abstract interface DbManager {
    * @param rowId as row coordinate
    * @param columnIndex as column coordinate
    * @param value to set
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract void setRepairRecordCell(int rowId, int columnIndex, String value);
+  public abstract boolean setRepairRecordCell(int rowId, int columnIndex, String value);
   
   /**
    * Delete rows from repair record table.

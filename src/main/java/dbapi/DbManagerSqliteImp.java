@@ -63,15 +63,28 @@ public class DbManagerSqliteImp implements DbManager {
       updateRepairRecordsMapWithLastInsertedRow(rowToInsert);
     } catch (SQLException | IdAlreadyExistsException e) {
       rebuildRepairRecordsTableData();
-      // TO DO: update GUI representation of data (although this is extremely rare case)
+      // TODO: update GUI representation of data (although this is extremely rare case)
     }
     return true;
   }
 
   @Override
-  public void setRepairRecordCell(final int rowId, final int columnIndex, final String value) {
-    // TODO Auto-generated method stub
-
+  public boolean setRepairRecordCell(final int rowId, final int columnIndex, final String value) {
+    final String sqlStatement =
+        "UPDATE repair_records SET " 
+        + IndexToColumnNameTranslator.translateForRepairRecordsTable(columnIndex)
+        + " " + value + " WHERE id = " + rowId;
+    try (final PreparedStatement updateCell =
+          connection.getConnection().prepareStatement(sqlStatement)) {
+      updateCell.executeUpdate();
+      repairRecordsTableData.get(rowId).set(columnIndex, value);
+      return true;
+    } catch (final SQLException e) {
+      logger.error("Failed to update " + rowId + " row " + columnIndex + " column with value: " 
+          + value + ": " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
   }
 
   @Override
@@ -127,11 +140,10 @@ public class DbManagerSqliteImp implements DbManager {
         data.put(resultSet.getString("loco_model_name"), repairPeriods);
       }
       
-      logger.info("Successfully loaded data from repair periods table at instantiating DbManager: "
-          + data);
+      logger.info("Successfully loaded data from repair periods table: " + data);
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
-          + "SQLException was occured at attempt load data from repair periods table: "
+          + "SQLException was occured at attempt to load data from repair periods table: "
           + e.getMessage();
       logger.fatal(logString);
       e.printStackTrace();
