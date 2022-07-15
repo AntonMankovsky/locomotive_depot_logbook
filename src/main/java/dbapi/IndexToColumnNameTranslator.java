@@ -8,12 +8,13 @@ public class IndexToColumnNameTranslator {
   private static final String LOCO_NUMBER = "loco_number";
   private static final String LAST_THREE_MAINTENANCE = "last_three_maintenance";
   private static final String NEXT_THREE_MAINTENANCE = "next_three_maintenance";
-  private static final String LAST_THREE_CURRENT_REPAIR = "last_three_current_repair";
-  private static final String NEXT_THREE_CURRENT_REPAIR = "next_three_current_repair";
-  private static final String LAST_TWO_CURRENT_REPAIR = "last_two_current_repair";
-  private static final String NEXT_TWO_CURRENT_REPAIR = "next_two_current_repair";
   private static final String LAST_ONE_CURRENT_REPAIR = "last_one_current_repair";
   private static final String NEXT_ONE_CURRENT_REPAIR = "next_one_current_repair";
+  private static final String LAST_TWO_CURRENT_REPAIR = "last_two_current_repair";
+  private static final String NEXT_TWO_CURRENT_REPAIR = "next_two_current_repair";
+  private static final String LAST_THREE_CURRENT_REPAIR = "last_three_current_repair";
+  private static final String NEXT_THREE_CURRENT_REPAIR = "next_three_current_repair";
+
   private static final String LAST_MEDIUM_REPAIR = "last_medium_repair";
   private static final String NEXT_MEDIUM_REPAIR = "next_medium_repair";
   private static final String LAST_OVERHAUL = "last_overhaul";
@@ -43,12 +44,12 @@ public class IndexToColumnNameTranslator {
     case 1:   return LOCO_NUMBER;
     case 2:   return LAST_THREE_MAINTENANCE;
     case 3:   return NEXT_THREE_MAINTENANCE;
-    case 4:   return LAST_THREE_CURRENT_REPAIR;
-    case 5:   return NEXT_THREE_CURRENT_REPAIR;
+    case 4:   return LAST_ONE_CURRENT_REPAIR;
+    case 5:   return NEXT_ONE_CURRENT_REPAIR;
     case 6:   return LAST_TWO_CURRENT_REPAIR;
     case 7:   return NEXT_TWO_CURRENT_REPAIR;
-    case 8:   return LAST_ONE_CURRENT_REPAIR;
-    case 9:   return NEXT_ONE_CURRENT_REPAIR;
+    case 8:   return LAST_THREE_CURRENT_REPAIR;
+    case 9:   return NEXT_THREE_CURRENT_REPAIR;
     case 10:  return LAST_MEDIUM_REPAIR;
     case 11:  return NEXT_MEDIUM_REPAIR;
     case 12:  return LAST_OVERHAUL;

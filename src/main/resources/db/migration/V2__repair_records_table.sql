@@ -6,14 +6,14 @@ CREATE TABLE IF NOT EXISTS repair_records(
 	last_three_maintenance TEXT,
 	next_three_maintenance TEXT,
 	
-	last_three_current_repair TEXT,
-	next_three_current_repair TEXT,
+	last_one_current_repair TEXT,
+	next_one_current_repair TEXT,
 	
 	last_two_current_repair TEXT,
 	next_two_current_repair TEXT,
 	
-	last_one_current_repair TEXT,
-	next_one_current_repair TEXT,
+	last_three_current_repair TEXT,
+	next_three_current_repair TEXT,
 	
 	last_medium_repair TEXT,
 	next_medium_repair TEXT,

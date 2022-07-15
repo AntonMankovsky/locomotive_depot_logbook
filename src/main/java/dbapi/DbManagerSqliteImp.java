@@ -248,12 +248,12 @@ public class DbManagerSqliteImp implements DbManager {
         repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
         repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
         repairRecords.add(validateString(resultSet.getString("next_three_maintenance")));
-        repairRecords.add(validateString(resultSet.getString("last_three_current_repair")));
-        repairRecords.add(validateString(resultSet.getString("next_three_current_repair")));
-        repairRecords.add(validateString(resultSet.getString("last_two_current_repair")));
-        repairRecords.add(validateString(resultSet.getString("next_two_current_repair")));
         repairRecords.add(validateString(resultSet.getString("last_one_current_repair")));
         repairRecords.add(validateString(resultSet.getString("next_one_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_two_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_two_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("last_three_current_repair")));
+        repairRecords.add(validateString(resultSet.getString("next_three_current_repair")));
         repairRecords.add(validateString(resultSet.getString("last_medium_repair")));
         repairRecords.add(validateString(resultSet.getString("next_medium_repair")));
         repairRecords.add(validateString(resultSet.getString("last_overhaul")));

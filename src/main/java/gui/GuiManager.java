@@ -44,7 +44,7 @@ public class GuiManager {
   private void createAndShowGui() {
     final Toolkit kit = Toolkit.getDefaultToolkit();
     final Dimension screenSize = kit.getScreenSize();
-    mainFrameWidth = screenSize.width / 2;
+    mainFrameWidth = (int) (screenSize.width * 0.60);
     mainFrameHeight = screenSize.height / 2;
     modelsFrame = new ModelsFrame(this, dbManager);
     
@@ -88,7 +88,7 @@ public class GuiManager {
   }
   
   private void buildRepairRecordsTable() {
-    repairRecordsTable = new JTable(new RepairRecordsTableModel());
+    repairRecordsTable = new JTable(new RepairRecordsTableModel(dbManager));
     repairRecordsTable.setPreferredScrollableViewportSize(
         new Dimension(mainFrameWidth, mainFrameHeight));
     repairRecordsTable.setFillsViewportHeight(true);
