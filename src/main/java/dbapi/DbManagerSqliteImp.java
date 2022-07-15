@@ -47,14 +47,14 @@ public class DbManagerSqliteImp implements DbManager {
   @Override
   public boolean insertNewRepairRecord(final List<String> rowToInsert) {
     try (final PreparedStatement insertRow =
-          connection.getConnection().prepareStatement(SqlCommands.RT_INSERT_ROW);) {
+          connection.getConnection().prepareStatement(SqlCommands.RT_INSERT_ROW)) {
       for (int j = 0; j < rowToInsert.size(); j++) {
         insertRow.setString(j + 1, rowToInsert.get(j));
       }
       insertRow.executeUpdate();
     } catch (final SQLException e) {
       logger.error("Row was not inserted in repair records table: " + rowToInsert
-          + "Error: " + e.getMessage());
+          + " Error: " + e.getMessage());
       e.printStackTrace();
       return false;
     }
@@ -78,6 +78,9 @@ public class DbManagerSqliteImp implements DbManager {
           connection.getConnection().prepareStatement(sqlStatement)) {
       updateCell.executeUpdate();
       repairRecordsTableData.get(rowId).set(columnIndex, value);
+      final String logString = "Repair records table was succesfully updated: row="
+          + rowId + "; column index=" + columnIndex + "; new value=" + value;
+      logger.info(logString);
       return true;
     } catch (final SQLException e) {
       logger.error("Failed to update " + rowId + " row " + columnIndex + " column with value " 
@@ -124,15 +127,76 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public void insertNewModelRepairPeriods(String modelName, List<Integer> repairPeriods) {
-    // TODO Auto-generated method stub
-
+  public boolean insertNewModelRepairPeriods(
+                  final String modelName, final List<Integer> repairPeriods) {
+    
+    try (final PreparedStatement insertRow =
+          connection.getConnection().prepareStatement(SqlCommands.PT_INSERT_ROW)) {
+      insertRow.setString(1, modelName);
+      for (int j = 0; j < repairPeriods.size(); j++) {
+        insertRow.setInt(j + 2, repairPeriods.get(j));
+      }
+      insertRow.executeUpdate();
+      repairPeriodsTableData.put(modelName, repairPeriods);
+      final String logString = "Row was succesfully inserted in repair periods database table: "
+            + modelName + ":" + repairPeriods;
+      logger.info(logString);
+      return true;
+    } catch (final SQLException e) {
+      logger.error("Row was not inserted in repair periods table: " + repairPeriods
+          + " Error: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
   }
 
   @Override
-  public void setRepairPeriodCell(final String modelName, final int columnIndex, final int value) {
-    // TODO Auto-generated method stub
-
+  public boolean setRepairPeriodCell(
+                  final String modelName, final int columnIndex, final int value) {
+    final String sqlStatement =
+        "UPDATE repair_periods SET "
+        + IndexToColumnNameTranslator.translateForRepairPeriodsTable(columnIndex)
+        + " " + value + " WHERE loco_model_name = " + modelName;
+    try (final PreparedStatement updateCell =
+          connection.getConnection().prepareStatement(sqlStatement)) {
+      updateCell.executeUpdate();
+      repairPeriodsTableData.get(modelName).set(columnIndex, value);
+      final String logString = "Repair periods table was succesfully updated: row="
+          + modelName + "; repair period index=" + columnIndex + "; new value=" + value;
+      logger.info(logString);
+      return true;
+    } catch (final Exception e) {
+      logger.error("Failed to update " + modelName + " row " + columnIndex + " column with value " 
+          + value + ": " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+  
+  @Override
+  public boolean deleteRepairPeriods(String[] modelName) {
+    for (String row: modelName) {
+      try {
+        deleteRepairPeriodsRow(row);
+        repairPeriodsTableData.remove(row);
+      } catch (final SQLException e) {
+        logger.error("Failed to delete row with model " + row + " from repair_periods table: "
+            + e.getMessage());
+        e.printStackTrace();
+        return false;
+      }
+    }
+    logger.info("Rows with models " + Arrays.toString(modelName)
+    + " was succesfully deleted from repair_periods table");
+    return true;
+  }
+  
+  private void deleteRepairPeriodsRow(final String modelName) throws SQLException {
+    final String sqlStatement = "DELETE FROM repair_periods WHERE loco_model_name = " + modelName;
+    try (final PreparedStatement deleteRow =
+        connection.getConnection().prepareStatement(sqlStatement)) {
+      deleteRow.executeUpdate();
+    }
   }
 
   @Override
@@ -259,6 +323,5 @@ public class DbManagerSqliteImp implements DbManager {
     builder.append("]");
     return builder.toString();
   }
-  
-  
+
 }

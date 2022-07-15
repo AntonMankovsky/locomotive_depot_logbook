@@ -70,16 +70,26 @@ public abstract interface DbManager {
    * <p>
    * @param modelName unique identifier of model in repair periods table
    * @param repairPeriods in list for all possible repair types
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract void insertNewModelRepairPeriods(String modelName, List<Integer> repairPeriods);
+  public abstract boolean insertNewModelRepairPeriods(
+      String modelName, List<Integer> repairPeriods);
   
   /**
    * Set value of particular cell in repair periods table.
    * @param modelName as row coordinate
    * @param columnIndex as column coordinate
    * @param value to set
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract void setRepairPeriodCell(String modelName, int columnIndex, int value);
+  public abstract boolean setRepairPeriodCell(String modelName, int columnIndex, int value);
+  
+  /**
+   * Delete rows from repair periods table.
+   * @param rowId array of rows that should be deleted
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
+   */
+  public abstract boolean deleteRepairPeriods(String[] modelName);
   
   /**
    * Returns all model names from repair periods table.

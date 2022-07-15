@@ -66,5 +66,18 @@ public class SqlCommands {
       + "    next_overhaul,\n"
       + "    notes\n"
       + "    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+  
+  /**
+   * Insert new row into repair_periods table.
+   */
+  public static final String PT_INSERT_ROW = "INSERT INTO repair_periods (\n"
+      + "    loco_model_name,\n"
+      + "    three_maintenance,\n"
+      + "    one_current_repair,\n"
+      + "    two_current_repair,\n"
+      + "    three_current_repair,\n"
+      + "    medium_repair,\n"
+      + "    overhaul\n"
+      + "    ) VALUES (?, ?, ?, ?, ?, ?, ?);";
 }
 
