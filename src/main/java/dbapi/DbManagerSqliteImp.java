@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.util.comparator.Comparators;
 
 import exceptions.IdAlreadyExistsException;
 
@@ -23,6 +25,8 @@ public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
   private Map<String, List<Integer>> repairPeriodsTableData;
   private Map<Integer, List<String>> repairRecordsTableData;
+  private Map<Integer, Integer> orderedId;
+  private int maxId;
   private SqliteConnection connection;
   
   /**
@@ -34,11 +38,16 @@ public class DbManagerSqliteImp implements DbManager {
   @Autowired
   public DbManagerSqliteImp(final SqliteConnection connection) {
     this.connection = connection;
+    orderedId = new HashMap<>();
     repairRecordsTableData = loadDataFromRepairRecordsTable();
   }
   
 //========================== Methods for repair records table ==========================
 
+  /**
+   * The method provides convenient access to up-to-date information about the data and should not 
+   * be used by other classes other than to read the data.
+   */
   @Override
   public Map<Integer, List<String>> getAllRepairRecords() {
     return repairRecordsTableData;
@@ -114,6 +123,25 @@ public class DbManagerSqliteImp implements DbManager {
         connection.getConnection().prepareStatement(sqlStatement)) {
       deleteRow.executeUpdate();
     }
+    reorderIdOnRowDeletion(rowId);
+  }
+  
+  private void reorderIdOnRowDeletion(final int rowId) {
+    // Find ordered id that points to deleted row id
+    final int idToDelete = orderedId.keySet().stream()
+                     .filter(key -> orderedId.get(key) == rowId)
+                     .limit(1)
+                     .reduce((a, b) -> a).get();
+    // Shift ordered id`s by one to the left in order to fill the hole
+    for (int j = idToDelete; j < maxId; j++) {
+      orderedId.put(j, orderedId.get(j + 1));
+    }
+    maxId--;
+  }
+  
+  @Override
+  public int getIdByOrdinalNumber(final int ordinalNumber) {
+    return orderedId.get(ordinalNumber);
   }
 
   // ========================== Methods for repair periods table ==========================
@@ -241,11 +269,11 @@ public class DbManagerSqliteImp implements DbManager {
     try (final PreparedStatement fetchData =
         connection.getConnection().prepareStatement(SqlCommands.RT_ALL_DATA)) {
       final ResultSet resultSet = fetchData.executeQuery();
+      maxId = 0;
       while (resultSet.next()) {
         repairRecords.clear();
         repairRecords.add(resultSet.getString("loco_model_name"));
         repairRecords.add(resultSet.getString("loco_number"));
-        repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
         repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
         repairRecords.add(validateString(resultSet.getString("next_three_maintenance")));
         repairRecords.add(validateString(resultSet.getString("last_one_current_repair")));
@@ -259,10 +287,10 @@ public class DbManagerSqliteImp implements DbManager {
         repairRecords.add(validateString(resultSet.getString("last_overhaul")));
         repairRecords.add(validateString(resultSet.getString("next_overhaul")));
         repairRecords.add(validateString(resultSet.getString("notes")));
-        
         data.put(resultSet.getInt("id"), repairRecords);
+        
+        orderedId.put(maxId++, resultSet.getInt("id"));
       }
-      
       logger.info("Successfully loaded data from repair records table: " + data);
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
@@ -292,6 +320,7 @@ public class DbManagerSqliteImp implements DbManager {
         throw new IdAlreadyExistsException("id already exists in internal data structure: " + id);
       } else {
         repairRecordsTableData.put(id, row);
+        orderedId.put(maxId++, id);
         logger.info("Internal data structure was succesfully updated: " + id + ":" + row);
       }
     } catch (final SQLException e) {
@@ -310,7 +339,7 @@ public class DbManagerSqliteImp implements DbManager {
     repairRecordsTableData = loadDataFromRepairRecordsTable();
     logger.info("Data structure with repair records data was updated with latest database data.");
   }
-
+  
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
