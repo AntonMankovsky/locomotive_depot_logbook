@@ -57,19 +57,20 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public boolean insertNewRepairRecord(final List<String> rowToInsert) {
+    rowToInsert.forEach(this::validateString);
     try (final PreparedStatement insertRow =
           connection.getConnection().prepareStatement(SqlCommands.RT_INSERT_ROW)) {
       for (int j = 0; j < rowToInsert.size(); j++) {
         insertRow.setString(j + 1, rowToInsert.get(j));
       }
       insertRow.executeUpdate();
+      logger.info("Row was succesfully inserted in repair records database table: " + rowToInsert);
     } catch (final SQLException e) {
       logger.error("Row was not inserted in repair records table: " + rowToInsert
           + " Error: " + e.getMessage());
       e.printStackTrace();
       return false;
     }
-    logger.info("Row was succesfully inserted in repair records database table: " + rowToInsert);
     try {
       updateRepairRecordsMapWithLastInsertedRow(rowToInsert);
     } catch (SQLException | IdAlreadyExistsException e) {
@@ -144,6 +145,11 @@ public class DbManagerSqliteImp implements DbManager {
   @Override
   public int getIdByOrdinalNumber(final int ordinalNumber) {
     return orderedId.get(ordinalNumber);
+  }
+  
+  @Override
+  public int getRecordsCount() {
+    return maxId;
   }
 
   // ========================== Methods for repair periods table ==========================
@@ -238,7 +244,8 @@ public class DbManagerSqliteImp implements DbManager {
       while (resultSet.next()) {
         namesList.add(resultSet.getString("loco_model_name"));
       }
-      logger.info("Successfully loaded model names from repair periods table.");
+      logger.info("Successfully loaded model names from repair periods table ("
+      + namesList.size() + " names total).");
       return namesList.toArray(new String[namesList.size()]);
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
@@ -286,13 +293,12 @@ public class DbManagerSqliteImp implements DbManager {
   
   private Map<Integer, List<String>> loadDataFromRepairRecordsTable() {
     final Map<Integer, List<String>> data = new HashMap<>();
-    final List<String> repairRecords = new ArrayList<>(15);
     try (final PreparedStatement fetchData =
         connection.getConnection().prepareStatement(SqlCommands.RT_ALL_DATA)) {
       final ResultSet resultSet = fetchData.executeQuery();
       maxId = 0;
       while (resultSet.next()) {
-        repairRecords.clear();
+        final List<String> repairRecords = new ArrayList<>(15);
         repairRecords.add(resultSet.getString("loco_model_name"));
         repairRecords.add(resultSet.getString("loco_number"));
         repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
@@ -312,7 +318,8 @@ public class DbManagerSqliteImp implements DbManager {
         
         orderedId.put(maxId++, resultSet.getInt("id"));
       }
-      logger.info("Successfully loaded data from repair records table: " + data);
+      logger.info(
+          "Successfully loaded data from repair records table (" + data.size() + " rows total).");
     } catch (final SQLException e) {
       final String logString = "Unable to establish connection with database.\n"
           + "SQLException was occured at attempt to initialize DbManager instance: \n"
@@ -324,6 +331,11 @@ public class DbManagerSqliteImp implements DbManager {
     return data;
   }
   
+  /**
+   * Converts any null value to empty string.
+   * @param tempString to convert if null
+   * @return original string or empty string, if original string was NULL
+   */
   private String validateString(final String tempString) {
     return tempString != null ? tempString : "";
   }
@@ -333,9 +345,9 @@ public class DbManagerSqliteImp implements DbManager {
     try (final PreparedStatement getMaxId =
         connection.getConnection().prepareStatement(SqlCommands.RT_MAX_ID)) {
       final int id = getMaxId.executeQuery().getInt("id");
-      if (repairPeriodsTableData.containsKey(id)) {
-        final String logString = "Error on attempt to update repair records map data structure\n"
-            + " with new inserted row: the row with id" + id + "already exists. \n"
+      if (repairRecordsTableData.containsKey(id)) {
+        final String logString = "Error on attempt to update repair records map data structure"
+            + " with new inserted row: the row with id " + id + " already exists. "
             + "This could lead to inconsistent data. Row that was not add to map: " + row;
         logger.error(logString);
         throw new IdAlreadyExistsException("id already exists in internal data structure: " + id);

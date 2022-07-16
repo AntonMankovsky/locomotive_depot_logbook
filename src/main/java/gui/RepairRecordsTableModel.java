@@ -42,7 +42,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
 
   @Override
   public int getRowCount() {
-    return dbManager.getAllRepairRecords().size() * 2;
+    return dbManager.getRecordsCount() * 2;
   }
 
   @Override
@@ -59,7 +59,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   }
 
   /*
-   * One row in database table is presented as two rows in GUI table. 
+   * One row in database table is presented as two rows in GUI table.
    * It leads to the need of determination which row to access: every row with even index 
    * (index 0 included) is a separate row in database table; every row with odd index is the same
    * row as a previous one in database table.
@@ -68,9 +68,9 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   public String getValueAt(final int rowIndex, final int columnIndex) {
     final String result;
     if (rowIndex % 2 == 0) {
-      result = getCellValueForPrimaryRow(rowIndex, columnIndex);
+      result = getCellValueForPrimaryRow(rowIndex / 2, columnIndex);
     } else {
-      result = getCellValueForSecondaryRow(rowIndex - 1, columnIndex);
+      result = getCellValueForSecondaryRow((rowIndex - 1) / 2, columnIndex);
     }
     return result;
   }

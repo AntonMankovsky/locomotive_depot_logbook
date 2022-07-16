@@ -66,6 +66,17 @@ public abstract interface DbManager {
    */
   public abstract int getIdByOrdinalNumber(int ordinalNumber);
   
+  /**
+   * Returns count of rows in {@code repair_records} database table.
+   * <p>
+   * Although there are other (more expensive) ways to access this value,
+   * the need for such a method is due to the huge number of calls to
+   * this value during the rendering of the GUI of the table.
+   * <br>
+   * @return count of rows in {@code repair_record} table with minimal overhead
+   */
+  public abstract int getRecordsCount();
+  
   // Methods for repair periods table
   
 /**

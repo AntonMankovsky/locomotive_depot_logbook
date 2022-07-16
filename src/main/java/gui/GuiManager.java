@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class GuiManager {
     String[] modelNames = dbManager.getAllModelNames();
     JMenuItem subMenuItem;
     for (String model : modelNames) {
-      subMenuItem = new JMenuItem(new NewRecordAction(model));
+      subMenuItem = new JMenuItem(new NewRecordAction(model, this));
       newRecordSubmenu.add(subMenuItem);
     }
     
@@ -114,6 +115,14 @@ public class GuiManager {
   
   public DbManager getDbManager() {
     return dbManager;
+  }
+  
+  public JTable getRepairRecordsTable() {
+    return repairRecordsTable;
+  }
+  
+  public JFrame getMainFrame() {
+    return mainFrame;
   }
   
   public int getMainFrameWidth() {

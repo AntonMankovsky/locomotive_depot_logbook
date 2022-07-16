@@ -87,12 +87,12 @@ public class InputValidator {
   public void validateLocoNumber(final String locoNumber) throws IllegalArgumentException {
     Pattern pattern = Pattern.compile("[0-9]+");
     if (locoNumber == null || !pattern.matcher(locoNumber).matches()) {
-      final String logString = locoNumber + " failed locomotive number validation:\n"
+      final String logString = "\"" + locoNumber + "\"" + " failed locomotive number validation:"
           + " it may not be null and should cointain only digits (one or more).";
       logger.warn(logString);
       throw new IllegalArgumentException("Invalid locomotive number: " + locoNumber);
     } else {
-      logger.info(locoNumber + " passed locomotive number validation.");
+      logger.info("\"" + locoNumber + "\"" + " passed locomotive number validation.");
     }
   }
   
@@ -145,15 +145,15 @@ public class InputValidator {
     final boolean lastEmpty = (lastRepair == null) || (lastRepair.equals(""));
     final boolean nextEmpty = (nextRepair == null) || (nextRepair.equals(""));
     if (lastEmpty != nextEmpty) {
-      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed \n"
-          + "validation: if last repair string contains date, \n"
+      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed "
+          + "validation: if last repair string contains date, "
           + "next repair must contain date too, and vice versa.";
       logger.warn(logString);
       throw new IllegalArgumentException("Heterogeneous pair error: " + logString);
     }
     
     if (lastEmpty) {
-      final String logString = "Last-Next repair date pair passed the validation due to both  \n"
+      final String logString = "Last-Next repair date pair passed the validation due to both "
           + "strings is either null or empty";
       logger.info(logString);
       return;
@@ -163,10 +163,10 @@ public class InputValidator {
     final LocalDate dateLast = LocalDate.parse(lastRepair, formatter);
     final LocalDate dateNext = LocalDate.parse(nextRepair, formatter);
     if (dateLast.isBefore(dateNext)) {
-      logger.info(lastRepair + "-" + nextRepair + " repair dates passed the validation due to \n"
-          + " both strings match all requirements.");
+      logger.info(lastRepair + "-" + nextRepair + " repair dates passed the validation due to "
+          + "both strings match all requirements.");
     } else {
-      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed \n"
+      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed "
           + "validation: last repair should be before next repair.";
       logger.warn(logString);
       throw new IllegalArgumentException("Invalid dates par: " + logString);
@@ -207,8 +207,8 @@ public class InputValidator {
     
     for (String name : dbManager.getAllModelNames()) {
       if (modelName.equals(name)) {
-        final String logString = modelName + " failed model name validation: model with the same\n"
-            + " name already exists.";
+        final String logString = modelName + " failed model name validation: model with the same "
+            + "name already exists.";
         logger.warn(logString);
         throw new IllegalArgumentException("Not unique model name: " + modelName);
       }
