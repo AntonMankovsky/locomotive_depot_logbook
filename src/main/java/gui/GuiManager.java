@@ -58,7 +58,7 @@ public class GuiManager {
   
   private void buildNewRecordSubmenu() {
     newRecordSubmenu = new JMenu("Новая запись");
-    String[] modelNames = {"ТГМ", "ТГМ4Б", "ТГМ4Бл"};
+    String[] modelNames = dbManager.getAllModelNames();
     JMenuItem subMenuItem;
     for (String model : modelNames) {
       subMenuItem = new JMenuItem(new NewRecordAction(model));

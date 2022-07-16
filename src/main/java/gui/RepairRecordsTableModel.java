@@ -49,6 +49,14 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   public int getColumnCount() {
     return 9;
   }
+  
+  @Override
+  public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+    if (rowIndex % 2 != 0 || columnIndex == 0) {
+      return false;
+    }
+    return true;
+  }
 
   /*
    * One row in database table is presented as two rows in GUI table. 
@@ -89,6 +97,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex);
     return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
   }
+  
 
   @Override
   public String toString() {

@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -229,7 +231,26 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public String[] getAllModelNames() {
-    return (String[]) repairPeriodsTableData.keySet().toArray();
+    try (final PreparedStatement selectModelNames =
+        connection.getConnection().prepareStatement("SELECT loco_model_name from repair_periods")){
+      final ResultSet resultSet = selectModelNames.executeQuery();
+      final List<String> namesList = new ArrayList<>(12);
+      while (resultSet.next()) {
+        namesList.add(resultSet.getString("loco_model_name"));
+      }
+      logger.info("Successfully loaded model names from repair periods table.");
+      return namesList.toArray(new String[namesList.size()]);
+    } catch (final SQLException e) {
+      final String logString = "Unable to establish connection with database.\n"
+          + "SQLException was occured at attempt to load model names from repair periods table: "
+          + e.getMessage() + "Default backup names was returned instead.";
+      logger.fatal(logString);
+      e.printStackTrace();
+      final String[] backupNames = {"ТЭМ", "ТЭМ2У", "ТЭМ2М", "ТЭМ2УМ", "ТЭМ15", "ТЭМ18", "ТГМ4(А)",
+          "ТГМ4", "ТГМ4А", "ТГМ4(Б)", "ТГМ4Б", "ТГМ4Бл"};
+      return backupNames;
+    }
+    
   }
   
 // ====================================== Utility methods ======================================
