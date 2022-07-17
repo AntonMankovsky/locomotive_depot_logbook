@@ -8,10 +8,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import datavalidation.InputValidator;
 import gui.GuiManager;
-import gui.RepairRecordsTableModel;
 
 public class NewRecordAction extends AbstractAction {
   private final GuiManager guiManager;
@@ -37,17 +37,16 @@ public class NewRecordAction extends AbstractAction {
     final List<String> newRow = new ArrayList<>(15);
     newRow.add((String) getValue(Action.NAME));
     newRow.add(locoNumber);
+    for (int j = 2; j < 15; j++) {
+      newRow.add("");
+    }
     final boolean wasInserted = guiManager.getDbManager().insertNewRepairRecord(newRow);
     
     if (wasInserted) {
-      if (guiManager.getRepairRecordsTable().getModel() instanceof AbstractTableModel) {
-        final AbstractTableModel recordsModel =
-        (AbstractTableModel) guiManager.getRepairRecordsTable().getModel();
+      final TableModel tm = guiManager.getRepairRecordsTable().getModel();
+      if (tm instanceof AbstractTableModel) {
+        final AbstractTableModel recordsModel = (AbstractTableModel) tm;
         final int newNumberOfRowsInGuiTable = guiManager.getDbManager().getRecordsCount() * 2;
-        System.out.println(
-            "First inserted row: " + (newNumberOfRowsInGuiTable - 2));
-        System.out.println(
-            "Last inserted row: " + (newNumberOfRowsInGuiTable - 1));
         recordsModel.fireTableRowsInserted(
             newNumberOfRowsInGuiTable - 2, newNumberOfRowsInGuiTable - 1 );
       }

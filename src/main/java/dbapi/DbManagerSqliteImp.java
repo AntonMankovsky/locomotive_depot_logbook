@@ -57,7 +57,6 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public boolean insertNewRepairRecord(final List<String> rowToInsert) {
-    rowToInsert.forEach(this::validateString);
     try (final PreparedStatement insertRow =
           connection.getConnection().prepareStatement(SqlCommands.RT_INSERT_ROW)) {
       for (int j = 0; j < rowToInsert.size(); j++) {
