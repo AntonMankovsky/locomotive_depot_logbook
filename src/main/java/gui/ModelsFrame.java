@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -10,6 +12,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 
 import dbapi.DbManager;
 import gui.eventlisteners.NewModelListener;
@@ -56,12 +59,18 @@ public class ModelsFrame extends JFrame {
   
   private void buildModelMenu() {
     modelMenu = new JMenu("Действия");
-    modelMenu.add(new JMenuItem("Новая модель"))
-      .addActionListener(new NewModelListener(dbManager));
+    
+    JMenuItem tempItem = new JMenuItem("Новая модель");
+    tempItem.addActionListener(new NewModelListener(dbManager));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+    modelMenu.add(tempItem);
     
     modelMenu.addSeparator();
-    modelMenu.add(new JMenuItem("Закрыть"))
-      .addActionListener(e -> setVisible(false));
+    
+    tempItem = new JMenuItem("Закрыть");
+    tempItem.addActionListener(e -> setVisible(false));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+    modelMenu.add(tempItem);
   }
   
   private void buildModelMenuBar() {

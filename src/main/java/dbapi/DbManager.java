@@ -46,11 +46,11 @@ public abstract interface DbManager {
   public abstract boolean setRepairRecordCell(int rowId, int columnIndex, String value);
   
   /**
-   * Delete rows from repair record table.
-   * @param rowId array of rows that should be deleted
+   * Delete row from repair record table.
+   * @param rowId to delete
    * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract boolean deleteRepairRecords(int[] rowId);
+  public abstract boolean deleteRepairRecord(int rowId);
   
   /**
    * Converts ordinal number to corresponding id in repair_records database table.

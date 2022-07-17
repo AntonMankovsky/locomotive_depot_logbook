@@ -20,7 +20,6 @@ public class NewRecordAction extends AbstractAction {
     super();
     putValue(Action.NAME, name);
     this.guiManager = guiManager;
-    
   }
   
   @Override

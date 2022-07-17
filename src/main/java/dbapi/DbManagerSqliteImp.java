@@ -102,30 +102,21 @@ public class DbManagerSqliteImp implements DbManager {
   }
 
   @Override
-  public boolean deleteRepairRecords(int[] rowId) {
-    for (int row : rowId) {
-      try {
-        deleteRepairRecordRow(row);
-        repairRecordsTableData.remove(row);
-      } catch (final SQLException e) {
-        logger.error("Failed to delete row with id " + row + " from repair_records table: "
-            + e.getMessage());
-        e.printStackTrace();
-        return false;
-      }
-    }
-    logger.info("Rows " + Arrays.toString(rowId)
-          + " was succesfully deleted from repair_records table");
-    return true;
-  }
-  
-  private void deleteRepairRecordRow(final int rowId) throws SQLException {
+  public boolean deleteRepairRecord(final int rowId) {
     final String sqlStatement = "DELETE FROM repair_records WHERE id = " + rowId;
     try (final PreparedStatement deleteRow =
         connection.getConnection().prepareStatement(sqlStatement)) {
       deleteRow.executeUpdate();
+      repairRecordsTableData.remove(rowId);
+      reorderIdOnRowDeletion(rowId);
+      logger.info("Row with id=" + rowId + " was succesfully deleted from repair_records table");
+      return true;
+    } catch (final SQLException e) {
+      logger.error("Failed to delete row with id=" + rowId + " from repair_records table: "
+          + e.getMessage());
+      e.printStackTrace();
+      return false;
     }
-    reorderIdOnRowDeletion(rowId);
   }
   
   private void reorderIdOnRowDeletion(final int rowId) {
