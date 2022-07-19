@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -8,6 +10,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,6 +108,7 @@ public class GuiManager {
         new Dimension(mainFrameWidth, mainFrameHeight));
     repairRecordsTable.setFillsViewportHeight(true);
     repairRecordsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    repairRecordsTable.getTableHeader().setReorderingAllowed(false);
   }
   
   private void buildRepairRecordsTablePane() {
@@ -121,6 +125,7 @@ public class GuiManager {
     mainFrame.setTitle("Журнал учёта ремонтов");
     mainFrame.setJMenuBar(mainMenuBar);
     mainFrame.setContentPane(repairRecordsTablePane);
+    mainFrame.setMinimumSize(new Dimension((int) (mainFrameWidth * 0.40), 0));
     
     mainFrame.setVisible(true);
   }

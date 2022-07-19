@@ -70,6 +70,7 @@ public class ModelsFrame extends JFrame {
     repairPeriodsTable.setPreferredScrollableViewportSize(
         new Dimension(modelFrameWidth, modelFrameHeight));
     repairPeriodsTable.setFillsViewportHeight(true);
+    repairPeriodsTable.getTableHeader().setReorderingAllowed(false);
   }
   
   private void buildRepairPeriodsTablePane() {
@@ -84,6 +85,7 @@ public class ModelsFrame extends JFrame {
     setTitle("Таблица моделей");
     setJMenuBar(modelMenuBar);
     setContentPane(repairPeriodsTablePane);
+    setMinimumSize(new Dimension((int) (modelFrameWidth * 0.25), 0));
   }
   
   @Override
