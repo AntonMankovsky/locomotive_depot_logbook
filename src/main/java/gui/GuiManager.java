@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dbapi.DbManager;
-import gui.eventlisteners.DeleteModelListener;
+import gui.eventlisteners.DeleteRecordListener;
 import gui.eventlisteners.NewRecordAction;
 
 
@@ -82,7 +82,7 @@ public class GuiManager {
     mainMenu.addSeparator();
     
     tempItem = new JMenuItem("Удалить выбранную запись");
-    tempItem.addActionListener(new DeleteModelListener(this));
+    tempItem.addActionListener(new DeleteRecordListener(this));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     mainMenu.add(tempItem);
     
@@ -100,7 +100,7 @@ public class GuiManager {
   }
   
   private void buildRepairRecordsTable() {
-    repairRecordsTable = new JTable(new RepairRecordsTableModel(dbManager));
+    repairRecordsTable = new JTable(new RepairRecordsTableModel(dbManager, this));
     repairRecordsTable.setPreferredScrollableViewportSize(
         new Dimension(mainFrameWidth, mainFrameHeight));
     repairRecordsTable.setFillsViewportHeight(true);
@@ -143,6 +143,10 @@ public class GuiManager {
 
   public int getMainFrameHeight() {
     return mainFrameHeight;
+  }
+  
+  public JFrame getModelsFrame() {
+    return modelsFrame;
   }
 
   @Override

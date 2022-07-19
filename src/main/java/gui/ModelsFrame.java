@@ -26,28 +26,15 @@ public class ModelsFrame extends JFrame {
   private JMenu modelMenu;
   private JTable repairPeriodsTable;
   private JPanel repairPeriodsTablePane;
-  private boolean wasInitialized = false;
   
   public ModelsFrame(final GuiManager guiManager, final DbManager dbManager) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
+    createGui();
   }
   
-  /**
-   * Initialize GUI and data on first call.
-   */
-  @Override
-  public void setVisible(final boolean b) {
-    if (b && wasInitialized == false) {
-      dbManager.getAllRepairPeriodData(false);
-      createAndShowGui();
-      wasInitialized = true;
-    }
-    super.setVisible(b);
-  }
-  
-  private void createAndShowGui() {
+  private void createGui() {
     modelFrameWidth = (int) (guiManager.getMainFrameWidth() * 0.75);
     modelFrameHeight = guiManager.getMainFrameHeight();
     buildModelMenu();
@@ -98,7 +85,7 @@ public class ModelsFrame extends JFrame {
     setJMenuBar(modelMenuBar);
     setContentPane(repairPeriodsTablePane);
   }
-
+  
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();

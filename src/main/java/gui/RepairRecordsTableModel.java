@@ -3,6 +3,7 @@ package gui;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import dbapi.DbManager;
@@ -23,6 +24,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
                                                   "Примечания"
                                                   };
   private final DbManager dbManager;
+  private RecordUpdateHandler updateHandler;
   
   /**
    * Provides methods for core operations with repair records table.
@@ -30,9 +32,10 @@ public class RepairRecordsTableModel extends AbstractTableModel {
    * Actively interacts with database API and data validation classes. 
    * @param dbManager that provides API for working with database
    */
-  public RepairRecordsTableModel(final DbManager dbManager) {
+  public RepairRecordsTableModel(final DbManager dbManager, final GuiManager guiManager) {
     super();
     this.dbManager = dbManager;
+    updateHandler = new RecordUpdateHandler(dbManager, guiManager);
   }
   
   @Override
@@ -98,6 +101,15 @@ public class RepairRecordsTableModel extends AbstractTableModel {
     return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
   }
   
+  @Override
+  public void setValueAt(Object value, final int rowIndex, final int colIndex) {
+    String valueString = (String) value;
+    valueString = valueString != null ? valueString.trim() : null;
+    
+    if (rowIndex % 2 == 0 && !valueString.equals(getValueAt(rowIndex, colIndex))) {
+      updateHandler.handleCellNewValue(valueString, rowIndex, colIndex);
+    }
+  }
 
   @Override
   public String toString() {

@@ -88,7 +88,7 @@ public abstract interface DbManager {
  * @return map with model names as keys and other columns in list of integers as values from
  * repair periods database table.
  */
-  public abstract Map<String, List<Integer>> getAllRepairPeriodData(boolean wasInitialized);
+  public abstract Map<String, List<Integer>> getAllRepairPeriodData();
   
   /**
    * Create new row in repair periods table.

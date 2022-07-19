@@ -9,16 +9,23 @@ import javax.swing.table.TableModel;
 
 import gui.GuiManager;
 
-public class DeleteModelListener implements ActionListener {
+public class DeleteRecordListener implements ActionListener {
   private final GuiManager guiManager;
   
-  public DeleteModelListener(final GuiManager guiManager) {
+  public DeleteRecordListener(final GuiManager guiManager) {
     super();
     this.guiManager = guiManager;
   }
   
   @Override
   public void actionPerformed(final ActionEvent event) {
+    try {
+    guiManager.getRepairRecordsTable().getCellEditor().cancelCellEditing();
+    } catch (final NullPointerException e) {
+      // this construction is needed to prevent a graphical bug that occurs 
+      // when a row is deleted while it`s cell is in editing state
+    }
+    
     int selectedRecord = guiManager.getRepairRecordsTable().getSelectedRow();
     if (selectedRecord == -1) {
       return;
@@ -43,6 +50,11 @@ public class DeleteModelListener implements ActionListener {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;
         recordsModel.fireTableRowsDeleted(deletedRows[0], deletedRows[1]);
       }
+      if (guiManager.getRepairRecordsTable().getRowCount() > 0) {
+        guiManager.getRepairRecordsTable()
+        .setRowSelectionInterval(deletedRows[0] - 1, deletedRows[0] - 1);
+      }
+
     } else {
       JOptionPane.showMessageDialog(
           guiManager.getMainFrame(),

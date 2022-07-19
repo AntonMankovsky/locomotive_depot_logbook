@@ -42,6 +42,7 @@ public class DbManagerSqliteImp implements DbManager {
     this.connection = connection;
     orderedId = new HashMap<>();
     repairRecordsTableData = loadDataFromRepairRecordsTable();
+    repairPeriodsTableData = loadDataFromRepairPeriodsTable();
   }
   
 //========================== Methods for repair records table ==========================
@@ -81,10 +82,19 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public boolean setRepairRecordCell(final int rowId, final int columnIndex, final String value) {
-    final String sqlStatement =
+    final String sqlStatement;
+    try {
+      sqlStatement =
         "UPDATE repair_records SET " 
         + IndexToColumnNameTranslator.translateForRepairRecordsTable(columnIndex)
-        + " " + value + " WHERE id = " + rowId;
+        + " = '" + value + "' WHERE id = " + rowId;
+    } catch (final IllegalArgumentException e) {
+      logger.error("Failed to prepare update cell SQL statement: " 
+          + "cannot convert given index to column name: " 
+          + e.getMessage());
+      return false;
+    }
+    
     try (final PreparedStatement updateCell =
           connection.getConnection().prepareStatement(sqlStatement)) {
       updateCell.executeUpdate();
@@ -145,10 +155,7 @@ public class DbManagerSqliteImp implements DbManager {
   // ========================== Methods for repair periods table ==========================
   
   @Override
-  public Map<String, List<Integer>> getAllRepairPeriodData(final boolean wasInitialized) {
-    if (wasInitialized == false) {
-      repairPeriodsTableData = loadDataFromRepairPeriodsTable();
-    }
+  public Map<String, List<Integer>> getAllRepairPeriodData() {
     return repairPeriodsTableData;
   }
 
@@ -179,10 +186,19 @@ public class DbManagerSqliteImp implements DbManager {
   @Override
   public boolean setRepairPeriodCell(
                   final String modelName, final int columnIndex, final int value) {
-    final String sqlStatement =
-        "UPDATE repair_periods SET "
-        + IndexToColumnNameTranslator.translateForRepairPeriodsTable(columnIndex)
-        + " " + value + " WHERE loco_model_name = " + modelName;
+    final String sqlStatement;
+    try {
+      sqlStatement =
+              "UPDATE repair_periods SET "
+              + IndexToColumnNameTranslator.translateForRepairPeriodsTable(columnIndex)
+              + " " + value + " WHERE loco_model_name = " + modelName;
+    } catch (final IllegalArgumentException e) {
+      logger.error("Failed to prepare update cell SQL statement: " 
+          + "cannot convert given index to column name: " 
+          + e.getMessage());
+      return false;
+    }
+
     try (final PreparedStatement updateCell =
           connection.getConnection().prepareStatement(sqlStatement)) {
       updateCell.executeUpdate();
@@ -227,38 +243,19 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public String[] getAllModelNames() {
-    try (final PreparedStatement selectModelNames =
-        connection.getConnection().prepareStatement("SELECT loco_model_name from repair_periods")){
-      final ResultSet resultSet = selectModelNames.executeQuery();
-      final List<String> namesList = new ArrayList<>(12);
-      while (resultSet.next()) {
-        namesList.add(resultSet.getString("loco_model_name"));
-      }
-      logger.info("Successfully loaded model names from repair periods table ("
-      + namesList.size() + " names total).");
-      return namesList.toArray(new String[namesList.size()]);
-    } catch (final SQLException e) {
-      final String logString = "Unable to establish connection with database.\n"
-          + "SQLException was occured at attempt to load model names from repair periods table: "
-          + e.getMessage() + "Default backup names was returned instead.";
-      logger.fatal(logString);
-      e.printStackTrace();
-      final String[] backupNames = {"ТЭМ", "ТЭМ2У", "ТЭМ2М", "ТЭМ2УМ", "ТЭМ15", "ТЭМ18", "ТГМ4(А)",
-          "ТГМ4", "ТГМ4А", "ТГМ4(Б)", "ТГМ4Б", "ТГМ4Бл"};
-      return backupNames;
-    }
-    
+    final Set<String> names = repairPeriodsTableData.keySet();
+    return names.toArray(new String[names.size()]);
   }
   
 // ====================================== Utility methods ======================================
   
   private Map<String, List<Integer>> loadDataFromRepairPeriodsTable() {
     final Map<String, List<Integer>> data = new HashMap<>();
-    final List<Integer> repairPeriods = new ArrayList<>(6);
     try (final PreparedStatement fetchData =
         connection.getConnection().prepareStatement(SqlCommands.PT_ALL_DATA)) {
       final ResultSet resultSet = fetchData.executeQuery();
       while (resultSet.next()) {
+        final List<Integer> repairPeriods = new ArrayList<>(6);
         repairPeriods.clear();
         repairPeriods.add(resultSet.getInt("three_maintenance"));
         repairPeriods.add(resultSet.getInt("one_current_repair"));

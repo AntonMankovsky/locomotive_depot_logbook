@@ -86,7 +86,7 @@ public class InputValidator {
    */
   public void validateLocoNumber(final String locoNumber) throws IllegalArgumentException {
     Pattern pattern = Pattern.compile("[0-9]+");
-    if (locoNumber == null || !pattern.matcher(locoNumber).matches()) {
+    if (locoNumber == null || !pattern.matcher(locoNumber.trim()).matches()) {
       final String logString = "\"" + locoNumber + "\"" + " failed locomotive number validation:"
           + " it may not be null and should cointain only digits (one or more).";
       logger.warn(logString);
@@ -111,11 +111,11 @@ public class InputValidator {
     }
     
     Pattern pattern = Pattern.compile("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}");
-    if (!pattern.matcher(date).matches()) {
+    if (!pattern.matcher(date.trim()).matches()) {
       logger.warn(date + " failed validation due to violation of required date format: dd.MM.yyyy");
       throw new IllegalArgumentException("Invalid date format: " + date + ". dd.MM.yyyy expected.");
     } else {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+      final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
       try {
         LocalDate.parse(date, formatter);
       } catch (final DateTimeParseException e) {
