@@ -75,7 +75,7 @@ public class ModelsFrame extends JFrame {
   }
   
   private void buildRepairPeriodsTable() {
-    repairPeriodsTable = new JTable(new RepairPeriodsTableModel(dbManager));
+    repairPeriodsTable = new JTable(new RepairPeriodsTableModel(dbManager, guiManager));
     repairPeriodsTable.setPreferredScrollableViewportSize(
         new Dimension(modelFrameWidth, modelFrameHeight));
     repairPeriodsTable.setFillsViewportHeight(true);

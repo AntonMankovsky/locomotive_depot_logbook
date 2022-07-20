@@ -192,7 +192,7 @@ public class DbManagerSqliteImp implements DbManager {
       sqlStatement =
               "UPDATE repair_periods SET "
               + IndexToColumnNameTranslator.translateForRepairPeriodsTable(columnIndex)
-              + " " + value + " WHERE loco_model_name = " + modelName;
+              + " = " + value + " WHERE loco_model_name = " + "'" + modelName + "'";
     } catch (final IllegalArgumentException e) {
       logger.error("Failed to prepare update cell SQL statement: " 
           + "cannot convert given index to column name: " 

@@ -102,7 +102,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   }
   
   @Override
-  public void setValueAt(Object value, final int rowIndex, final int colIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int colIndex) {
     String valueString = (String) value;
     valueString = valueString != null ? valueString.trim() : null;
     

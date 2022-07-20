@@ -25,7 +25,7 @@ public class DeleteModelListener implements ActionListener {
     }
     
     try {
-    guiManager.getRepairRecordsTable().getCellEditor().cancelCellEditing();
+    guiManager.getModelsFrame().getRepairPeriodsTable().getCellEditor().cancelCellEditing();
     } catch (final NullPointerException e) {
       // This construction is needed to prevent a graphical bug that occurs 
       // when a row is deleted while it`s cell is in editing state.
