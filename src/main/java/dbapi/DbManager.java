@@ -114,7 +114,7 @@ public abstract interface DbManager {
    * @param rowId array of rows that should be deleted
    * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
-  public abstract boolean deleteRepairPeriods(String[] modelName);
+  public abstract boolean deleteRepairPeriods(String modelName);
   
   /**
    * Returns all model names from repair periods table.

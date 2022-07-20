@@ -5,14 +5,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import datavalidation.InputValidator;
-import dbapi.DbManager;
 import gui.GuiManager;
 
 public class NewModelListener implements ActionListener {
@@ -81,7 +79,7 @@ public class NewModelListener implements ActionListener {
     } catch (final IllegalArgumentException err) {
       JOptionPane.showMessageDialog(
           guiManager.getModelsFrame(),
-          "Некорректное название модели",
+          "Недопустимое название модели",
           "Операция отменена",
           JOptionPane.ERROR_MESSAGE
           );

@@ -217,29 +217,23 @@ public class DbManagerSqliteImp implements DbManager {
   }
   
   @Override
-  public boolean deleteRepairPeriods(String[] modelName) {
-    for (String row: modelName) {
-      try {
-        deleteRepairPeriodsRow(row);
-        repairPeriodsTableData.remove(row);
+  public boolean deleteRepairPeriods(final String modelName) {
+    final String sqlStatement =
+        "DELETE FROM repair_periods WHERE loco_model_name = " + "'" + modelName + "'";
+      try (final PreparedStatement deleteRow =
+          connection.getConnection().prepareStatement(sqlStatement)) {
+        deleteRow.executeUpdate();
+        repairPeriodsTableData.remove(modelName);
+        logger.info(
+            "Row with model " + modelName + " was succesfully deleted from repair_periods table");
+        return true;
       } catch (final SQLException e) {
-        logger.error("Failed to delete row with model " + row + " from repair_periods table: "
-            + e.getMessage());
+        logger.error(
+                "Failed to delete row with model " + modelName + " from repair_periods table: "
+                + e.getMessage());
         e.printStackTrace();
         return false;
       }
-    }
-    logger.info("Rows with models " + Arrays.toString(modelName)
-    + " was succesfully deleted from repair_periods table");
-    return true;
-  }
-  
-  private void deleteRepairPeriodsRow(final String modelName) throws SQLException {
-    final String sqlStatement = "DELETE FROM repair_periods WHERE loco_model_name = " + modelName;
-    try (final PreparedStatement deleteRow =
-        connection.getConnection().prepareStatement(sqlStatement)) {
-      deleteRow.executeUpdate();
-    }
   }
 
   @Override

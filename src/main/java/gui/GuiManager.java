@@ -129,6 +129,20 @@ public class GuiManager {
     mainFrame.setVisible(true);
   }
   
+  /**
+   * Updates submenu items by rebuilding it from scratch.
+   * <p>
+   * Method suppose to be used when model was deleted form models table
+   * so submenu will not contain wrong option.
+   */
+  public void rebuildNewRecordSubmenu() {
+    newRecordSubmenu.removeAll();
+    String[] modelNames = dbManager.getAllModelNames();
+    for (String model : modelNames) {
+      newRecordSubmenu.add(new JMenuItem(new NewRecordAction(model, this)));
+    }
+  }
+  
   public DbManager getDbManager() {
     return dbManager;
   }

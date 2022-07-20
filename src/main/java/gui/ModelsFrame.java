@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
 import dbapi.DbManager;
+import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
 
 public class ModelsFrame extends JFrame {
@@ -51,6 +52,13 @@ public class ModelsFrame extends JFrame {
     JMenuItem tempItem = new JMenuItem("Новая модель");
     tempItem.addActionListener(new NewModelListener(guiManager));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+    modelMenu.add(tempItem);
+    
+    modelMenu.addSeparator();
+    
+    tempItem = new JMenuItem("Удалить выбранную модель");
+    tempItem.addActionListener(new DeleteModelListener(guiManager));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     modelMenu.add(tempItem);
     
     modelMenu.addSeparator();

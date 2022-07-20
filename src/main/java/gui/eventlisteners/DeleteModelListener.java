@@ -9,18 +9,18 @@ import javax.swing.table.TableModel;
 
 import gui.GuiManager;
 
-public class DeleteRecordListener implements ActionListener {
+public class DeleteModelListener implements ActionListener {
   private final GuiManager guiManager;
-  
-  public DeleteRecordListener(final GuiManager guiManager) {
+
+  public DeleteModelListener(final GuiManager guiManager) {
     super();
     this.guiManager = guiManager;
   }
-  
+
   @Override
   public void actionPerformed(final ActionEvent event) {
-    int selectedRecord = guiManager.getRepairRecordsTable().getSelectedRow();
-    if (selectedRecord == -1) {
+    final int selectedRow = guiManager.getModelsFrame().getRepairPeriodsTable().getSelectedRow();
+    if (selectedRow == -1) {
       return;
     }
     
@@ -31,32 +31,23 @@ public class DeleteRecordListener implements ActionListener {
       // when a row is deleted while it`s cell is in editing state.
     }
     
-    final int[] deletedRows = new int[2];
-    if (selectedRecord % 2 == 0) {
-      deletedRows[0] = selectedRecord;
-      deletedRows[1] = selectedRecord + 1;
-      selectedRecord /= 2;
-    } else {
-      deletedRows[0] = selectedRecord - 1;
-      deletedRows[1] = selectedRecord;
-      selectedRecord = --selectedRecord / 2;
-    }
-    
-    final int actualRowId = guiManager.getDbManager().getIdByOrdinalNumber(selectedRecord);
-    final boolean wasDeleted = guiManager.getDbManager().deleteRepairRecord(actualRowId);
+    final String modelName =
+        (String) guiManager.getModelsFrame().getRepairPeriodsTable().getValueAt(selectedRow, 0);
+    final boolean wasDeleted = guiManager.getDbManager().deleteRepairPeriods(modelName);
     
     if (wasDeleted) {
-      final TableModel tm = guiManager.getRepairRecordsTable().getModel();
+      guiManager.rebuildNewRecordSubmenu();
+      final TableModel tm = guiManager.getModelsFrame().getRepairPeriodsTable().getModel();
       if (tm instanceof AbstractTableModel) {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;
-        recordsModel.fireTableRowsDeleted(deletedRows[0], deletedRows[1]);
+        recordsModel.fireTableRowsDeleted(selectedRow, selectedRow);
         
         if (recordsModel.getRowCount() > 0) {
-          guiManager.getRepairRecordsTable()
-          .setRowSelectionInterval(deletedRows[0] - 2, deletedRows[0] - 2);
+          guiManager.getModelsFrame()
+              .getRepairPeriodsTable()
+              .setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
         }
       }
-
     } else {
       JOptionPane.showMessageDialog(
           guiManager.getMainFrame(),
@@ -66,5 +57,4 @@ public class DeleteRecordListener implements ActionListener {
           );
     }
   }
-
 }
