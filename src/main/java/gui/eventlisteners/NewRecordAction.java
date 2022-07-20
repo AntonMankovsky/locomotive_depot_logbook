@@ -45,9 +45,12 @@ public class NewRecordAction extends AbstractAction {
       final TableModel tm = guiManager.getRepairRecordsTable().getModel();
       if (tm instanceof AbstractTableModel) {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;
-        final int newNumberOfRowsInGuiTable = guiManager.getDbManager().getRecordsCount() * 2;
+        final int newNumberOfRowsInGuiTable = recordsModel.getRowCount();
         recordsModel.fireTableRowsInserted(
             newNumberOfRowsInGuiTable - 2, newNumberOfRowsInGuiTable - 1 );
+        
+        guiManager.getRepairRecordsTable()
+            .setRowSelectionInterval(newNumberOfRowsInGuiTable - 2, newNumberOfRowsInGuiTable - 2);
       }
     } else {
       JOptionPane.showMessageDialog(

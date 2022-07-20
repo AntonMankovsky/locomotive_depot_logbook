@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.comparator.Comparators;
 
 import exceptions.IdAlreadyExistsException;
+import gui.ModelNamesComparator;
 
 @Service
 @Profile("SqliteDb")
@@ -243,8 +244,10 @@ public class DbManagerSqliteImp implements DbManager {
 
   @Override
   public String[] getAllModelNames() {
-    final Set<String> names = repairPeriodsTableData.keySet();
-    return names.toArray(new String[names.size()]);
+    final Set<String> namesSet = repairPeriodsTableData.keySet();
+    final String[] names = namesSet.toArray(new String[namesSet.size()]);
+    Arrays.sort(names, new ModelNamesComparator());
+    return names;
   }
   
 // ====================================== Utility methods ======================================

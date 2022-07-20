@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 
 import dbapi.DbManager;
 import gui.eventlisteners.NewModelListener;
@@ -48,7 +49,7 @@ public class ModelsFrame extends JFrame {
     modelMenu = new JMenu("Действия");
     
     JMenuItem tempItem = new JMenuItem("Новая модель");
-    tempItem.addActionListener(new NewModelListener(dbManager));
+    tempItem.addActionListener(new NewModelListener(guiManager));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
     modelMenu.add(tempItem);
     
@@ -66,11 +67,12 @@ public class ModelsFrame extends JFrame {
   }
   
   private void buildRepairPeriodsTable() {
-    repairPeriodsTable = new JTable(new RepairPeriodsTableModel());
+    repairPeriodsTable = new JTable(new RepairPeriodsTableModel(dbManager));
     repairPeriodsTable.setPreferredScrollableViewportSize(
         new Dimension(modelFrameWidth, modelFrameHeight));
     repairPeriodsTable.setFillsViewportHeight(true);
     repairPeriodsTable.getTableHeader().setReorderingAllowed(false);
+    repairPeriodsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
   }
   
   private void buildRepairPeriodsTablePane() {
@@ -86,6 +88,10 @@ public class ModelsFrame extends JFrame {
     setJMenuBar(modelMenuBar);
     setContentPane(repairPeriodsTablePane);
     setMinimumSize(new Dimension((int) (modelFrameWidth * 0.25), 0));
+  }
+  
+  public JTable getRepairPeriodsTable() {
+    return repairPeriodsTable;
   }
   
   @Override

@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -29,7 +31,7 @@ public class GuiManager {
   private int mainFrameWidth;
   private int mainFrameHeight;
   private JFrame mainFrame;
-  private JFrame modelsFrame;
+  private ModelsFrame modelsFrame;
   private JMenuBar mainMenuBar;
   private JMenu mainMenu;
   private JMenu newRecordSubmenu;
@@ -65,12 +67,9 @@ public class GuiManager {
   private void buildNewRecordSubmenu() {
     newRecordSubmenu = new JMenu("Новая запись");
     String[] modelNames = dbManager.getAllModelNames();
-    JMenuItem subMenuItem;
     for (String model : modelNames) {
-      subMenuItem = new JMenuItem(new NewRecordAction(model, this));
-      newRecordSubmenu.add(subMenuItem);
+      newRecordSubmenu.add(new JMenuItem(new NewRecordAction(model, this)));
     }
-    
   }
   
   private void buildMainMenu() {
@@ -150,10 +149,14 @@ public class GuiManager {
     return mainFrameHeight;
   }
   
-  public JFrame getModelsFrame() {
+  public ModelsFrame getModelsFrame() {
     return modelsFrame;
   }
-
+  
+  public JMenu getNewRecordSubmenu() {
+    return newRecordSubmenu;
+  }
+  
   @Override
   public String toString() {
     return "GuiManager - the object for setting up and run application GUI.";

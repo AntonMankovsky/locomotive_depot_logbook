@@ -49,10 +49,11 @@ public class DeleteRecordListener implements ActionListener {
       if (tm instanceof AbstractTableModel) {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;
         recordsModel.fireTableRowsDeleted(deletedRows[0], deletedRows[1]);
-      }
-      if (guiManager.getRepairRecordsTable().getRowCount() > 0) {
-        guiManager.getRepairRecordsTable()
-        .setRowSelectionInterval(deletedRows[0] - 1, deletedRows[0] - 1);
+        
+        if (recordsModel.getRowCount() > 0) {
+          guiManager.getRepairRecordsTable()
+          .setRowSelectionInterval(deletedRows[0] - 2, deletedRows[0] - 2);
+        }
       }
 
     } else {
