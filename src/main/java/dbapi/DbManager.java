@@ -28,7 +28,7 @@ public abstract interface DbManager {
   public abstract Map<Integer, List<String>> getAllRepairRecords();
   
   /**
-   * Create new row in repair records table. 
+   * Creates new row in repair records table. 
    * <p>
    * @param rowToInsert represents new repair record for database. 
    * Locomotive model and number (indices 0 and 1) could not be {@code NULL} or empty string.
@@ -46,7 +46,7 @@ public abstract interface DbManager {
   public abstract boolean setRepairRecordCell(int rowId, int columnIndex, String value);
   
   /**
-   * Delete row from repair record table.
+   * Deletes row from repair record table.
    * @param rowId to delete
    * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
@@ -81,17 +81,13 @@ public abstract interface DbManager {
   
 /**
  * Returns all data from repair periods table.
- * <p>
- * The table is meant to be used rarely so it should build GUI components and load data only when
- * user opens Model Frame.
- * @param wasInitialized for lazy loading
  * @return map with model names as keys and other columns in list of integers as values from
  * repair periods database table.
  */
   public abstract Map<String, List<Integer>> getAllRepairPeriodData();
   
   /**
-   * Create new row in repair periods table.
+   * Creates new row in repair periods table.
    * <p>
    * @param modelName unique identifier of model in repair periods table
    * @param repairPeriods in list for all possible repair types
@@ -110,7 +106,7 @@ public abstract interface DbManager {
   public abstract boolean setRepairPeriodCell(String modelName, int columnIndex, int value);
   
   /**
-   * Delete rows from repair periods table.
+   * Deletes rows from repair periods table.
    * @param rowId array of rows that should be deleted
    * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
@@ -121,4 +117,31 @@ public abstract interface DbManager {
    * @return unique model names
    */
   public abstract String[] getAllModelNames();
+  
+  // Methods for records archive table
+  
+  /**
+   * Returns all data from records archive table.
+   * <p>
+   * The table is meant to be used rarely so it should build GUI components and load data only when
+   * user opens Archive Frame.
+   * @return list of rows from records archive database table.
+   */
+    public abstract List<List<String>> getAllRecordsArchiveData();
+  
+  /**
+   * Creates new row in records archive table. 
+   * <p>
+   * Method suppose to be called in deleteRepairRecord method, cause this table is meant to
+   * contain only repair records that was deleted from repair_records table.
+   * @param rowToInsert represents new archive record for database. 
+   */
+  public abstract void insertNewArchiveRecord(List<String> rowToInsert);
+  
+  /**
+   * Deletes all records from records_archive table.
+   * @return {@code false} if operation fails and {@code true} if operation succeeds
+   */
+  public abstract boolean clearArchive();
+  
 }

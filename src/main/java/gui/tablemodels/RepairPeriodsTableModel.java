@@ -1,4 +1,4 @@
-package gui;
+package gui.tablemodels;
 
 
 import javax.swing.JOptionPane;
@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import datavalidation.InputValidator;
 import dbapi.DbManager;
+import gui.GuiManager;
 
 public class RepairPeriodsTableModel extends AbstractTableModel {
   private static final String[] COLUMN_NAMES = {

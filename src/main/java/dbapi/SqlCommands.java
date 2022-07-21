@@ -79,5 +79,47 @@ public class SqlCommands {
       + "    medium_repair,\n"
       + "    overhaul\n"
       + "    ) VALUES (?, ?, ?, ?, ?, ?, ?);";
-}
+  
+  /**
+   * Select all rows and columns (except id) from archive table.
+   */
+  public static final String AT_ALL_DATA = "SELECT\n"
+      + "    loco_model_name,\n"
+      + "    loco_number,\n"
+      + "    last_three_maintenance,\n"
+      + "    next_three_maintenance,\n"
+      + "    last_three_current_repair,\n"
+      + "    next_three_current_repair,\n"
+      + "    last_two_current_repair,\n"
+      + "    next_two_current_repair,\n"
+      + "    last_one_current_repair,\n"
+      + "    next_one_current_repair,\n"
+      + "    last_medium_repair,\n"
+      + "    next_medium_repair,\n"
+      + "    last_overhaul,\n"
+      + "    next_overhaul,\n"
+      + "    notes\n"
+      + "    FROM records_archive\n;";
+  
+  /**
+   * Insert new row into repair_records table.
+   */
+  public static final String AT_INSERT_ROW = "INSERT INTO records_archive (\n"
+      + "    loco_model_name,\n"
+      + "    loco_number,\n"
+      + "    last_three_maintenance,\n"
+      + "    next_three_maintenance,\n"
+      + "    last_three_current_repair,\n"
+      + "    next_three_current_repair,\n"
+      + "    last_two_current_repair,\n"
+      + "    next_two_current_repair,\n"
+      + "    last_one_current_repair,\n"
+      + "    next_one_current_repair,\n"
+      + "    last_medium_repair,\n"
+      + "    next_medium_repair,\n"
+      + "    last_overhaul,\n"
+      + "    next_overhaul,\n"
+      + "    notes\n"
+      + "    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
+}

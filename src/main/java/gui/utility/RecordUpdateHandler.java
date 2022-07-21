@@ -1,10 +1,11 @@
-package gui;
+package gui.utility;
 
 import javax.swing.JOptionPane;
 
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import dbapi.DbManager;
+import gui.GuiManager;
 
 /**
  * Provides appropriate reaction to changes in repair records table model. 

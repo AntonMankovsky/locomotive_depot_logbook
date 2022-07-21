@@ -5,9 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,20 +15,21 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.util.comparator.Comparators;
 
 import exceptions.IdAlreadyExistsException;
-import gui.ModelNamesComparator;
+import gui.utility.ModelNamesComparator;
 
 @Service
 @Profile("SqliteDb")
 public class DbManagerSqliteImp implements DbManager {
   private static final Logger logger = LogManager.getLogger();
+  private SqliteConnection connection;
   private Map<String, List<Integer>> repairPeriodsTableData;
   private Map<Integer, List<String>> repairRecordsTableData;
   private Map<Integer, Integer> orderedId;
   private int maxId;
-  private SqliteConnection connection;
+  private List<List<String>> recordsArchiveTableData;
+  private boolean archiveInitialized;
   
   /**
    * Gives methods for working with database.
@@ -41,12 +40,16 @@ public class DbManagerSqliteImp implements DbManager {
   @Autowired
   public DbManagerSqliteImp(final SqliteConnection connection) {
     this.connection = connection;
+    clearUnusedDiskSpace();
+    
     orderedId = new HashMap<>();
     repairRecordsTableData = loadDataFromRepairRecordsTable();
     repairPeriodsTableData = loadDataFromRepairPeriodsTable();
+    recordsArchiveTableData = new ArrayList<>(0);
+    archiveInitialized = false;
   }
   
-//========================== Methods for repair records table ==========================
+  //========================== Methods for repair records table ==========================
 
   /**
    * The method provides convenient access to up-to-date information about the data and should not 
@@ -66,17 +69,17 @@ public class DbManagerSqliteImp implements DbManager {
       }
       insertRow.executeUpdate();
       logger.info("Row was succesfully inserted in repair records database table: " + rowToInsert);
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       logger.error("Row was not inserted in repair records table: " + rowToInsert
-          + " Error: " + e.getMessage());
-      e.printStackTrace();
+          + " Error: " + err.getMessage());
+      err.printStackTrace();
       return false;
     }
     try {
       updateRepairRecordsMapWithLastInsertedRow(rowToInsert);
-    } catch (SQLException | IdAlreadyExistsException e) {
+    } catch (SQLException | IdAlreadyExistsException err) {
       rebuildRepairRecordsTableData();
-      // TODO: update GUI representation of data (although this is extremely rare case)
+      // TODO: update GUI representation of data (although this is very unrealistic case)
     }
     return true;
   }
@@ -89,10 +92,10 @@ public class DbManagerSqliteImp implements DbManager {
         "UPDATE repair_records SET " 
         + IndexToColumnNameTranslator.translateForRepairRecordsTable(columnIndex)
         + " = '" + value + "' WHERE id = " + rowId;
-    } catch (final IllegalArgumentException e) {
+    } catch (final IllegalArgumentException err) {
       logger.error("Failed to prepare update cell SQL statement: " 
           + "cannot convert given index to column name: " 
-          + e.getMessage());
+          + err.getMessage());
       return false;
     }
     
@@ -104,10 +107,10 @@ public class DbManagerSqliteImp implements DbManager {
           + rowId + "; column index=" + columnIndex + "; new value=" + value;
       logger.info(logString);
       return true;
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       logger.error("Failed to update " + rowId + " row " + columnIndex + " column with value " 
-          + value + ": " + e.getMessage());
-      e.printStackTrace();
+          + value + ": " + err.getMessage());
+      err.printStackTrace();
       return false;
     }
   }
@@ -118,14 +121,15 @@ public class DbManagerSqliteImp implements DbManager {
     try (final PreparedStatement deleteRow =
         connection.getConnection().prepareStatement(sqlStatement)) {
       deleteRow.executeUpdate();
+      insertNewArchiveRecord(repairRecordsTableData.get(rowId));
       repairRecordsTableData.remove(rowId);
       reorderIdOnRowDeletion(rowId);
       logger.info("Row with id=" + rowId + " was succesfully deleted from repair_records table");
       return true;
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       logger.error("Failed to delete row with id=" + rowId + " from repair_records table: "
-          + e.getMessage());
-      e.printStackTrace();
+          + err.getMessage());
+      err.printStackTrace();
       return false;
     }
   }
@@ -176,10 +180,10 @@ public class DbManagerSqliteImp implements DbManager {
             + modelName + ":" + repairPeriods;
       logger.info(logString);
       return true;
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       logger.error("Row was not inserted in repair periods table: " + repairPeriods
-          + " Error: " + e.getMessage());
-      e.printStackTrace();
+          + " Error: " + err.getMessage());
+      err.printStackTrace();
       return false;
     }
   }
@@ -208,10 +212,10 @@ public class DbManagerSqliteImp implements DbManager {
           + modelName + "; repair period index=" + columnIndex + "; new value=" + value;
       logger.info(logString);
       return true;
-    } catch (final Exception e) {
+    } catch (final Exception err) {
       logger.error("Failed to update " + modelName + " row " + columnIndex + " column with value " 
-          + value + ": " + e.getMessage());
-      e.printStackTrace();
+          + value + ": " + err.getMessage());
+      err.printStackTrace();
       return false;
     }
   }
@@ -227,11 +231,11 @@ public class DbManagerSqliteImp implements DbManager {
         logger.info(
             "Row with model " + modelName + " was succesfully deleted from repair_periods table");
         return true;
-      } catch (final SQLException e) {
+      } catch (final SQLException err) {
         logger.error(
                 "Failed to delete row with model " + modelName + " from repair_periods table: "
-                + e.getMessage());
-        e.printStackTrace();
+                + err.getMessage());
+        err.printStackTrace();
         return false;
       }
   }
@@ -242,6 +246,49 @@ public class DbManagerSqliteImp implements DbManager {
     final String[] names = namesSet.toArray(new String[namesSet.size()]);
     Arrays.sort(names, new ModelNamesComparator());
     return names;
+  }
+  
+  //========================== Methods for records archive table ==========================
+  
+  public List<List<String>> getAllRecordsArchiveData() {
+    if (!archiveInitialized) {
+      recordsArchiveTableData = loadDataFromRecordsArchiveTable();
+      archiveInitialized = true;
+    }
+    return recordsArchiveTableData;
+  }
+  
+  public void insertNewArchiveRecord(final List<String> rowToInsert) {
+    try (final PreparedStatement insertRow =
+          connection.getConnection().prepareStatement(SqlCommands.AT_INSERT_ROW)) {
+      for (int j = 0; j < rowToInsert.size(); j++) {
+        insertRow.setString(j + 1, rowToInsert.get(j));
+      }
+      insertRow.executeUpdate();
+      logger.info(
+          "Row was succesfully inserted in records archive database table: " + rowToInsert);
+      if (archiveInitialized) {
+        recordsArchiveTableData.add(rowToInsert);
+      }
+    } catch (final SQLException err) {
+      logger.error("Row was not inserted in records_archive table: " + rowToInsert
+          + " Error: " + err.getMessage());
+      err.printStackTrace();
+    }
+  }
+  
+  public boolean clearArchive() {
+    try (final PreparedStatement clearTable =
+          connection.getConnection().prepareStatement("DELETE FROM records_archive;")) {
+      clearTable.executeUpdate();
+      recordsArchiveTableData.clear();
+      logger.info("All data was deleted from archive table");
+      return true;
+    } catch (final SQLException err) {
+      logger.error("Failed to delete all data from repair_periods table: " + err.getMessage());
+      err.printStackTrace();
+      return false;
+    }
   }
   
 // ====================================== Utility methods ======================================
@@ -265,12 +312,12 @@ public class DbManagerSqliteImp implements DbManager {
       }
       
       logger.info("Successfully loaded data from repair periods table: " + data);
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       final String logString = "Unable to establish connection with database.\n"
           + "SQLException was occured at attempt to load data from repair periods table: "
-          + e.getMessage();
+          + err.getMessage();
       logger.fatal(logString);
-      e.printStackTrace();
+      err.printStackTrace();
     }
     return data;
   }
@@ -304,12 +351,12 @@ public class DbManagerSqliteImp implements DbManager {
       }
       logger.info(
           "Successfully loaded data from repair records table (" + data.size() + " rows total).");
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       final String logString = "Unable to establish connection with database.\n"
           + "SQLException was occured at attempt to initialize DbManager instance: \n"
           + "can`t load data from repair records table.";
       logger.fatal(logString);
-      e.printStackTrace();
+      err.printStackTrace();
     }
     
     return data;
@@ -340,12 +387,49 @@ public class DbManagerSqliteImp implements DbManager {
         orderedId.put(maxId++, id);
         logger.info("Internal data structure was succesfully updated: " + id + ":" + row);
       }
-    } catch (final SQLException e) {
+    } catch (final SQLException err) {
       final String logString = "SQLException was occured at attempt to update repair records map: "
-          + e.getMessage();
+          + err.getMessage();
       logger.warn(logString);
-      throw e;
+      throw err;
     }
+  }
+  
+  private List<List<String>> loadDataFromRecordsArchiveTable() {
+    final List<List<String>> data = new ArrayList<>();
+    try (final PreparedStatement fetchData =
+        connection.getConnection().prepareStatement(SqlCommands.AT_ALL_DATA)) {
+      final ResultSet resultSet = fetchData.executeQuery();
+      while (resultSet.next()) {
+        final List<String> archiveRecords = new ArrayList<>(15);
+        archiveRecords.add(resultSet.getString("loco_model_name"));
+        archiveRecords.add(resultSet.getString("loco_number"));
+        archiveRecords.add(resultSet.getString("last_three_maintenance"));
+        archiveRecords.add(resultSet.getString("next_three_maintenance"));
+        archiveRecords.add(resultSet.getString("last_one_current_repair"));
+        archiveRecords.add(resultSet.getString("next_one_current_repair"));
+        archiveRecords.add(resultSet.getString("last_two_current_repair"));
+        archiveRecords.add(resultSet.getString("next_two_current_repair"));
+        archiveRecords.add(resultSet.getString("last_three_current_repair"));
+        archiveRecords.add(resultSet.getString("next_three_current_repair"));
+        archiveRecords.add(resultSet.getString("last_medium_repair"));
+        archiveRecords.add(resultSet.getString("next_medium_repair"));
+        archiveRecords.add(resultSet.getString("last_overhaul"));
+        archiveRecords.add(resultSet.getString("next_overhaul"));
+        archiveRecords.add(resultSet.getString("notes"));
+        data.add(archiveRecords);
+      }
+      logger.info(
+          "Successfully loaded data from records archive table (" + data.size() + " rows total).");
+    } catch (final SQLException err) {
+      final String logString = "Unable to establish connection with database.\n"
+          + "SQLException was occured at attempt to initialize DbManager instance: \n"
+          + "can`t load data from records archive table.";
+      logger.error(logString);
+      err.printStackTrace();
+    }
+    
+    return data;
   }
   
   /**
@@ -355,6 +439,24 @@ public class DbManagerSqliteImp implements DbManager {
   private void rebuildRepairRecordsTableData() {
     repairRecordsTableData = loadDataFromRepairRecordsTable();
     logger.info("Data structure with repair records data was updated with latest database data.");
+  }
+  
+  /**
+   * Cleans up unused disk space that remains after previous application sessions.
+   * <p>
+   * Running VACUUM to rebuild the database reclaims unused space and
+   * reduces the size of the database file. 
+   * @see <a href="https://www.sqlite.org/lang_vacuum.html">SQLite VACUUM</a>
+   */
+  private void clearUnusedDiskSpace() {
+    try (final PreparedStatement vacuum =
+        connection.getConnection().prepareStatement("VACUUM;")) {
+      vacuum.executeUpdate();
+      logger.info("Database was successfully vacuumed.");
+    } catch (final SQLException err) {
+      logger.error("Failed to vacuum database: " + err.getMessage());
+      err.printStackTrace();
+    }
   }
   
   @Override

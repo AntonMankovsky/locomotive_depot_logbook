@@ -1,12 +1,13 @@
-package gui;
+package gui.tablemodels;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import dbapi.DbManager;
+import gui.GuiManager;
+import gui.utility.RecordUpdateHandler;
 
 /**
  * Provides methods for core operations with repair records table.

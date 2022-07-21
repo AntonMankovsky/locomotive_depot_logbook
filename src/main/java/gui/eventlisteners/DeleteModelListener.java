@@ -12,6 +12,9 @@ import javax.swing.table.TableModel;
 import dbapi.DbManager;
 import gui.GuiManager;
 
+/**
+ * Reacts to delete model command from user.
+ */
 public class DeleteModelListener implements ActionListener {
   private final GuiManager guiManager;
 
@@ -51,6 +54,7 @@ public class DeleteModelListener implements ActionListener {
     
     if (wasDeleted) {
       guiManager.rebuildNewRecordSubmenu();
+      
       final TableModel tm = guiManager.getModelsFrame().getRepairPeriodsTable().getModel();
       if (tm instanceof AbstractTableModel) {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;

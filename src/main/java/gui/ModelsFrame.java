@@ -18,7 +18,11 @@ import javax.swing.ListSelectionModel;
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
+import gui.tablemodels.RepairPeriodsTableModel;
 
+/**
+ * Manages frame with repair periods table.
+ */
 public class ModelsFrame extends JFrame {
   private final DbManager dbManager;
   private final GuiManager guiManager;
@@ -51,7 +55,7 @@ public class ModelsFrame extends JFrame {
     
     JMenuItem tempItem = new JMenuItem("Новая модель");
     tempItem.addActionListener(new NewModelListener(guiManager));
-    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     modelMenu.add(tempItem);
     
     modelMenu.addSeparator();
@@ -104,26 +108,6 @@ public class ModelsFrame extends JFrame {
   
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("ModelsFrame [dbManager=");
-    builder.append(dbManager);
-    builder.append(", guiManager=");
-    builder.append(guiManager);
-    builder.append(", modelFrameWidth=");
-    builder.append(modelFrameWidth);
-    builder.append(", modelFrameHeight=");
-    builder.append(modelFrameHeight);
-    builder.append(", modelMenuBar=");
-    builder.append(modelMenuBar);
-    builder.append(", modelMenu=");
-    builder.append(modelMenu);
-    builder.append(", repairPeriodsTablePane=");
-    builder.append(repairPeriodsTablePane);
-    builder.append(", repairPeriodsTable=");
-    builder.append(repairPeriodsTable);
-    builder.append("]");
-    return builder.toString();
+    return "The object represents models frame of applciation";
   }
 }
-
-

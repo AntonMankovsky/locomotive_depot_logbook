@@ -1,18 +1,12 @@
 package gui;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +14,7 @@ import org.springframework.stereotype.Service;
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteRecordListener;
 import gui.eventlisteners.NewRecordAction;
-
+import gui.tablemodels.RepairRecordsTableModel;
 
 /**
  * Creates, displays and provides access to application GUI.
@@ -32,6 +26,7 @@ public class GuiManager {
   private int mainFrameHeight;
   private JFrame mainFrame;
   private ModelsFrame modelsFrame;
+  private ArchiveFrame archiveFrame;
   private JMenuBar mainMenuBar;
   private JMenu mainMenu;
   private JMenu newRecordSubmenu;
@@ -55,6 +50,7 @@ public class GuiManager {
     mainFrameWidth = (int) (screenSize.width * 0.60);
     mainFrameHeight = screenSize.height / 2;
     modelsFrame = new ModelsFrame(this, dbManager);
+    archiveFrame = new ArchiveFrame(this, dbManager);
     
     buildNewRecordSubmenu();
     buildMainMenu();
@@ -76,9 +72,16 @@ public class GuiManager {
     mainMenu = new JMenu("Меню");
     mainMenu.add(newRecordSubmenu);
     
-    JMenuItem tempItem = new JMenuItem("Открыть таблицу моделей");
-    tempItem.addActionListener(e -> modelsFrame.setVisible(true));
+    mainMenu.addSeparator();
+    
+    JMenuItem tempItem = new JMenuItem("Архив");
+    tempItem.addActionListener(e -> archiveFrame.setVisible(true));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+    mainMenu.add(tempItem);
+    
+    tempItem = new JMenuItem("Таблица моделей");
+    tempItem.addActionListener(e -> modelsFrame.setVisible(true));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
     mainMenu.add(tempItem);
     
     mainMenu.addSeparator();
@@ -165,6 +168,10 @@ public class GuiManager {
   
   public ModelsFrame getModelsFrame() {
     return modelsFrame;
+  }
+  
+  public ArchiveFrame getArchiveFrame() {
+    return archiveFrame;
   }
   
   public JMenu getNewRecordSubmenu() {

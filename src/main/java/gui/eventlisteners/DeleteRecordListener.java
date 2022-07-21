@@ -46,6 +46,11 @@ public class DeleteRecordListener implements ActionListener {
     final boolean wasDeleted = guiManager.getDbManager().deleteRepairRecord(actualRowId);
     
     if (wasDeleted) {
+      
+      if (guiManager.getArchiveFrame().isInitialized()) {
+        fireArchiveTableRowInserted();
+      }
+      
       final TableModel tm = guiManager.getRepairRecordsTable().getModel();
       if (tm instanceof AbstractTableModel) {
         final AbstractTableModel recordsModel = (AbstractTableModel) tm;
@@ -64,6 +69,15 @@ public class DeleteRecordListener implements ActionListener {
           "Ошибка при удалении записи",
           JOptionPane.ERROR_MESSAGE
           );
+    }
+  }
+  
+  private void fireArchiveTableRowInserted() {
+    final TableModel tm = guiManager.getArchiveFrame().getRecordsArchiveTable().getModel();
+    if (tm instanceof AbstractTableModel) {
+      final AbstractTableModel archiveModel = (AbstractTableModel) tm;
+      final int rows = archiveModel.getRowCount();
+      archiveModel.fireTableRowsInserted(rows - 2, rows - 1);
     }
   }
 
