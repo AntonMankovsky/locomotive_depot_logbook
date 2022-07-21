@@ -2,11 +2,14 @@ package gui.eventlisteners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import dbapi.DbManager;
 import gui.GuiManager;
 
 public class DeleteModelListener implements ActionListener {
@@ -24,6 +27,19 @@ public class DeleteModelListener implements ActionListener {
       return;
     }
     
+    final String modelName =
+        (String) guiManager.getModelsFrame().getRepairPeriodsTable().getValueAt(selectedRow, 0);
+    
+    if (isModelInUse(modelName)) {
+      JOptionPane.showMessageDialog(
+          guiManager.getMainFrame(),
+          "Модель " + modelName + " используется в журнале учёта ремонтов",
+          "Ошибка при удалении записи",
+          JOptionPane.ERROR_MESSAGE
+          );
+      return;
+    }
+    
     try {
     guiManager.getModelsFrame().getRepairPeriodsTable().getCellEditor().cancelCellEditing();
     } catch (final NullPointerException e) {
@@ -31,8 +47,6 @@ public class DeleteModelListener implements ActionListener {
       // when a row is deleted while it`s cell is in editing state.
     }
     
-    final String modelName =
-        (String) guiManager.getModelsFrame().getRepairPeriodsTable().getValueAt(selectedRow, 0);
     final boolean wasDeleted = guiManager.getDbManager().deleteRepairPeriods(modelName);
     
     if (wasDeleted) {
@@ -50,11 +64,25 @@ public class DeleteModelListener implements ActionListener {
       }
     } else {
       JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
+          guiManager.getModelsFrame(),
           "Не удалось удалить выбранную запись",
           "Ошибка при удалении записи",
           JOptionPane.ERROR_MESSAGE
           );
     }
+  }
+  
+  private boolean isModelInUse(final String modelName) {
+    final DbManager dbManager = guiManager.getDbManager();
+    final Map<Integer, List<String>> recordsData = dbManager.getAllRepairRecords();
+    for (int j = 0; j < dbManager.getRecordsCount(); j++) {
+      if (recordsData
+                .get(dbManager.getIdByOrdinalNumber(j))
+                .get(0)
+                .equals(modelName)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
