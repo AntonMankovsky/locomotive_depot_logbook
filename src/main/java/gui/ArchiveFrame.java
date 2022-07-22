@@ -33,6 +33,14 @@ public class ArchiveFrame extends JFrame {
   private JPanel recordsArchiveTablePane;
   private boolean initialized;
   
+  /**
+   * Builds components for JFrame for archive table and registers listeners for them.
+   * <p>
+   * Although this object can be created on application start for other GUI needs,
+   * it will use lazy GUI and data initialization.
+   * @param guiManager the core GUI class of application with important GUI fields and methods
+   * @param dbManager class that contains database API
+   */
   public ArchiveFrame(final GuiManager guiManager, final DbManager dbManager) {
     super();
     this.guiManager = guiManager;
@@ -40,6 +48,9 @@ public class ArchiveFrame extends JFrame {
     initialized = false;
   }
   
+  /**
+   * Initializes GUI and data on the first call.
+   */
   @Override
   public void setVisible(final boolean bool) {
     if (!initialized) {
@@ -104,10 +115,18 @@ public class ArchiveFrame extends JFrame {
     setMinimumSize(new Dimension((int) (archiveFrameWidth * 0.40), 0));
   }
   
+  /**
+   * Provides access to JTable representing database table with archive repair records.
+   * @return JTable that represents database table with archived records
+   */
   public JTable getRecordsArchiveTable() {
     return recordsArchiveTable;
   }
   
+  /**
+   * Tells whether or not frame was initialized
+   * @return {@code true} if frame already has been initialized (i.e. has created it`s own GUI)
+   */
   public boolean isInitialized() {
     return initialized;
   }

@@ -63,7 +63,7 @@ public class NewModelListener implements ActionListener {
   }
   
   private String getUserInput() {
-    return (String) JOptionPane.showInputDialog(
+    return JOptionPane.showInputDialog(
         guiManager.getModelsFrame(),
         "Название модели",
         "Новая модель",

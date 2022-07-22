@@ -63,7 +63,7 @@ public class NewRecordAction extends AbstractAction {
   }
   
   private String getUserInput() {
-    return (String) JOptionPane.showInputDialog(
+    return JOptionPane.showInputDialog(
         guiManager.getMainFrame(),
         "Номер тепловоза",
         (String) getValue(Action.NAME),

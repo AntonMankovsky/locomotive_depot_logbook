@@ -35,7 +35,8 @@ public class GuiManager {
   
   /**
    * Builds all components for GUI and registers listeners for them. Displays GUI on screen.
-   * @param dbManager that will be used by listeners that handle events.
+   * @param dbManager that contains database API, that will be used by table models and listeners
+   * that handle events.
    */
   @Autowired
   public GuiManager(final DbManager dbManager) {
@@ -44,6 +45,9 @@ public class GuiManager {
     createAndShowGui();
   }
   
+  /**
+   * Defines correct order of variables initialization and GUI build methods.
+   */
   private void createAndShowGui() {
     final Toolkit kit = Toolkit.getDefaultToolkit();
     final Dimension screenSize = kit.getScreenSize();

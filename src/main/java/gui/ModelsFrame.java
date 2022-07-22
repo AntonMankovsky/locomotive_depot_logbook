@@ -33,6 +33,11 @@ public class ModelsFrame extends JFrame {
   private JTable repairPeriodsTable;
   private JPanel repairPeriodsTablePane;
   
+  /**
+   * Builds components for JFrame for models table and registers listeners for them.
+   * @param guiManager the core GUI class of application with important GUI fields and methods
+   * @param dbManager class that contains database API
+   */
   public ModelsFrame(final GuiManager guiManager, final DbManager dbManager) {
     super();
     this.guiManager = guiManager;
@@ -40,6 +45,9 @@ public class ModelsFrame extends JFrame {
     createGui();
   }
   
+  /**
+   * Defines correct order of variables initialization and frame build methods.
+   */
   private void createGui() {
     modelFrameWidth = (int) (guiManager.getMainFrameWidth() * 0.75);
     modelFrameHeight = guiManager.getMainFrameHeight();
@@ -102,6 +110,10 @@ public class ModelsFrame extends JFrame {
     setMinimumSize(new Dimension((int) (modelFrameWidth * 0.25), 0));
   }
   
+  /**
+   * Provides access to JTable representing database table with repair periods.
+   * @return JTable that represents database table with models and their repair periods
+   */
   public JTable getRepairPeriodsTable() {
     return repairPeriodsTable;
   }
