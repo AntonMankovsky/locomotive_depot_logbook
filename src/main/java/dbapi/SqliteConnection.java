@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SqliteConnection {
-  private static final Path PATH = Paths.get(".", "src", "main", "resources", "db", "app.db");
+  private static final Path PATH = Paths.get(".", "app.db");
   private static final String CONNECTION_URL = "jdbc:sqlite:" + PATH;
   private Connection connection;
   
