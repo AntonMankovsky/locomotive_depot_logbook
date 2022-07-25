@@ -311,7 +311,8 @@ public class DbManagerSqliteImp implements DbManager {
         data.put(resultSet.getString("loco_model_name"), repairPeriods);
       }
       
-      logger.info("Successfully loaded data from repair periods table: " + data);
+      logger.info(
+          "Successfully loaded data from repair periods table (" + data.size() + " rows total).");
     } catch (final SQLException err) {
       final String logString = "Unable to establish connection with database.\n"
           + "SQLException was occured at attempt to load data from repair periods table: "

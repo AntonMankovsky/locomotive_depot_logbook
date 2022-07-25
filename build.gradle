@@ -5,10 +5,21 @@ buildscript {
 }
 
 plugins {
+	id 'application'
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id "org.flywaydb.flyway" version "8.5.10"
+	id 'edu.sc.seis.launch4j' version '2.5.3'
+}
+
+launch4j {
+  mainClassName = 'anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication'
+  icon = "${projectDir}/src/main/resources/locoicon.ico"
+}
+
+application {
+    mainClass = 'anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication'
 }
 
 flyway {
