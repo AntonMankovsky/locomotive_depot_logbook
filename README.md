@@ -6,7 +6,7 @@
 
 ## Содержание
 * [Установка на Windows](#установка-на-windows)
-* [Установка на GNU/Linux или Mac OS](#установка-на-gnulinux-или-mac-os)
+* [Установка на GNU/Linux](#установка-на-gnulinux)
 * [Работа с журналом](#работа-с-журналом-учёта)
 * [Версия](#версия)
 
@@ -32,16 +32,14 @@
 
 ---
 
-### Установка на GNU\/Linux или Mac OS
-1. Загрузите [zip архив для *Linux* или *Mac OS*](https://drive.google.com/file/d/13LxGeI0z-2IIihXTk8yiggBBA_AQ7e0C/view?usp=sharing)
+### Установка на GNU\/Linux
+1. Загрузите [zip архив для *Linux*](https://drive.google.com/file/d/1j4zpjsOQ2MFmXRjhzKdaYHjh_5l_9-qp/view?usp=sharing)
 2. Распакуйте содержимое архива в любую папку.
 3. В папке приложения пройдите в директорию **bin** и запустите из терминала сценарий командной оболочки:
 `./Depo_Logbook`
 
 
 > Примечание: для работы приложения требуется среда выполнения Java программ (*Java Runtime Environment*).
->
-> Для *Mac OS* загрузить и установить JRE можно пройдя по ссылке: [mac_install](https://www.java.com/ru/download/help/mac_install.html)
 >
 > Для Linux загрузить и установить JRE можно пройдя по ссылке: [linux_install](https://www.java.com/ru/download/help/linux_x64_install.html)
 >
