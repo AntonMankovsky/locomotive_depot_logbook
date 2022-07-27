@@ -21,6 +21,12 @@ CREATE TABLE IF NOT EXISTS repair_records(
 	last_overhaul TEXT,
 	next_overhaul TEXT,
 	
+	last_repair_type TEXT,
+	last_repair_date TEXT,
+	
+	required_repair_type TEXT,
+	required_repair_date TEXT,
+	
 	notes TEXT,
 	
 	FOREIGN KEY(loco_model_name) REFERENCES repair_periods(loco_model_name)

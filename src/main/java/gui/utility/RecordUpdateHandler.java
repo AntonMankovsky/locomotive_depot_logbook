@@ -27,7 +27,7 @@ public class RecordUpdateHandler {
       editRepairDateCase(value, rowIndex, colIndex);
     } else if (colIndex == 1) {
       editNumberCase(value, rowIndex);
-    } else if (colIndex == 8) {
+    } else if (colIndex == 10) {
       editNotesCase(value, rowIndex);
     } 
     
@@ -77,7 +77,7 @@ public class RecordUpdateHandler {
   
   private void editNotesCase(final String value, final int rowIndex) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
-    if (!dbManager.setRepairRecordCell(rowId, 14, value)) {
+    if (!dbManager.setRepairRecordCell(rowId, 18, value)) {
       notifyUserOnOperationFailure();
     }
   }

@@ -262,6 +262,12 @@ public class DbManagerSqliteImp implements DbManager {
     try (final PreparedStatement insertRow =
           connection.getConnection().prepareStatement(SqlCommands.AT_INSERT_ROW)) {
       for (int j = 0; j < rowToInsert.size(); j++) {
+        // After adding 4 new columns before 'notes' in repair_records table, archive insertion
+        // loop adjusted to skip those columns and jump from last_overhaul to notes
+        if (j == 14) {
+          insertRow.setString(15, rowToInsert.get(18));
+          break;
+        }
         insertRow.setString(j + 1, rowToInsert.get(j));
       }
       insertRow.executeUpdate();
@@ -330,7 +336,7 @@ public class DbManagerSqliteImp implements DbManager {
       final ResultSet resultSet = fetchData.executeQuery();
       maxId = 0;
       while (resultSet.next()) {
-        final List<String> repairRecords = new ArrayList<>(15);
+        final List<String> repairRecords = new ArrayList<>(19);
         repairRecords.add(resultSet.getString("loco_model_name"));
         repairRecords.add(resultSet.getString("loco_number"));
         repairRecords.add(validateString(resultSet.getString("last_three_maintenance")));
@@ -345,6 +351,10 @@ public class DbManagerSqliteImp implements DbManager {
         repairRecords.add(validateString(resultSet.getString("next_medium_repair")));
         repairRecords.add(validateString(resultSet.getString("last_overhaul")));
         repairRecords.add(validateString(resultSet.getString("next_overhaul")));
+        repairRecords.add(validateString(resultSet.getString("last_repair_type")));
+        repairRecords.add(validateString(resultSet.getString("last_repair_date")));
+        repairRecords.add(validateString(resultSet.getString("required_repair_type")));
+        repairRecords.add(validateString(resultSet.getString("required_repair_date")));
         repairRecords.add(validateString(resultSet.getString("notes")));
         data.put(resultSet.getInt("id"), repairRecords);
         

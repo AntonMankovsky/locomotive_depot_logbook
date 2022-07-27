@@ -14,11 +14,14 @@ public class IndexToColumnNameTranslator {
   private static final String NEXT_TWO_CURRENT_REPAIR = "next_two_current_repair";
   private static final String LAST_THREE_CURRENT_REPAIR = "last_three_current_repair";
   private static final String NEXT_THREE_CURRENT_REPAIR = "next_three_current_repair";
-
   private static final String LAST_MEDIUM_REPAIR = "last_medium_repair";
   private static final String NEXT_MEDIUM_REPAIR = "next_medium_repair";
   private static final String LAST_OVERHAUL = "last_overhaul";
   private static final String NEXT_OVERHAUL = "next_overhaul";
+  private static final String LAST_REPAIR_TYPE = "last_repair_type";
+  private static final String LAST_REPAIR_DATE = "last_repair_date";
+  private static final String REQUIRED_REPAIR_TYPE = "required_repair_type";
+  private static final String REQUIRED_REPAIR_DATE = "required_repair_date";
   private static final String NOTES = "notes";
   
   private static final String THREE_MAINTENANCE = "three_maintenance";
@@ -54,9 +57,13 @@ public class IndexToColumnNameTranslator {
     case 11:  return NEXT_MEDIUM_REPAIR;
     case 12:  return LAST_OVERHAUL;
     case 13:  return NEXT_OVERHAUL;
-    case 14:  return NOTES;
+    case 14:  return LAST_REPAIR_TYPE;
+    case 15:  return LAST_REPAIR_DATE;
+    case 16:  return REQUIRED_REPAIR_TYPE;
+    case 17:  return REQUIRED_REPAIR_DATE;
+    case 18:  return NOTES;
     default:
-      throw new IllegalArgumentException("Index " + index + " is out of bounds [0:14].");
+      throw new IllegalArgumentException("Index " + index + " is out of bounds [0:18].");
     }
   }
   

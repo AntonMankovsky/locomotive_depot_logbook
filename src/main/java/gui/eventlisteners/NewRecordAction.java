@@ -33,10 +33,10 @@ public class NewRecordAction extends AbstractAction {
       return;
     }
     
-    final List<String> newRow = new ArrayList<>(15);
+    final List<String> newRow = new ArrayList<>(19);
     newRow.add((String) getValue(Action.NAME));
     newRow.add(locoNumber);
-    for (int j = 2; j < 15; j++) {
+    for (int j = 2; j < 19; j++) {
       newRow.add("");
     }
     final boolean wasInserted = guiManager.getDbManager().insertNewRepairRecord(newRow);

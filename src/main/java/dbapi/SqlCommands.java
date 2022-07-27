@@ -34,6 +34,10 @@ public class SqlCommands {
       + "    repair_records.next_medium_repair,\n"
       + "    repair_records.last_overhaul,\n"
       + "    repair_records.next_overhaul,\n"
+      + "    repair_records.last_repair_type,\n"
+      + "    repair_records.last_repair_date,\n"
+      + "    repair_records.required_repair_type,\n"
+      + "    repair_records.required_repair_date,\n"
       + "    repair_records.notes\n"
       + "    FROM repair_records, repair_periods\n"
       + "    WHERE repair_periods.loco_model_name=repair_records.loco_model_name;";
@@ -64,8 +68,12 @@ public class SqlCommands {
       + "    next_medium_repair,\n"
       + "    last_overhaul,\n"
       + "    next_overhaul,\n"
+      + "    last_repair_type,\n"
+      + "    last_repair_date,\n"
+      + "    required_repair_type,\n"
+      + "    required_repair_date,\n"
       + "    notes\n"
-      + "    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+      + "    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
   
   /**
    * Insert new row into repair_periods table.

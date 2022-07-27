@@ -22,6 +22,8 @@ public class RepairRecordsTableModel extends AbstractTableModel {
                                                   "ТР-3",
                                                   "СР",
                                                   "КР",
+                                                  "Последний ремонт",
+                                                  "Требуемый ремонт",
                                                   "Примечания"
                                                   };
   private final DbManager dbManager;
@@ -51,12 +53,12 @@ public class RepairRecordsTableModel extends AbstractTableModel {
 
   @Override
   public int getColumnCount() {
-    return 9;
+    return 11;
   }
   
   @Override
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-    if (rowIndex % 2 != 0 || columnIndex == 0) {
+    if (rowIndex % 2 != 0 || columnIndex == 0 || columnIndex == 8 || columnIndex == 9) {
       return false;
     }
     return true;
@@ -85,9 +87,9 @@ public class RepairRecordsTableModel extends AbstractTableModel {
     final Map<Integer, List<String>> data = dbManager.getAllRepairRecords();
     if (columnIndex <= 1) {                                     // loco_model_name or loco_number
       result = data.get(rowId).get(columnIndex);
-    } else if (columnIndex == 8) {                              // notes
-      result = data.get(rowId).get(14);
-    } else {                                                    // last repairs
+    } else if (columnIndex == 10) {                              // notes
+      result = data.get(rowId).get(18);
+    } else {                                                    // last repairs and repair types
       final int requiredIndex = columnIndex * 2 - 2;
       result = data.get(rowId).get(requiredIndex);
     }
@@ -95,11 +97,11 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   }
   
   private String getCellValueForSecondaryRow(final int rowIndex, final int columnIndex) {
-    if (columnIndex <= 1 || columnIndex == 8) {
+    if (columnIndex <= 1 || columnIndex == 10) {
       return "";
     }
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex);
-    return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
+      return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
   }
   
   @Override
