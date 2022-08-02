@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class DateCalculationsHandlerTest {
   private static DateCalculationsHandler dateCalculationsHandler;
   private static GuiManager guiManagerMock;
   private static DbManager dbManagerMock;
-  private static Map<Integer, List<String>> repairRecordsMock; 
+  private static Map<Integer, List<String>> repairRecordsMock;
   private static Map<String, List<Integer>> repairPeriodsMock;
   private static AbstractTableModel repairRecordsTableModelMock;
   private static JTable repairRecordsTableMock;
