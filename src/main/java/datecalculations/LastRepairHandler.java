@@ -31,12 +31,12 @@ public class LastRepairHandler {
    * @param rowIndex where new last repair date was inserted
    */
   public void updateLastRepairColumn(final int rowIndex) {
-    final int rowId = dbManager.getIdByOrdinalNumber(rowIndex);
+    final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
     final LocalDate[] lastRepairsDates = getLastRepairsDates(rowId);
-    LocalDate lastRepairDate = lastRepairsDates[0];
+    LocalDate lastRepairDate = LocalDate.ofEpochDay(0);
     int index = 0;
     for (int j = 0; j < 6; j++) {
-      if (lastRepairDate.isBefore(lastRepairsDates[j])) {
+      if (lastRepairsDates[j] != null && lastRepairDate.isBefore(lastRepairsDates[j])) {
         lastRepairDate = lastRepairsDates[j];
         index = j;
       }
@@ -48,8 +48,8 @@ public class LastRepairHandler {
       return;
     }
     
+    dbManager.setRepairRecordCell(rowId, 14, REPAIR_NAMES[index]);
     dbManager.setRepairRecordCell(rowId, 15, lastRepairDateString);
-    dbManager.setRepairRecordCell(rowId, 16, REPAIR_NAMES[index]);
     
     final AbstractTableModel recordsModel =
         (AbstractTableModel) guiManager.getRepairRecordsTable().getModel();
@@ -64,8 +64,13 @@ public class LastRepairHandler {
   private LocalDate[] getLastRepairsDates(final int rowId) {
     recordData = dbManager.getAllRepairRecords().get(rowId);
     final LocalDate[] lastRepairsDates = new LocalDate[6];
+    String tempString;
     for (int j = 2, k = 0; j <= 12; j+=2, k++) {
-      lastRepairsDates[k] = LocalDate.parse(recordData.get(j), formatter);
+      tempString = recordData.get(j);
+      if (tempString == null || tempString.equals("")) {
+        continue;
+      }
+      lastRepairsDates[k] = LocalDate.parse(tempString, formatter);
     }
     return lastRepairsDates;
   }

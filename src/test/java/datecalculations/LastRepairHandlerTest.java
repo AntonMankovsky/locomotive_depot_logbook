@@ -89,7 +89,7 @@ public class LastRepairHandlerTest {
     
     List<String> tempList = new ArrayList<>(19);
     Stream.of(
-          "", "", "01.01.2000", "", "02.01.2000", "", "01.02.2000", "", "02.02.2000", ""
+          "", "", "01.01.2000", "", null, "", "01.02.2000", "", "02.02.2000", ""
           , "01.01.1999", "", "01.02.1999", "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
@@ -99,7 +99,7 @@ public class LastRepairHandlerTest {
     tempList = new ArrayList<>(19);
     Stream.of(
           "", "", "01.01.1970", "", "31.12.2070", "", "11.11.2011", "", "20.11.2010", ""
-          , "28.07.2007", "", "15.04.2015", "", "", "", "", "", "")
+          , "28.07.2007", "", null, "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
     expectedDate[1] = "31.12.2070";
@@ -107,7 +107,7 @@ public class LastRepairHandlerTest {
     
     tempList = new ArrayList<>(19);
     Stream.of(
-          "", "", "31.10.1994", "", "25.06.2000", "", "10.12.1998", "", "19.09.2018", ""
+          "", "", "", "", "25.06.2000", "", "10.12.1998", "", "19.09.2018", ""
           , "09.05.2019", "", "13.07.2022", "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
@@ -116,13 +116,13 @@ public class LastRepairHandlerTest {
   }
   
   @ParameterizedTest
-  @ValueSource(ints = {0, 1, 2})
+  @ValueSource(ints = {0, 2, 4})
   @DisplayName("Handler updates and fires date and type")
   void handlerUpdatesAndFiresDateAndType(final int rowIndex) {
     lastRepairHandler.updateLastRepairColumn(rowIndex);
     
-    verify(dbManagerMock).setRepairRecordCell(rowIndex, 15, expectedDate[rowIndex]);
-    verify(dbManagerMock).setRepairRecordCell(rowIndex, 16, expectedRepairType[rowIndex]);
+    verify(dbManagerMock).setRepairRecordCell(rowIndex / 2, 14, expectedRepairType[rowIndex / 2]);
+    verify(dbManagerMock).setRepairRecordCell(rowIndex / 2, 15, expectedDate[rowIndex / 2]);
     
     verify(repairRecordsTableModelMock).fireTableCellUpdated(rowIndex, 8);
     verify(repairRecordsTableModelMock).fireTableCellUpdated(rowIndex + 1, 8);

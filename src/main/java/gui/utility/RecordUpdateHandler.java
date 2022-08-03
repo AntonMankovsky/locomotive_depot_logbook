@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
+import datecalculations.LastRepairHandler;
 import dbapi.DbManager;
 import gui.GuiManager;
 
@@ -14,12 +15,14 @@ public class RecordUpdateHandler {
   private final DbManager dbManager;
   private final GuiManager guiManager;
   private final DateCalculationsHandler dateCalculationsHandler;
+  private final LastRepairHandler lastRepairHandler;
   
   public RecordUpdateHandler(final DbManager dbManager, final GuiManager guiManager) {
     super();
     this.dbManager = dbManager;
     this.guiManager = guiManager;
     dateCalculationsHandler = new DateCalculationsHandler(guiManager, dbManager);
+    lastRepairHandler = new LastRepairHandler(guiManager, dbManager);
   }
   
   public void handleCellNewValue(final String value, final int rowIndex, final int colIndex) {
@@ -51,10 +54,11 @@ public class RecordUpdateHandler {
     if (!dbManager.setRepairRecordCell(rowId, colIndex * 2 - 2, value)) {
       notifyUserOnOperationFailure();
     } else if (value != null && !value.equals("")){
+      lastRepairHandler.updateLastRepairColumn(rowIndex);
       dateCalculationsHandler.handleDateCalculations(value, rowIndex, colIndex);
       }
-    }
-    
+  }
+
   private void editNumberCase(final String value, final int rowIndex) {
     final InputValidator validator = new InputValidator(dbManager);
     try {
