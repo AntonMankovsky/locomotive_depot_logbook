@@ -80,6 +80,8 @@ public class DateCalculationsHandler {
     final String nextTreeMaintenanceString = nextTreeMaintenanceDate.format(formatter);
     final String nextOneCurrentRepairString = nextOneCurrentRepairDate.format(formatter);
     
+    // TODO: replace multiple database calls for every cell with single call that would
+    // insert values in database for all cells of row at once (for all repair cases).
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextOneCurrentRepairString);
     dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTreeMaintenanceString);
     
@@ -216,7 +218,6 @@ public class DateCalculationsHandler {
     dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextTwoCurrentRepairString);
     dbManager.setRepairRecordCell(rowId, (colIndex - 4) * 2 - 1, nextOneCurrentRepairString);
     dbManager.setRepairRecordCell(rowId, (colIndex - 5) * 2 - 1, nextTreeMaintenanceString);
-    
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 5);
   }
   
