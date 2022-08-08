@@ -31,6 +31,10 @@ import org.mockito.ArgumentCaptor;
 import dbapi.DbManager;
 import gui.GuiManager;
 
+/*
+ * TODO: add tests for cases in which data should not be updated (when new next repair date is
+ * before old next repair date for auto calculations).
+ */
 public class DateCalculationsHandlerTest {
   private static DateCalculationsHandler dateCalculationsHandler;
   private static GuiManager guiManagerMock;
@@ -45,7 +49,7 @@ public class DateCalculationsHandlerTest {
   private static List<String> expectedStrings1;
   private static List<String> expectedStrings2;
   private static List<Integer> expectedColumnIndices;
-  private static List<String> modelName;
+  private static List<String> recordData;
   
   /**
    * Initializes list of repair periods and lists with expected data for assertions.
@@ -74,8 +78,9 @@ public class DateCalculationsHandlerTest {
     correctStrings.put("01.01.1980", expectedStrings1);
     correctStrings.put("31.12.2022", expectedStrings2);
     
-    modelName = new ArrayList<>(1);
-    modelName.add("ТЭМ");
+    recordData = new ArrayList<>(1);
+    recordData.add("ТЭМ");
+    Stream.generate(() -> "").limit(12).forEach(recordData::add);
   }
 
   @AfterAll
@@ -97,7 +102,7 @@ public class DateCalculationsHandlerTest {
     repairRecordsTableModelMock = mock(AbstractTableModel.class);
     repairRecordsTableMock = mock(JTable.class);
 
-    when(repairRecordsMock.get(anyInt())).thenReturn(modelName);
+    when(repairRecordsMock.get(anyInt())).thenReturn(recordData);
     when(repairPeriodsMock.get("ТЭМ")).thenReturn(periodsData);
     when(dbManagerMock.getAllRepairRecords()).thenReturn(repairRecordsMock);
     when(dbManagerMock.getAllRepairPeriodData()).thenReturn(repairPeriodsMock);
@@ -155,7 +160,7 @@ public class DateCalculationsHandlerTest {
   }
   
   /**
-   * Checks absence of calls to database when invalid indexed passed.
+   * Checks absence of calls to database when invalid index passed.
    * <p>
    * String argument of handleDateCalculations is random string which has nothing to do with this
    * test, except that it needed to call the method.

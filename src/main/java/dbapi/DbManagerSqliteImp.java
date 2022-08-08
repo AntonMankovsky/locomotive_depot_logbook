@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import datecalculations.RequiredRepairHandler;
 import exceptions.IdAlreadyExistsException;
 import gui.utility.ModelNamesComparator;
 
@@ -47,6 +48,8 @@ public class DbManagerSqliteImp implements DbManager {
     repairPeriodsTableData = loadDataFromRepairPeriodsTable();
     recordsArchiveTableData = new ArrayList<>(0);
     archiveInitialized = false;
+    
+    updateRequiredRepairValues();
   }
   
   //========================== Methods for repair records table ==========================
@@ -469,6 +472,19 @@ public class DbManagerSqliteImp implements DbManager {
       err.printStackTrace();
     }
   }
+  
+  /**
+   * Updates values of required repair columns for every repair record.
+   * <p>
+   * This method is meant to be used at DbManager initialization cause if application run on
+   * another day, some of required repairs could be overdue and must be updated accordingly.
+   */
+  private void updateRequiredRepairValues() {
+    RequiredRepairHandler requiredRepairHandler = new RequiredRepairHandler(this);
+    for (int j = 0; j < maxId; j++) {
+      requiredRepairHandler.updateRequiredRepairValues(getIdByOrdinalNumber(j));
+    }
+  }  
   
   @Override
   public String toString() {

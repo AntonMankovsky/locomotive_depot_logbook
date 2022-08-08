@@ -83,7 +83,9 @@ public class DateCalculationsHandler {
     // TODO: replace multiple database calls for every cell with single call that would
     // insert values in database for all cells of row at once (for all repair cases).
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextOneCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTreeMaintenanceString);
+    if (shouldUpdate(colIndex * 2 - 1, nextTreeMaintenanceDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTreeMaintenanceString);
+    }
     
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 1);
   }
@@ -108,9 +110,13 @@ public class DateCalculationsHandler {
     final String nextTwoCurrentRepairString = nextTwoCurrentRepairDate.format(formatter);
     
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextTwoCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextOneCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextTreeMaintenanceString);
-    
+    if (shouldUpdate((colIndex - 1) * 2 - 1, nextOneCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextOneCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 2) * 2 - 1, nextTreeMaintenanceDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextTreeMaintenanceString);
+    }
+
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 2);
   }
   
@@ -138,9 +144,15 @@ public class DateCalculationsHandler {
     final String nextThreeCurrentRepairString = nextThreeCurrentRepairDate.format(formatter);
     
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextThreeCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTwoCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextOneCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextTreeMaintenanceString);
+    if (shouldUpdate((colIndex - 1) * 2 - 1, nextTwoCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTwoCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 2) * 2 - 1, nextOneCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextOneCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 3) * 2 - 1, nextTreeMaintenanceDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextTreeMaintenanceString);
+    }
     
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 3);
   }
@@ -173,10 +185,18 @@ public class DateCalculationsHandler {
     final String nextMediumRepairString = nextMediumRepairDate.format(formatter);
     
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextMediumRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextThreeCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextTwoCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextOneCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 4) * 2 - 1, nextTreeMaintenanceString);
+    if (shouldUpdate((colIndex - 1) * 2 - 1, nextThreeCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextThreeCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 2) * 2 - 1, nextTwoCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextTwoCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 3) * 2 - 1, nextOneCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextOneCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 4) * 2 - 1, nextTreeMaintenanceDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 4) * 2 - 1, nextTreeMaintenanceString);
+    }
     
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 4);
   }
@@ -213,11 +233,22 @@ public class DateCalculationsHandler {
     final String nextOverhaulString = nextOverhaulDate.format(formatter);
     
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextOverhaulString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextMediumRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextThreeCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextTwoCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 4) * 2 - 1, nextOneCurrentRepairString);
-    dbManager.setRepairRecordCell(rowId, (colIndex - 5) * 2 - 1, nextTreeMaintenanceString);
+    if (shouldUpdate((colIndex - 1) * 2 - 1, nextMediumRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextMediumRepairString);
+    }
+    if (shouldUpdate((colIndex - 2) * 2 - 1, nextThreeCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 2) * 2 - 1, nextThreeCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 3) * 2 - 1, nextTwoCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 3) * 2 - 1, nextTwoCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 4) * 2 - 1, nextOneCurrentRepairDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 4) * 2 - 1, nextOneCurrentRepairString);
+    }
+    if (shouldUpdate((colIndex - 5) * 2 - 1, nextTreeMaintenanceDate)) {
+      dbManager.setRepairRecordCell(rowId, (colIndex - 5) * 2 - 1, nextTreeMaintenanceString);
+    }
+    
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 5);
   }
   
@@ -231,5 +262,25 @@ public class DateCalculationsHandler {
       }
     } 
   }
-
+  
+  /**
+   * Defines whether or not date value should be updated.
+   * @param colId for repair type
+   * @param newDate to compare with old date
+   * @return {@code true} if new date is after old date
+   */
+  private boolean shouldUpdate(final int colId, final LocalDate newDate) {
+    final String oldDateString = recordData.get(colId);
+    if (oldDateString == null || oldDateString.equals("")) {
+      return true;
+    }
+    
+    final LocalDate oldDate = LocalDate.parse(oldDateString, formatter);
+    if (newDate.isAfter(oldDate)) {
+      return true;
+    }
+    
+    return false;
+  }
+  
 }
