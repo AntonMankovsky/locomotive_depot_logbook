@@ -76,14 +76,13 @@ public class RequiredRepairHandler {
   
   private void findNextRequiredRepair(final LocalDate[] nextRepairsDates, final int rowId) {
     // find the nearest next repair
-    LocalDate nextRepairDate = LocalDate.ofEpochDay(0);
+    LocalDate nextRepairDate = today.plusYears(50);
     for (int j = 0; j < 6; j++) {
-      if (nextRepairsDates[j] != null && nextRepairDate.isBefore(nextRepairsDates[j])) {
+      if (nextRepairsDates[j] != null && (nextRepairsDates[j].isBefore(nextRepairDate))) {
         nextRepairDate = nextRepairsDates[j];
       }
     }
-    
-    // find the largest next repair within a month of nearest next repair
+    // find the largest next repair type within a month of nearest next repair
     int index = 0;
     YearMonth nextRepairMonth = YearMonth.of(nextRepairDate.getYear(), nextRepairDate.getMonth());
     for (int j = 0; j < 6; j++) {
@@ -94,7 +93,6 @@ public class RequiredRepairHandler {
         index = j;
       }
     }
-    
     // update required repair values if needed
     final String currentRequiredRepair = recordData.get(17);
     final String requiredRepairDateString = nextRepairDate.format(formatter);
@@ -113,13 +111,15 @@ public class RequiredRepairHandler {
   private LocalDate[] getNextRepairsDates() {
     final LocalDate[] nextRepairsDates = new LocalDate[6];
     boolean atLeastOneDate = false;
-    String tempString;
+    String nextRepairString;
     for (int j = 3, k = 0; j <= 13; j+=2, k++) {
-      tempString = recordData.get(j);
-      if (tempString == null || tempString.equals("")) {
+      nextRepairString = recordData.get(j);
+      
+      if (nextRepairString == null || nextRepairString.equals("")) {
         continue;
       }
-      nextRepairsDates[k] = LocalDate.parse(tempString, formatter);
+      
+      nextRepairsDates[k] = LocalDate.parse(nextRepairString, formatter);
       atLeastOneDate = true;
     }
     return atLeastOneDate ? nextRepairsDates : null;

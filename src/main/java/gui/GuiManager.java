@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteRecordListener;
+import gui.eventlisteners.ShowNextRepairsDatesListener;
 import gui.eventlisteners.NewRecordAction;
 import gui.tablemodels.RepairRecordsTableModel;
 
@@ -32,6 +33,7 @@ public class GuiManager {
   private JMenu newRecordSubmenu;
   private JTable repairRecordsTable;
   private JPanel repairRecordsTablePane;
+  private boolean showNextRepairsDates;
   
   /**
    * Builds all components for GUI and registers listeners for them. Displays GUI on screen.
@@ -42,6 +44,7 @@ public class GuiManager {
   public GuiManager(final DbManager dbManager) {
     super();
     this.dbManager = dbManager;
+    showNextRepairsDates = false;
     createAndShowGui();
   }
   
@@ -89,6 +92,11 @@ public class GuiManager {
     mainMenu.add(tempItem);
     
     mainMenu.addSeparator();
+    
+    tempItem = new JCheckBoxMenuItem("Отображать рассчитанные даты");
+    tempItem.addItemListener(new ShowNextRepairsDatesListener(this));
+    tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+    mainMenu.add(tempItem);
     
     tempItem = new JMenuItem("Удалить выбранную запись");
     tempItem.addActionListener(new DeleteRecordListener(this));
@@ -150,6 +158,14 @@ public class GuiManager {
     }
   }
   
+  public boolean isShowNextRepairsDates() {
+    return showNextRepairsDates;
+  }
+
+  public void setShowNextRepairsDates(final boolean showNextRepairsDates) {
+    this.showNextRepairsDates = showNextRepairsDates;
+  }
+
   public DbManager getDbManager() {
     return dbManager;
   }

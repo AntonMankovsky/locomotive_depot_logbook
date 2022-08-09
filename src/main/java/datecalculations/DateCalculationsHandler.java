@@ -51,6 +51,8 @@ public class DateCalculationsHandler {
       break;
     default:
     }
+    
+    updateRequiredRepairColumn(rowIndex);
   }
   
   private void threeMaintenanceCase(
@@ -83,7 +85,7 @@ public class DateCalculationsHandler {
     // TODO: replace multiple database calls for every cell with single call that would
     // insert values in database for all cells of row at once (for all repair cases).
     dbManager.setRepairRecordCell(rowId, colIndex * 2 - 1, nextOneCurrentRepairString);
-    if (shouldUpdate(colIndex * 2 - 1, nextTreeMaintenanceDate)) {
+    if (shouldUpdate((colIndex - 1) * 2 - 1, nextTreeMaintenanceDate)) {
       dbManager.setRepairRecordCell(rowId, (colIndex - 1) * 2 - 1, nextTreeMaintenanceString);
     }
     
@@ -281,6 +283,14 @@ public class DateCalculationsHandler {
     }
     
     return false;
+  }
+  
+  private void updateRequiredRepairColumn(final int rowIndex) {
+    final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
+    final RequiredRepairHandler repairHandler = new RequiredRepairHandler(dbManager);
+    repairHandler.updateRequiredRepairValues(rowId);
+    fireCellUpdated(rowIndex, 9, 9);
+    fireCellUpdated(rowIndex + 1, 9, 9);
   }
   
 }

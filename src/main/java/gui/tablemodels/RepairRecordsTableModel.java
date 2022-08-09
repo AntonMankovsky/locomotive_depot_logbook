@@ -27,6 +27,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
                                                   "Примечания"
                                                   };
   private final DbManager dbManager;
+  final GuiManager guiManager;
   private RecordUpdateHandler updateHandler;
   
   /**
@@ -38,6 +39,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   public RepairRecordsTableModel(final DbManager dbManager, final GuiManager guiManager) {
     super();
     this.dbManager = dbManager;
+    this.guiManager = guiManager;
     updateHandler = new RecordUpdateHandler(dbManager, guiManager);
   }
   
@@ -100,6 +102,11 @@ public class RepairRecordsTableModel extends AbstractTableModel {
     if (columnIndex <= 1 || columnIndex == 10) {
       return "";
     }
+    
+    if (columnIndex > 1 && columnIndex < 8 && !guiManager.isShowNextRepairsDates()) {
+      return "";
+    }
+    
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex);
       return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
   }
