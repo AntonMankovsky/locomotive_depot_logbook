@@ -7,15 +7,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dbapi.DbManager;
+import gui.eventlisteners.ChooseThemeAction;
 import gui.eventlisteners.DeleteRecordListener;
 import gui.eventlisteners.ShowNextRepairsDatesListener;
 import gui.eventlisteners.NewRecordAction;
 import gui.tablemodels.RepairRecordsTableModel;
+import gui.tablerenderers.RepairRecordsHeaderRenderer;
+import gui.tablerenderers.RepairRecordsTableRenderer;
 
 /**
  * Creates, displays and provides access to application GUI.
@@ -31,9 +35,11 @@ public class GuiManager {
   private JMenuBar mainMenuBar;
   private JMenu mainMenu;
   private JMenu newRecordSubmenu;
+  private JMenu chooseThemeSubmenu;
   private JTable repairRecordsTable;
   private JPanel repairRecordsTablePane;
   private boolean showNextRepairsDates;
+  private int[] columnsWidth;
   
   /**
    * Builds all components for GUI and registers listeners for them. Displays GUI on screen.
@@ -54,16 +60,19 @@ public class GuiManager {
   private void createAndShowGui() {
     final Toolkit kit = Toolkit.getDefaultToolkit();
     final Dimension screenSize = kit.getScreenSize();
-    mainFrameWidth = (int) (screenSize.width * 0.60);
-    mainFrameHeight = screenSize.height / 2;
+    mainFrameWidth = (int) (screenSize.width * 0.90);
+    mainFrameHeight = (int) (screenSize.height * 0.80);
     modelsFrame = new ModelsFrame(this, dbManager);
     archiveFrame = new ArchiveFrame(this, dbManager);
+    columnsWidth = new int[11];
     
     buildNewRecordSubmenu();
+    buildChooseThemeSubmenu();
     buildMainMenu();
     buildMainMenuBar();
     buildRepairRecordsTable();
     buildRepairRecordsTablePane();
+    setСolumnsWidth();
     buildMainFrame();
   }
   
@@ -73,6 +82,12 @@ public class GuiManager {
     for (String model : modelNames) {
       newRecordSubmenu.add(new JMenuItem(new NewRecordAction(model, this)));
     }
+  }
+  
+  private void buildChooseThemeSubmenu() {
+    chooseThemeSubmenu = new JMenu("Выбрать тему");
+    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Светлая", this)));
+    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Тёмная", this)));
   }
   
   private void buildMainMenu() {
@@ -105,6 +120,8 @@ public class GuiManager {
     
     mainMenu.addSeparator();
     
+    mainMenu.add(chooseThemeSubmenu);
+    
     tempItem = new JMenuItem("Выход");
     tempItem.addActionListener(e -> System.exit(0));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
@@ -123,6 +140,9 @@ public class GuiManager {
     repairRecordsTable.setFillsViewportHeight(true);
     repairRecordsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     repairRecordsTable.getTableHeader().setReorderingAllowed(false);
+    repairRecordsTable.getTableHeader()
+        .setDefaultRenderer(new RepairRecordsHeaderRenderer(repairRecordsTable));
+    repairRecordsTable.setDefaultRenderer(Object.class, new RepairRecordsTableRenderer(dbManager));
   }
   
   private void buildRepairRecordsTablePane() {
@@ -142,6 +162,40 @@ public class GuiManager {
     mainFrame.setMinimumSize(new Dimension((int) (mainFrameWidth * 0.40), 0));
     
     mainFrame.setVisible(true);
+  }
+  
+  private void setСolumnsWidth() {
+    defineColumnsWidth();
+    TableColumn column;
+    for (int j = 0; j < columnsWidth.length; j++) {
+      column = repairRecordsTable.getColumnModel().getColumn(j);
+      column.setPreferredWidth(columnsWidth[j]);
+    }
+  }
+  
+  private void defineColumnsWidth() {
+    for (int j = 0; j < columnsWidth.length; j++) {
+      switch (j) {
+      case 0:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.06);
+        break;
+      case 1:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.06);
+        break;
+      case 8:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.12);
+        break;
+      case 9:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.12);
+        break;
+      case 10:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.15);
+        break;
+      default:
+        columnsWidth[j] = (int) (mainFrameWidth * 0.08);
+        break;
+      }
+    }
   }
   
   /**

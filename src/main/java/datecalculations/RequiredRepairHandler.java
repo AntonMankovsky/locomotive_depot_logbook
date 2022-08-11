@@ -33,12 +33,15 @@ public class RequiredRepairHandler {
     final LocalDate[] nextRepairsDates = getNextRepairsDates();
     
     if (nextRepairsDates == null) {
+      dbManager.getOverdueRepairsMap().put(rowId, false);
       return;
     }
     
     if (checkOverdueRepair(nextRepairsDates, rowId)) {
+      dbManager.getOverdueRepairsMap().put(rowId, true);
       return;
     }
+    dbManager.getOverdueRepairsMap().put(rowId, false);
     
     findNextRequiredRepair(nextRepairsDates, rowId);
   }

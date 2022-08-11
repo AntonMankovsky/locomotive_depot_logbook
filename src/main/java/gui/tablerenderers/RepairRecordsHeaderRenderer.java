@@ -1,0 +1,57 @@
+package gui.tablerenderers;
+
+import java.awt.Component;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+
+import gui.lookandfeel.BorderManager;
+import gui.lookandfeel.ColorManager;
+
+public class RepairRecordsHeaderRenderer implements TableCellRenderer {
+  private final DefaultTableCellRenderer renderer;
+  private final ColorManager colorManager;
+  private final BorderManager borderManager;
+  private static final String[] HEADER_TOOLTIPS = {
+                                     "Модель тепловоза",
+                                     "Номер тепловоза",
+                                     "Техническое обслуживание третьего объёма",
+                                     "Текущий ремонт первого объёма",
+                                     "Текущий ремонт второго объёма",
+                                     "Текущий ремонт третьего объёма",
+                                     "Средний ремонт",
+                                     "Капитальный ремонт",
+                                     "Самый поздний из последних ремонтов",
+                                     "Наибольший из просроченных или ближайший предстоящий ремонт",
+                                     "Поле для заметок"
+                                     };
+  
+  public RepairRecordsHeaderRenderer(final JTable table) {
+    renderer = (DefaultTableCellRenderer) table.getTableHeader().getDefaultRenderer();
+    renderer.setHorizontalAlignment(JLabel.CENTER);
+    colorManager = ColorManager.getColorManager();
+    borderManager = BorderManager.getBorderManager();
+  }
+
+  @Override
+  public Component getTableCellRendererComponent(
+      final JTable table, final Object value, final boolean isSelected, final boolean hasFocus
+      , final int row, final int column) {
+    final JLabel label = (JLabel)
+        renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    
+    label.setToolTipText(HEADER_TOOLTIPS[column]);
+    label.setBorder(borderManager.getHeaderBorder());
+    
+    if (column == 6) {
+      label.setBackground(colorManager.getRecordsTableHeaderMediumRepairColor());
+    } else if (column == 7) {
+      label.setBackground(colorManager.getRecordsTableHeaderOverhaulColor());
+    }
+    
+    return label;
+  }
+
+}

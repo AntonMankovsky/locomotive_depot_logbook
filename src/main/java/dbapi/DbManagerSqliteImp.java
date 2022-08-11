@@ -28,6 +28,7 @@ public class DbManagerSqliteImp implements DbManager {
   private Map<String, List<Integer>> repairPeriodsTableData;
   private Map<Integer, List<String>> repairRecordsTableData;
   private Map<Integer, Integer> orderedId;
+  private Map<Integer, Boolean> overdueRepairsMap;
   private int maxId;
   private List<List<String>> recordsArchiveTableData;
   private boolean archiveInitialized;
@@ -48,6 +49,7 @@ public class DbManagerSqliteImp implements DbManager {
     repairPeriodsTableData = loadDataFromRepairPeriodsTable();
     recordsArchiveTableData = new ArrayList<>(0);
     archiveInitialized = false;
+    overdueRepairsMap = new HashMap<>();
     
     updateRequiredRepairValues();
   }
@@ -126,6 +128,7 @@ public class DbManagerSqliteImp implements DbManager {
       deleteRow.executeUpdate();
       insertNewArchiveRecord(repairRecordsTableData.get(rowId));
       repairRecordsTableData.remove(rowId);
+      overdueRepairsMap.remove(rowId);
       reorderIdOnRowDeletion(rowId);
       logger.info("Row with id=" + rowId + " was succesfully deleted from repair_records table");
       return true;
@@ -158,6 +161,10 @@ public class DbManagerSqliteImp implements DbManager {
   @Override
   public int getRecordsCount() {
     return maxId;
+  }
+  
+  public Map<Integer, Boolean> getOverdueRepairsMap() {
+    return overdueRepairsMap;
   }
 
   // ========================== Methods for repair periods table ==========================
@@ -398,6 +405,7 @@ public class DbManagerSqliteImp implements DbManager {
         throw new IdAlreadyExistsException("id already exists in internal data structure: " + id);
       } else {
         repairRecordsTableData.put(id, row);
+        overdueRepairsMap.put(id, false);
         orderedId.put(maxId++, id);
         logger.info("Internal data structure was succesfully updated: " + id + ":" + row);
       }

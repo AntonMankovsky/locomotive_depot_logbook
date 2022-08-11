@@ -77,6 +77,14 @@ public abstract interface DbManager {
    */
   public abstract int getRecordsCount();
   
+  /**
+   * Provides access to information about overdue repairs.
+   * <p>
+   * The map contains record id integers as keys and isOverdue boolean as values.
+   * @return map that allows to get or set information about overdue repairs.
+   */
+  public abstract Map<Integer, Boolean> getOverdueRepairsMap();
+  
   // Methods for repair periods table
   
 /**

@@ -43,6 +43,7 @@ dependencies {
 	implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.3'
 	implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
+    implementation group: 'com.formdev', name: 'flatlaf', version: '2.4'
 }
 
 tasks.named('test') {
