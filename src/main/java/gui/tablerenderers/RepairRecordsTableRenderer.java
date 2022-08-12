@@ -20,7 +20,7 @@ public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
   private final ColorManager colorManager;
   private final BorderManager borderManager;
 
-  public RepairRecordsTableRenderer(DbManager dbManager) {
+  public RepairRecordsTableRenderer(final DbManager dbManager) {
     super();
     super.setHorizontalAlignment(JLabel.CENTER);
     this.dbManager = dbManager;

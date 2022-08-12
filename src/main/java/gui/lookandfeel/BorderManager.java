@@ -14,6 +14,9 @@ public final class BorderManager {
   private final Border defaultNoFocusBorder;
   private final Border noBottomLineBorder;
   private final Border noTopLineBorder;
+  
+  private final Border archiveTablePrimaryRowBorder;
+  private final Border archiveTableSecondaryRowBorder;
 
   /**
    * Returns {@code BorderManager} singleton instance. 
@@ -42,6 +45,9 @@ public final class BorderManager {
       defaultNoFocusBorder = BorderFactory.createLineBorder(color, 1);
       noBottomLineBorder = BorderFactory.createMatteBorder(1, 1, 0, 1, color);
       noTopLineBorder = BorderFactory.createMatteBorder(0, 1, 1, 1, color);
+      
+      archiveTablePrimaryRowBorder = BorderFactory.createMatteBorder(0, 0, 0, 0, color);
+      archiveTableSecondaryRowBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, color);
       break;
     case "light":
       color = Color.BLACK;
@@ -50,6 +56,9 @@ public final class BorderManager {
       defaultNoFocusBorder = BorderFactory.createLineBorder(color, 1);
       noBottomLineBorder = BorderFactory.createMatteBorder(1, 1, 0, 1, color);
       noTopLineBorder = BorderFactory.createMatteBorder(0, 1, 1, 1, color);
+      
+      archiveTablePrimaryRowBorder = BorderFactory.createMatteBorder(0, 0, 0, 0, color);
+      archiveTableSecondaryRowBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, color);
       break;
     default:
       color = Color.LIGHT_GRAY;
@@ -58,8 +67,10 @@ public final class BorderManager {
       defaultNoFocusBorder = BorderFactory.createLineBorder(color, 1);
       noBottomLineBorder = BorderFactory.createMatteBorder(1, 1, 0, 1, color);
       noTopLineBorder = BorderFactory.createMatteBorder(0, 1, 1, 1, color);
+      
+      archiveTablePrimaryRowBorder = BorderFactory.createMatteBorder(0, 0, 0, 0, color);
+      archiveTableSecondaryRowBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, color);
       break;
-
     }
   }
 
@@ -81,6 +92,14 @@ public final class BorderManager {
 
   public Border getHeaderBorder() {
     return headerBorder;
+  }
+
+  public Border getArchiveTableSecondaryRowBorder() {
+    return archiveTableSecondaryRowBorder;
+  }
+
+  public Border getArchiveTablePrimaryRowBorder() {
+    return archiveTablePrimaryRowBorder;
   }
   
 }

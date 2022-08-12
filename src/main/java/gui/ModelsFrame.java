@@ -19,6 +19,7 @@ import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
 import gui.tablemodels.RepairPeriodsTableModel;
+import gui.tablerenderers.RepairPeriodsTableRenderer;
 
 /**
  * Manages frame with repair periods table.
@@ -93,6 +94,8 @@ public class ModelsFrame extends JFrame {
     repairPeriodsTable.setFillsViewportHeight(true);
     repairPeriodsTable.getTableHeader().setReorderingAllowed(false);
     repairPeriodsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    repairPeriodsTable.setDefaultRenderer(Object.class, new RepairPeriodsTableRenderer());
+    repairPeriodsTable.setDefaultRenderer(Integer.class, new RepairPeriodsTableRenderer());
   }
   
   private void buildRepairPeriodsTablePane() {

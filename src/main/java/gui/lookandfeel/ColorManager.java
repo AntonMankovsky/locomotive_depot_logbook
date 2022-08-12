@@ -17,6 +17,10 @@ public final class ColorManager {
   private final Color recordsTableRequiredRepairColor;
   private final Color recordsTableOverdueRequiredRepairTypeColor;
   private final Color recordsTableNotesColor;
+  private final Color recordsArchiveTablePrimaryRowColor;
+  private final Color recordsArchiveTableSecondaryRowColor;
+  private final Color modelsTablePrimaryRowColor;
+  private final Color modelsTableSecondaryRowColor;
   
   /**
    * Returns {@code ColorManager} singleton instance. 
@@ -51,6 +55,12 @@ public final class ColorManager {
       recordsTableRequiredRepairColor = recordsTableSecondaryRowColor;
       recordsTableOverdueRequiredRepairTypeColor = new Color(210, 130, 25);
       recordsTableNotesColor = new Color(255, 255, 255);
+      
+      recordsArchiveTablePrimaryRowColor = recordsTablePrimaryRowColor;
+      recordsArchiveTableSecondaryRowColor = recordsTableSecondaryRowColor;
+      
+      modelsTablePrimaryRowColor = recordsTableSecondaryRowColor;
+      modelsTableSecondaryRowColor = recordsTablePrimaryRowColor;
       break;
     case "dark":
       recordsTableHeaderMediumRepairColor = new Color(0, 0, 50);
@@ -64,6 +74,12 @@ public final class ColorManager {
       recordsTableRequiredRepairColor = recordsTableSecondaryRowColor;
       recordsTableOverdueRequiredRepairTypeColor = new Color(75, 35, 35);
       recordsTableNotesColor = new Color(85, 95, 85);
+      
+      recordsArchiveTablePrimaryRowColor = recordsTablePrimaryRowColor;
+      recordsArchiveTableSecondaryRowColor = recordsTableSecondaryRowColor;
+      
+      modelsTablePrimaryRowColor = recordsTableSecondaryRowColor;
+      modelsTableSecondaryRowColor = recordsTablePrimaryRowColor;
       break;
     }
   }
@@ -111,6 +127,21 @@ public final class ColorManager {
   public Color getRecordsTableNotesColor() {
     return recordsTableNotesColor;
   }
-  
+
+  public Color getRecordsArchiveTablePrimaryRowColor() {
+    return recordsArchiveTablePrimaryRowColor;
+  }
+
+  public Color getRecordsArchiveTableSecondaryRowColor() {
+    return recordsArchiveTableSecondaryRowColor;
+  }
+
+  public Color getModelsTablePrimaryRowColor() {
+    return modelsTablePrimaryRowColor;
+  }
+
+  public Color getModelsTableSecondaryRowColor() {
+    return modelsTableSecondaryRowColor;
+  }
   
 }

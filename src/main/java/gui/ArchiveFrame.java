@@ -14,10 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumn;
 
 import dbapi.DbManager;
 import gui.eventlisteners.ClearArchiveListener;
 import gui.tablemodels.RecordsArchiveTableModel;
+import gui.tablerenderers.RecordsArchiveTableRenderer;
 
 /**
  * Manages frame with records archive table.
@@ -32,6 +34,7 @@ public class ArchiveFrame extends JFrame {
   private JTable recordsArchiveTable;
   private JPanel recordsArchiveTablePane;
   private boolean initialized;
+  private int[] columnsWidth;
   
   /**
    * Builds components for JFrame for archive table and registers listeners for them.
@@ -61,12 +64,15 @@ public class ArchiveFrame extends JFrame {
   }
   
   private void createGui() {
-    archiveFrameWidth = guiManager.getMainFrameWidth();
-    archiveFrameHeight = guiManager.getMainFrameHeight();
+    archiveFrameWidth = (int) (guiManager.getMainFrameWidth() * 0.6);
+    archiveFrameHeight = (int) (guiManager.getMainFrameHeight() * 0.6);
+    columnsWidth = new int[9];
+    
     buildArchiveMenu();
     buildArchiveMenuBar();
     buildRecordsArchiveTable();
     buildRecordsArchiveTablePane();
+    setСolumnsWidth();
     buildArchiveFrame();
   }
   
@@ -98,6 +104,7 @@ public class ArchiveFrame extends JFrame {
     recordsArchiveTable.setFillsViewportHeight(true);
     recordsArchiveTable.getTableHeader().setReorderingAllowed(false);
     recordsArchiveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    recordsArchiveTable.setDefaultRenderer(Object.class, new RecordsArchiveTableRenderer());
   }
   
   private void buildRecordsArchiveTablePane() {
@@ -113,6 +120,34 @@ public class ArchiveFrame extends JFrame {
     setJMenuBar(archiveMenuBar);
     setContentPane(recordsArchiveTablePane);
     setMinimumSize(new Dimension((int) (archiveFrameWidth * 0.40), 0));
+  }
+  
+  private void setСolumnsWidth() {
+    defineColumnsWidth();
+    TableColumn column;
+    for (int j = 0; j < columnsWidth.length; j++) {
+      column = recordsArchiveTable.getColumnModel().getColumn(j);
+      column.setPreferredWidth(columnsWidth[j]);
+    }
+  }
+  
+  private void defineColumnsWidth() {
+    for (int j = 0; j < columnsWidth.length; j++) {
+      switch (j) {
+      case 0:
+        columnsWidth[j] = (int) (archiveFrameWidth * 0.12);
+        break;
+      case 1:
+        columnsWidth[j] = (int) (archiveFrameWidth * 0.12);
+        break;
+      case 9:
+        columnsWidth[j] = (int) (archiveFrameWidth * 0.21);
+        break;
+      default:
+        columnsWidth[j] = (int) (archiveFrameWidth * 0.14);
+        break;
+      }
+    }
   }
   
   /**

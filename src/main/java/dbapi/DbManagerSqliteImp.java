@@ -233,7 +233,7 @@ public class DbManagerSqliteImp implements DbManager {
   @Override
   public boolean deleteRepairPeriods(final String modelName) {
     final String sqlStatement =
-        "DELETE FROM repair_periods WHERE loco_model_name = " + "'" + modelName + "'";
+        "DELETE FROM repair_periods WHERE loco_model_name = " + "\"" + modelName + "\"";
       try (final PreparedStatement deleteRow =
           connection.getConnection().prepareStatement(sqlStatement)) {
         deleteRow.executeUpdate();
