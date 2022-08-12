@@ -194,7 +194,8 @@ public class InputValidator {
   /**
    * Validates locomotive model name.
    * <p>
-   * Model name must be non-empty unique string and may not be NULL.
+   * Model name must be non-empty unique string and may not be NULL. 
+   * It cannot contain special char like " ' or \
    * @param modelName to validate
    * @throws IllegalArgumentException if validation fails
    */
@@ -203,6 +204,11 @@ public class InputValidator {
     if (modelName == null || modelName.equals("")) {
       logger.warn(modelName + " failed model name validation: it can not be empty or NULL");
       throw new IllegalArgumentException("Invalid locomotive model name: cannot be empty or NULL");
+    }
+    
+    if (modelName.contains("\"") || modelName.contains("\'") || modelName.contains("\\")) {
+      logger.warn(modelName + " failed model name validation: it contains special character");
+      throw new IllegalArgumentException("Invalid locomotive model name: special character.");
     }
     
     for (String name : dbManager.getAllModelNames()) {
@@ -227,7 +233,7 @@ public class InputValidator {
     if (period > 0) {
       logger.info("Repair period value " + period +  " passed the validation.");
     } else {
-      logger.info("Repair period value " + period + " failed validation cause it`s not positive" );
+      logger.warn("Repair period value " + period + " failed validation cause it`s not positive" );
       throw new IllegalArgumentException("Repair period " + period + " is not a positive number");
     }
   }

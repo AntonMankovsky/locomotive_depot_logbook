@@ -1,6 +1,5 @@
 package gui.tablemodels;
 
-
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
