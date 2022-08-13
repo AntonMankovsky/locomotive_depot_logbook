@@ -288,7 +288,7 @@ public class DateCalculationsHandler {
   
   private void updateRequiredRepairColumn(final int rowIndex) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
-    requiredRepairHandler.updateRequiredRepairValues(rowId);
+    requiredRepairHandler.updateRequiredRepairValues(rowId, LocalDate.now());
     fireCellUpdated(rowIndex, 9, 9);
     fireCellUpdated(rowIndex + 1, 9, 9);
   }

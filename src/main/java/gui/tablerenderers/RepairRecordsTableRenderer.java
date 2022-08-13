@@ -30,8 +30,9 @@ public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
 
   @Override
   public Component getTableCellRendererComponent(
-      final JTable table, final Object value, final boolean isSelected, final boolean hasFocus,
+      final JTable table, Object value, final boolean isSelected, final boolean hasFocus,
       final int row, final int column) {
+    value = value == null ? "" : value;
     
     final Color backgroundColor = isSelected ? table.getSelectionBackground()
                                              : defineBackgroundColor(row, column, value);

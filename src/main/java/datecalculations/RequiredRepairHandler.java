@@ -25,11 +25,14 @@ public class RequiredRepairHandler {
   
   /**
    * Updates database values of 'required repair' columns for record with given rowId.
+   * <p>
+   * Also updates DB Manager data structure of overdue repairs with relevant values.
    * @param rowId of database repair record
+   * @param todayDate to detect overdue repair and define required repair date 
    */
-  public void updateRequiredRepairValues(final int rowId) {
+  public void updateRequiredRepairValues(final int rowId, final LocalDate todayDate) {
+    today = todayDate;
     recordData = dbManager.getAllRepairRecords().get(rowId);
-    today = LocalDate.now();
     final LocalDate[] nextRepairsDates = getNextRepairsDates();
     
     if (nextRepairsDates == null) {

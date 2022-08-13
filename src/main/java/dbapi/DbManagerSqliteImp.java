@@ -3,6 +3,7 @@ package dbapi;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -488,9 +489,10 @@ public class DbManagerSqliteImp implements DbManager {
    * another day, some of required repairs could be overdue and must be updated accordingly.
    */
   private void updateRequiredRepairValues() {
+    final LocalDate today = LocalDate.now();
     RequiredRepairHandler requiredRepairHandler = new RequiredRepairHandler(this);
     for (int j = 0; j < maxId; j++) {
-      requiredRepairHandler.updateRequiredRepairValues(getIdByOrdinalNumber(j));
+      requiredRepairHandler.updateRequiredRepairValues(getIdByOrdinalNumber(j), today);
     }
   }  
   

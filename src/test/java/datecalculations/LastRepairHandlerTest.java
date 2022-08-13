@@ -75,9 +75,13 @@ public class LastRepairHandlerTest {
   @AfterEach
   protected void tearDown() throws Exception {
   }
-  
+  @Override
+  public boolean equals(Object obj) {
+    // TODO Auto-generated method stub
+    return super.equals(obj);
+  }
   /**
-   * Imitates actual data.
+   * Imitates actual data and corresponding 'right answers'.
    * <p>
    * Original functionality depends only on last repair values, so all other indices in list could
    * contain empty strings (identical data structure, but only needed values).
@@ -89,8 +93,8 @@ public class LastRepairHandlerTest {
     
     List<String> tempList = new ArrayList<>(19);
     Stream.of(
-          "", "", "01.01.2000", "", null, "", "01.02.2000", "", "02.02.2000", ""
-          , "01.01.1999", "", "01.02.1999", "", "", "", "", "", "")
+          "", "", "01.01.2000", "", null, "", "01.02.2000", "", "02.02.2000", "",
+          "01.01.1999", "", "01.02.1999", "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
     expectedDate[0] = "02.02.2000";
@@ -98,8 +102,8 @@ public class LastRepairHandlerTest {
     
     tempList = new ArrayList<>(19);
     Stream.of(
-          "", "", "01.01.1970", "", "31.12.2070", "", "11.11.2011", "", "20.11.2010", ""
-          , "28.07.2007", "", null, "", "", "", "", "", "")
+          "", "", "01.01.1970", "", "31.12.2070", "", "11.11.2011", "", "20.11.2010", "",
+          "28.07.2007", "", null, "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
     expectedDate[1] = "31.12.2070";
@@ -107,8 +111,8 @@ public class LastRepairHandlerTest {
     
     tempList = new ArrayList<>(19);
     Stream.of(
-          "", "", "", "", "25.06.2000", "", "10.12.1998", "", "19.09.2018", ""
-          , "09.05.2019", "", "13.07.2022", "", "", "", "", "", "")
+          "", "", "", "", "25.06.2000", "", "10.12.1998", "", "19.09.2018", "",
+          "09.05.2019", "", "13.07.2022", "", "", "", "", "", "")
           .forEach(tempList::add);
     datesForTests.add(tempList);
     expectedDate[2] = "13.07.2022";
