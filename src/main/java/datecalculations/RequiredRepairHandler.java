@@ -8,7 +8,7 @@ import java.util.List;
 import dbapi.DbManager;
 
 /**
- * Handles values of required repair type and date
+ * Handles values of required repair type and date.
  */
 public class RequiredRepairHandler {
   private final DbManager dbManager;
@@ -25,7 +25,7 @@ public class RequiredRepairHandler {
   
   /**
    * Updates database values of 'required repair' columns for record with given rowId.
-   * @param rowId of repair record
+   * @param rowId of database repair record
    */
   public void updateRequiredRepairValues(final int rowId) {
     recordData = dbManager.getAllRepairRecords().get(rowId);

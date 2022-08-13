@@ -12,6 +12,9 @@ import javax.swing.table.TableColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import datecalculations.DateCalculationsHandler;
+import datecalculations.LastRepairHandler;
+import datecalculations.RequiredRepairHandler;
 import dbapi.DbManager;
 import gui.eventlisteners.ChooseThemeAction;
 import gui.eventlisteners.DeleteRecordListener;
@@ -20,6 +23,7 @@ import gui.eventlisteners.NewRecordAction;
 import gui.tablemodels.RepairRecordsTableModel;
 import gui.tablerenderers.RepairRecordsHeaderRenderer;
 import gui.tablerenderers.RepairRecordsTableRenderer;
+import gui.utility.RecordUpdateHandler;
 
 /**
  * Creates, displays and provides access to application GUI.
@@ -134,7 +138,8 @@ public class GuiManager {
   }
   
   private void buildRepairRecordsTable() {
-    repairRecordsTable = new JTable(new RepairRecordsTableModel(dbManager, this));
+    repairRecordsTable =
+        new JTable(new RepairRecordsTableModel(dbManager, this, initRecordUpdateHandler()));
     repairRecordsTable.setPreferredScrollableViewportSize(
         new Dimension(mainFrameWidth, mainFrameHeight));
     repairRecordsTable.setFillsViewportHeight(true);
@@ -196,6 +201,24 @@ public class GuiManager {
         break;
       }
     }
+  }
+  
+  /**
+   * Returns new Record Update Handler.
+   * <p>
+   * Creates chain of all classes that update handler depends on in order to achieve less coupling
+   * and make tests easy to perform.
+   * @return Record Update Handler that should handle changes in repair records table model.
+   */
+  private RecordUpdateHandler initRecordUpdateHandler() {
+    final RequiredRepairHandler requiredRepairHandler = new RequiredRepairHandler(dbManager);
+    final DateCalculationsHandler dateCalculationsHandler =
+        new DateCalculationsHandler(this, dbManager, requiredRepairHandler);
+    final LastRepairHandler lastRepairHandler = new LastRepairHandler(this, dbManager);
+    
+    final RecordUpdateHandler recordUpdateHandler =
+        new RecordUpdateHandler(dbManager, this, dateCalculationsHandler, lastRepairHandler);
+    return recordUpdateHandler;
   }
   
   /**

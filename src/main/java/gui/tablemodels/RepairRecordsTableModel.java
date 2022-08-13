@@ -36,11 +36,12 @@ public class RepairRecordsTableModel extends AbstractTableModel {
    * Actively interacts with database API and data validation classes. 
    * @param dbManager that provides API for working with database
    */
-  public RepairRecordsTableModel(final DbManager dbManager, final GuiManager guiManager) {
+  public RepairRecordsTableModel(final DbManager dbManager, final GuiManager guiManager, 
+                                 final RecordUpdateHandler updateHandler) {
     super();
     this.dbManager = dbManager;
     this.guiManager = guiManager;
-    updateHandler = new RecordUpdateHandler(dbManager, guiManager);
+    this.updateHandler = updateHandler;
   }
   
   @Override

@@ -27,7 +27,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 
 import dbapi.DbManager;
 import gui.GuiManager;
@@ -35,15 +37,12 @@ import gui.GuiManager;
 /*
  * TODO: add tests for cases in which data should not be updated (when new next repair date is
  * before old next repair date for auto calculations).
- * 
- * Currently busy with other functionality. Come back later and rewrite the tests. For now
- * have to disable.
  */
-@Disabled("Test is broken after adding new required repair date handle functionality")
 public class DateCalculationsHandlerTest {
   private static DateCalculationsHandler dateCalculationsHandler;
   private static GuiManager guiManagerMock;
   private static DbManager dbManagerMock;
+  private static RequiredRepairHandler requiredRepairHandlerMock;
   private static Map<Integer, List<String>> repairRecordsMock;
   private static Map<String, List<Integer>> repairPeriodsMock;
   private static AbstractTableModel repairRecordsTableModelMock;
@@ -83,9 +82,11 @@ public class DateCalculationsHandlerTest {
     correctStrings.put("01.01.1980", expectedStrings1);
     correctStrings.put("31.12.2022", expectedStrings2);
     
-    recordData = new ArrayList<>(1);
+    recordData = new ArrayList<>(18);
     recordData.add("ТЭМ");
-    Stream.generate(() -> "").limit(13).forEach(recordData::add);
+    Stream.generate(() -> "").limit(15).forEach(recordData::add);
+    recordData.add(7, null);
+    recordData.add(9, "01.01.1970");
   }
 
   @AfterAll
@@ -94,11 +95,14 @@ public class DateCalculationsHandlerTest {
 
   /**
    * Prepares mocks for tests.
+   * <p>
+   * Row index of user`s input can be any even number and is never odd by application design.
    * @throws Exception
    */
   @SuppressWarnings("unchecked")
   @BeforeEach
   protected void setUp() throws Exception {
+    requiredRepairHandlerMock = mock(RequiredRepairHandler.class);
     dbManagerMock = mock(DbManager.class);
     repairRecordsMock = mock(HashMap.class);
     repairPeriodsMock = mock(HashMap.class);
@@ -106,7 +110,7 @@ public class DateCalculationsHandlerTest {
     guiManagerMock = mock(GuiManager.class);
     repairRecordsTableModelMock = mock(AbstractTableModel.class);
     repairRecordsTableMock = mock(JTable.class);
-
+    
     when(repairRecordsMock.get(anyInt())).thenReturn(recordData);
     when(repairPeriodsMock.get("ТЭМ")).thenReturn(periodsData);
     when(dbManagerMock.getAllRepairRecords()).thenReturn(repairRecordsMock);
@@ -115,8 +119,10 @@ public class DateCalculationsHandlerTest {
     when(guiManagerMock.getRepairRecordsTable()).thenReturn(repairRecordsTableMock);
     when(repairRecordsTableMock.getModel()).thenReturn(repairRecordsTableModelMock);
     
-    dateCalculationsHandler = new DateCalculationsHandler(guiManagerMock, dbManagerMock);
+    dateCalculationsHandler =
+        new DateCalculationsHandler(guiManagerMock, dbManagerMock, requiredRepairHandlerMock);
     rowIndex = (int) (Math.random() * 100);
+    rowIndex = rowIndex % 2 == 0 ? rowIndex : rowIndex + 1;
   }
 
   @AfterEach
@@ -270,10 +276,58 @@ public class DateCalculationsHandlerTest {
     final List<Integer> actualColIndices = colCaptor.getAllValues();
     final List<Integer> actualRowIndices = rowCaptor.getAllValues();
     
+    // Fire next repair dates updated (exclude required repair column from loop).
     rowIndex++;
-    for (int j = 0; j < actualRowIndices.size(); j++) {
+    int tempInt = actualRowIndices.size() - 2;
+    for (int j = 0; j < tempInt; j++) {
       assertEquals(rowIndex, actualRowIndices.get(j));
       assertEquals(expectedColIndices.get(j), actualColIndices.get(j));
     }
+    // Fire required repair column updated.
+    rowIndex--;
+    for (; tempInt < actualRowIndices.size(); tempInt++) {
+      assertEquals(rowIndex++, actualRowIndices.get(tempInt));
+      assertEquals(9, actualColIndices.get(tempInt));
+    }
+  }
+  
+  /**
+   * Checks that only one call to DB was performed by calculations handler if old dates is
+   * bigger than auto calculated next repair dates.
+   * @param columnIndex for repair type
+   */
+  @SuppressWarnings("unchecked")
+  @ParameterizedTest
+  @MethodSource("provideColumnsIndices")
+  @DisplayName("Check No Calls For Older Dates")
+  void CheckNoCallsForOlderDates (final int columnIndex) {
+    /* thee_maintenence (column index=2) does not include any auto calculations for smaller repairs
+    *  cause it`s the smallest of all repairs. Therefore, it should be excluded from the test.
+    */
+    if (columnIndex == 2) {
+      return;
+    }
+    
+    /* This test was added later than all other tests and it needs different data.
+     * The easiest way to do that end up override global mocks with local ones.
+     */
+    final DbManager dbManager = mock(DbManager.class);
+    final Map<Integer, List<String>> repairRecords = mock(HashMap.class);
+    final Map<String, List<Integer>> repairPeriods = mock(HashMap.class);
+    
+    final List<String> recordData1 = new ArrayList<>(18);
+    recordData1.add("ТЭМ");
+    Stream.generate(() -> "31.12.2099").limit(17).forEach(recordData1::add);
+    
+    when(repairRecords.get(anyInt())).thenReturn(recordData1);
+    when(repairPeriods.get("ТЭМ")).thenReturn(periodsData);
+    when(dbManager.getAllRepairRecords()).thenReturn(repairRecords);
+    when(dbManager.getAllRepairPeriodData()).thenReturn(repairPeriods);
+    
+    final DateCalculationsHandler handler =
+        new DateCalculationsHandler(guiManagerMock, dbManager, requiredRepairHandlerMock);
+    handler.handleDateCalculations("01.01.2000", rowIndex, columnIndex);
+    
+    verify(dbManager, times(1)).setRepairRecordCell(anyInt(), anyInt(), anyString());
   }
 }

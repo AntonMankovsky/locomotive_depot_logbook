@@ -17,12 +17,14 @@ public class RecordUpdateHandler {
   private final DateCalculationsHandler dateCalculationsHandler;
   private final LastRepairHandler lastRepairHandler;
   
-  public RecordUpdateHandler(final DbManager dbManager, final GuiManager guiManager) {
+  public RecordUpdateHandler(final DbManager dbManager, final GuiManager guiManager,
+                             final DateCalculationsHandler dateCalculationsHandler,
+                             final LastRepairHandler lastRepairHandler) {
     super();
     this.dbManager = dbManager;
     this.guiManager = guiManager;
-    dateCalculationsHandler = new DateCalculationsHandler(guiManager, dbManager);
-    lastRepairHandler = new LastRepairHandler(guiManager, dbManager);
+    this.dateCalculationsHandler = dateCalculationsHandler;
+    this.lastRepairHandler = lastRepairHandler;
   }
   
   public void handleCellNewValue(final String value, final int rowIndex, final int colIndex) {

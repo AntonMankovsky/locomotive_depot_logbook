@@ -13,14 +13,17 @@ import gui.GuiManager;
 public class DateCalculationsHandler {
   private final GuiManager guiManager;
   private final DbManager dbManager;
+  private final RequiredRepairHandler requiredRepairHandler;
   private List<String> recordData;
   private List<Integer> periodsData;
   private final DateTimeFormatter formatter;
   
-  public DateCalculationsHandler(final GuiManager guiManager, final DbManager dbManager) {
+  public DateCalculationsHandler(final GuiManager guiManager, final DbManager dbManager,
+                                 final RequiredRepairHandler requiredRepairHandler) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
+    this.requiredRepairHandler = requiredRepairHandler;
     formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   }
 
@@ -273,22 +276,19 @@ public class DateCalculationsHandler {
    */
   private boolean shouldUpdate(final int colId, final LocalDate newDate) {
     final String oldDateString = recordData.get(colId);
-    if (oldDateString == null || oldDateString.equals("")) {
+    if (oldDateString == null|| oldDateString.equals("")) {
       return true;
     }
-    
     final LocalDate oldDate = LocalDate.parse(oldDateString, formatter);
     if (newDate.isAfter(oldDate)) {
       return true;
     }
-    
     return false;
   }
   
   private void updateRequiredRepairColumn(final int rowIndex) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
-    final RequiredRepairHandler repairHandler = new RequiredRepairHandler(dbManager);
-    repairHandler.updateRequiredRepairValues(rowId);
+    requiredRepairHandler.updateRequiredRepairValues(rowId);
     fireCellUpdated(rowIndex, 9, 9);
     fireCellUpdated(rowIndex + 1, 9, 9);
   }
