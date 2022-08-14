@@ -33,22 +33,27 @@ public class LastRepairHandler {
   public void updateLastRepairColumn(final int rowIndex) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
     final LocalDate[] lastRepairsDates = getLastRepairsDates(rowId);
-    LocalDate lastRepairDate = LocalDate.ofEpochDay(0);
-    int index = 0;
+    LocalDate lastRepairDate = null;
+    int index = -1;
+    
+    if (lastRepairsDates != null) {
+    lastRepairDate = LocalDate.ofEpochDay(0);
     for (int j = 0; j < 6; j++) {
       if (lastRepairsDates[j] != null && lastRepairDate.isBefore(lastRepairsDates[j])) {
         lastRepairDate = lastRepairsDates[j];
         index = j;
       }
     }
+    }
     
     final String currentLastRepair = dbManager.getAllRepairRecords().get(rowId).get(15);
-    final String lastRepairDateString = lastRepairDate.format(formatter);
+    final String lastRepairDateString =
+          lastRepairDate != null ? lastRepairDate.format(formatter) : "";
     if (currentLastRepair.equals(lastRepairDateString)) {
       return;
     }
     
-    dbManager.setRepairRecordCell(rowId, 14, REPAIR_NAMES[index]);
+    dbManager.setRepairRecordCell(rowId, 14, index != -1 ? REPAIR_NAMES[index] : "");
     dbManager.setRepairRecordCell(rowId, 15, lastRepairDateString);
     
     final AbstractTableModel recordsModel =
@@ -58,20 +63,25 @@ public class LastRepairHandler {
     
   }
   
-  /*
-   * int j for indices of last_repair values, int k for simple ordered elements in array
+  /**
+   * Returns array of last repair dates if there is at least one, otherwise returns {@code null}.
+   * @param rowId of repair record in database table
+   * @return array of last repair dates or {@code null} if record has no last repair dates yet
    */
   private LocalDate[] getLastRepairsDates(final int rowId) {
     recordData = dbManager.getAllRepairRecords().get(rowId);
     final LocalDate[] lastRepairsDates = new LocalDate[6];
+    boolean atLeastOneDate = false;
     String tempString;
+    // j for indices of last_repair values, k for natural order elements in array
     for (int j = 2, k = 0; j <= 12; j+=2, k++) {
       tempString = recordData.get(j);
       if (tempString == null || tempString.equals("")) {
         continue;
       }
       lastRepairsDates[k] = LocalDate.parse(tempString, formatter);
+      atLeastOneDate = true;
     }
-    return lastRepairsDates;
+    return atLeastOneDate ? lastRepairsDates : null;
   }
 }

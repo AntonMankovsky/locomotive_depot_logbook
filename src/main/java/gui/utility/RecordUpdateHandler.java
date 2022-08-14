@@ -45,7 +45,7 @@ public class RecordUpdateHandler {
     } catch (final IllegalArgumentException err) {
       JOptionPane.showMessageDialog(
           guiManager.getMainFrame(),
-          "Запись должна соответствовать формату дд.ММ.гггг и указывать на существующую дату",
+          "Запись должна быть в формате дд.ММ.гггг и указывать на существующую дату",
           "Некорректный ввод",
           JOptionPane.ERROR_MESSAGE
           );
@@ -55,10 +55,12 @@ public class RecordUpdateHandler {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
     if (!dbManager.setRepairRecordCell(rowId, colIndex * 2 - 2, value)) {
       notifyUserOnOperationFailure();
-    } else if (value != null && !value.equals("")){
+    } else {
       lastRepairHandler.updateLastRepairColumn(rowIndex);
+      if (value != null && !value.equals("")){
       dateCalculationsHandler.handleDateCalculations(value, rowIndex, colIndex);
       }
+    }
   }
 
   private void editNumberCase(final String value, final int rowIndex) {

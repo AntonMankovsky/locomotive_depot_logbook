@@ -147,7 +147,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
         null, null, null, "31.12.2021", null, "02.01.2022", null, "01.04.2022", null,
         "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-         .collect(Collectors.toCollection(ArrayList::new)));
+        .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[0] = "31.12.2021";
     expectedRepairType[0] = "ТО-3";
@@ -159,7 +159,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "31.12.2021", null, "01.04.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[1] = "31.12.2021";
     expectedRepairType[1] = "ТР-1";
@@ -171,7 +171,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, null, null, "29.12.2021", null, "31.12.2021", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[2] = "31.12.2021";
     expectedRepairType[2] = "ТР-2";
@@ -183,7 +183,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "31.12.2021", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[3] = "31.12.2021";
     expectedRepairType[3] = "ТР-3";
@@ -195,7 +195,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "27.12.2021", null, "31.12.2021", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[4] = "31.12.2021";
     expectedRepairType[4] = "СР";
@@ -207,7 +207,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "27.12.2021", null, "26.12.2021", null, "31.12.2021", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[5] = "31.12.2021";
     expectedRepairType[5] = "КР";
@@ -219,7 +219,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
         null, null, null, "31.12.2021", null, "02.01.2022", null, "01.04.2022", null,
         "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "31.12.2021")
-         .collect(Collectors.toCollection(ArrayList::new)));
+        .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[6] = "31.12.2021";
     expectedRepairType[6] = "ТО-3";
@@ -231,7 +231,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "31.12.2021", null, "01.04.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "31.12.2021")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[7] = "31.12.2021";
     expectedRepairType[7] = "ТР-1";
@@ -243,7 +243,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "31.12.2021", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "31.12.2021")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[8] = "31.12.2021";
     expectedRepairType[8] = "ТР-2";
@@ -255,7 +255,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "31.12.2021", null, "01.06.2023", null, "01.12.2026", null, null, null, "31.12.2021")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[9] = "31.12.2021";
     expectedRepairType[9] = "ТР-3";
@@ -267,7 +267,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "27.12.2021", null, "31.12.2021", null, "01.12.2026", null, null, null, "31.12.2021")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[10] = "31.12.2021";
     expectedRepairType[10] = "СР";
@@ -279,7 +279,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "30.12.2021", null, "29.12.2021", null, "28.12.2021", null,
             "27.12.2021", null, "26.12.2021", null, "31.12.2021", null, null, null, "31.12.2021")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[11] = "31.12.2021";
     expectedRepairType[11] = "КР";
@@ -292,7 +292,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
         null, null, null, "08.01.2022", null, "02.02.2022", null, "01.04.2022", null,
         "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-         .collect(Collectors.toCollection(ArrayList::new)));
+        .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[12] = "08.01.2022";
     expectedRepairType[12] = "ТО-3";
@@ -304,7 +304,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "01.04.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[13] = "09.01.2022";
     expectedRepairType[13] = "ТР-1";
@@ -316,7 +316,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, null, null, "09.01.2022", null, "10.01.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[14] = "10.01.2022";
     expectedRepairType[14] = "ТР-2";
@@ -328,7 +328,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "11.01.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[15] = "11.01.2022";
     expectedRepairType[15] = "ТР-3";
@@ -340,7 +340,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "11.01.2022", null, "12.01.2022", null, "01.12.2026", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[16] = "12.01.2022";
     expectedRepairType[16] = "СР";
@@ -352,7 +352,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "11.01.2022", null, "12.01.2022", null, "13.01.2022", null, null, null, "")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[17] = "13.01.2022";
     expectedRepairType[17] = "КР";
@@ -364,7 +364,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
         null, null, null, "08.01.2022", null, "02.02.2022", null, "01.04.2022", null,
         "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "08.01.2022")
-         .collect(Collectors.toCollection(ArrayList::new)));
+        .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[18] = "08.01.2022";
     expectedRepairType[18] = "ТО-3";
@@ -376,7 +376,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "07.01.2022", null, "01.04.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "07.01.2022")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[19] = "07.01.2022";
     expectedRepairType[19] = "ТР-1";
@@ -388,7 +388,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "06.01.2022", null,
             "01.11.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "06.01.2022")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[20] = "06.01.2022";
     expectedRepairType[20] = "ТР-2";
@@ -400,7 +400,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "05.01.2022", null, "01.06.2023", null, "01.12.2026", null, null, null, "05.01.2022")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[21] = "05.01.2022";
     expectedRepairType[21] = "ТР-3";
@@ -412,7 +412,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "11.01.2022", null, "04.01.2022", null, "01.12.2026", null, null, null, "04.01.2022")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[22] = "04.01.2022";
     expectedRepairType[22] = "СР";
@@ -424,7 +424,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
             null, null, null, "08.01.2022", null, "09.01.2022", null, "10.01.2022", null,
             "11.01.2022", null, "12.01.2022", null, "03.01.2022", null, null, null, "03.01.2022")
-             .collect(Collectors.toCollection(ArrayList::new)));
+            .collect(Collectors.toCollection(ArrayList::new)));
     
     expectedDate[23] = "03.01.2022";
     expectedRepairType[23] = "КР";
@@ -437,7 +437,7 @@ public class RequiredRepairHandlerTest {
     testRecordData.add(Stream.of(
         null, null, null, "", null, null, null, null, null,
         null, null, null, null, null, null, null, null, null)
-         .collect(Collectors.toCollection(ArrayList::new)));
+        .collect(Collectors.toCollection(ArrayList::new)));
 
     expectedDate[24] = "";
     expectedRepairType[24] = "";

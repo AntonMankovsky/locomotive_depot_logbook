@@ -57,8 +57,8 @@ public class DeleteRecordListener implements ActionListener {
         recordsModel.fireTableRowsDeleted(deletedRows[0], deletedRows[1]);
         
         if (recordsModel.getRowCount() > 0) {
-          guiManager.getRepairRecordsTable()
-          .setRowSelectionInterval(deletedRows[0] - 2, deletedRows[0] - 2);
+          final int rowToSelect = deletedRows[0] != 0 ? deletedRows[0] - 2 : 0;
+          guiManager.getRepairRecordsTable().setRowSelectionInterval(rowToSelect, rowToSelect);
         }
       }
 

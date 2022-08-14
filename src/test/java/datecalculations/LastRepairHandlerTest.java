@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JTable;
@@ -58,13 +59,9 @@ public class LastRepairHandlerTest {
     repairRecordsTableModelMock = mock(AbstractTableModel.class);
     repairRecordsTableMock = mock(JTable.class);
     
-    when(repairRecordsMock.get(0)).thenReturn(datesForTests.get(0));
-    when(repairRecordsMock.get(1)).thenReturn(datesForTests.get(1));
-    when(repairRecordsMock.get(2)).thenReturn(datesForTests.get(2));
+    when(repairRecordsMock.get(anyInt())).thenAnswer(i -> datesForTests.get(i.getArgument(0)));
     when(dbManagerMock.getAllRepairRecords()).thenReturn(repairRecordsMock);
-    when(dbManagerMock.getIdByOrdinalNumber(0)).thenReturn(0);
-    when(dbManagerMock.getIdByOrdinalNumber(1)).thenReturn(1);
-    when(dbManagerMock.getIdByOrdinalNumber(2)).thenReturn(2);
+    when(dbManagerMock.getIdByOrdinalNumber(anyInt())).thenAnswer(i -> (i.getArgument(0)));
     
     when(guiManagerMock.getRepairRecordsTable()).thenReturn(repairRecordsTableMock);
     when(repairRecordsTableMock.getModel()).thenReturn(repairRecordsTableModelMock);
@@ -87,40 +84,41 @@ public class LastRepairHandlerTest {
    * contain empty strings (identical data structure, but only needed values).
    */
   private static void initTestsData() {
-    expectedDate = new String[3];
-    expectedRepairType = new String[3];
-    datesForTests = new ArrayList<>(3);
+    expectedDate = new String[4];
+    expectedRepairType = new String[4];
+    datesForTests = new ArrayList<>(4);
     
-    List<String> tempList = new ArrayList<>(19);
-    Stream.of(
-          "", "", "01.01.2000", "", null, "", "01.02.2000", "", "02.02.2000", "",
-          "01.01.1999", "", "01.02.1999", "", "", "", "", "", "")
-          .forEach(tempList::add);
-    datesForTests.add(tempList);
+    datesForTests.add(Stream.of(
+        "", "", "01.01.2000", "", null, "", "01.02.2000", "", "02.02.2000", "",
+        "01.01.1999", "", "01.02.1999", "", "", "", "", "", "")
+        .collect(Collectors.toCollection(ArrayList::new)));
     expectedDate[0] = "02.02.2000";
     expectedRepairType[0] = "ТР-3";
     
-    tempList = new ArrayList<>(19);
-    Stream.of(
-          "", "", "01.01.1970", "", "31.12.2070", "", "11.11.2011", "", "20.11.2010", "",
-          "28.07.2007", "", null, "", "", "", "", "", "")
-          .forEach(tempList::add);
-    datesForTests.add(tempList);
+    datesForTests.add(Stream.of(
+        "", "", "01.01.1970", "", "31.12.2070", "", "11.11.2011", "", "20.11.2010", "",
+        "28.07.2007", "", null, "", "", "", "", "", "")
+        .collect(Collectors.toCollection(ArrayList::new)));
     expectedDate[1] = "31.12.2070";
     expectedRepairType[1] = "ТР-1";
     
-    tempList = new ArrayList<>(19);
-    Stream.of(
+    datesForTests.add(Stream.of(
           "", "", "", "", "25.06.2000", "", "10.12.1998", "", "19.09.2018", "",
           "09.05.2019", "", "13.07.2022", "", "", "", "", "", "")
-          .forEach(tempList::add);
-    datesForTests.add(tempList);
+          .collect(Collectors.toCollection(ArrayList::new)));
     expectedDate[2] = "13.07.2022";
     expectedRepairType[2] = "КР";
+    
+    datesForTests.add(Stream.generate(() -> "")
+        .limit(17) 
+        .collect(Collectors.toCollection(ArrayList::new)));
+    datesForTests.get(3).add(15, "01.01.2022"); // random last repair date to verify it would be changed with empty string 
+    expectedDate[3] = "";
+    expectedRepairType[3] = "";
   }
   
   @ParameterizedTest
-  @ValueSource(ints = {0, 2, 4})
+  @ValueSource(ints = {0, 2, 4, 6})
   @DisplayName("Handler updates and fires date and type")
   void handlerUpdatesAndFiresDateAndType(final int rowIndex) {
     lastRepairHandler.updateLastRepairColumn(rowIndex);

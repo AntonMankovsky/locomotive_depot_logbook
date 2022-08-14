@@ -28,58 +28,6 @@ public class InputValidator {
   }
 
   /**
-   * Validates repair record.
-   * <p>
-   * {@code loco_model_name} (index 0) should have corresponding model name in 
-   * {@code repair_periods table} and may not be null. 
-   * <br>
-   * {@code loco_number} (index 1) may not be null, empty, or contain anything except digits.
-   * <br>
-   * Other elements, except {@code notes} (index 14, the last), could be null, empty, or match
-   * format {@code dd.MM.yyyy} with correct date. 
-   * <br>
-   * Any date of next repair should always be bigger than date of corresponding last repair.
-   * <br>
-   * If any string in next/last repair pair contains date, the other one should contain date too.
-   * @param record to validate
-   * @throws IllegalArgumentException if validation fails
-   */
-  public void validateRepairRecord(final List<String> record) throws IllegalArgumentException {
-    validateRepairRecordModelName(record.get(0));
-    validateLocoNumber(record.get(1));
-    for (int j = 2; j < record.size() - 2; j++) {
-      validateRepairDate(record.get(j));
-    }
-    for (int j = 2; j < record.size() - 3; j+=2) {
-      validateLastNextRepairPair(record.get(j), record.get(j + 1));
-    }
-  }
-  
-  /**
-   * Validates model name for repair records table.
-   * @param modelName to validate
-   * @throws IllegalArgumentException if models table does not contain such model name.
-   */
-  public void validateRepairRecordModelName(final String modelName) throws 
-                                                                        IllegalArgumentException {
-    if (modelName == null) {
-      logger.warn(modelName + " failed model name validation: it may not be NULL");
-      throw new IllegalArgumentException("Invalid locomotive model name: it have to be not NULL");
-    }
-    
-    for (String validName : dbManager.getAllModelNames()) {
-      if (modelName.equals(validName)) {
-        logger.info(modelName + " passed model name validation.");
-        return;
-      }
-    }
-    final String logString = modelName + " failed model name validation:\n"
-        + " DbManager`s model name list does not contain such model name.";
-    logger.warn(logString);
-    throw new IllegalArgumentException("No match found for such model name: " + modelName);
-  }
-  
-  /**
    * Validates locomotive number for repair records table.
    * @param locoNumber to validate
    * @throws IllegalArgumentException when number is null or contains anything except digits
@@ -104,14 +52,15 @@ public class InputValidator {
    * @param date to validate
    * @throws IllegalArgumentException if contains any characters while violates pattern dd.MM.yyyy
    */
-  public void validateRepairDate(final String date) throws IllegalArgumentException {
+  public void validateRepairDate(String date) throws IllegalArgumentException {
     if (date == null || date.equals("")) {
-      logger.info("Repair date passed validation cause nulls and empty strings are allowed.");
+      //logger.info("Repair date passed validation cause nulls and empty strings are allowed.");
       return;
     }
     
+    date = date.trim();
     Pattern pattern = Pattern.compile("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}");
-    if (!pattern.matcher(date.trim()).matches()) {
+    if (!pattern.matcher(date).matches()) {
       logger.warn(date + " failed validation due to violation of required date format: dd.MM.yyyy");
       throw new IllegalArgumentException("Invalid date format: " + date + ". dd.MM.yyyy expected.");
     } else {
@@ -128,80 +77,17 @@ public class InputValidator {
   }
   
   /**
-   * Validates pair of strings: dates of last and next repairs.
-   * <p>
-   * Expects that given dates passed repair date validation and belongs to a single type of repair.
-   * <b>
-   * If any string in repair pair contains date, the other one should contain date too.
-   * <br>
-   * Date of next repair should always be bigger than date of corresponding last repair.
-   * @param lastRepair to validate with {@code nextRepair}
-   * @param nextRepair to validate with {@code lastRepair}
-   * @throws IllegalArgumentException when described validation rules are violated
-   */
-  public void validateLastNextRepairPair(final String lastRepair, final String nextRepair) throws
-                                                                        IllegalArgumentException {
-    
-    final boolean lastEmpty = (lastRepair == null) || (lastRepair.equals(""));
-    final boolean nextEmpty = (nextRepair == null) || (nextRepair.equals(""));
-    if (lastEmpty != nextEmpty) {
-      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed "
-          + "validation: if last repair string contains date, "
-          + "next repair must contain date too, and vice versa.";
-      logger.warn(logString);
-      throw new IllegalArgumentException("Heterogeneous pair error: " + logString);
-    }
-    
-    if (lastEmpty) {
-      final String logString = "Last-Next repair date pair passed the validation due to both "
-          + "strings is either null or empty";
-      logger.info(logString);
-      return;
-    }
-    
-    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    final LocalDate dateLast = LocalDate.parse(lastRepair, formatter);
-    final LocalDate dateNext = LocalDate.parse(nextRepair, formatter);
-    if (dateLast.isBefore(dateNext)) {
-      logger.info(lastRepair + "-" + nextRepair + " repair dates passed the validation due to "
-          + "both strings match all requirements.");
-    } else {
-      final String logString = lastRepair + "-" + nextRepair + " repair dates pair failed "
-          + "validation: last repair should be before next repair.";
-      logger.warn(logString);
-      throw new IllegalArgumentException("Invalid dates par: " + logString);
-  }
-  }
-  
-  /**
-   * Validates row with model name and repair periods.
-   * <p>
-   * Model name must be non-empty unique string and may not be NULL.
-   * <p>
-   * Period of any repair must be positive integer.
-   * @param modelName to validate
-   * @param repairPeriods to validate
-   * @throws IllegalArgumentException if validation fails
-   */
-  public void validateModelPeriods(final String modelName,final List<Integer> repairPeriods) throws
-                                                                         IllegalArgumentException {
-    validateRepairPeriodsModelName(modelName);
-    for (int period : repairPeriods) {
-      validateRepairPeriod(period);
-    }
-  }
-  
-  /**
    * Validates locomotive model name.
    * <p>
    * Model name must be non-empty unique string and may not be NULL. 
-   * It cannot contain special char like " ' or \
+   * It cannot contain special characters " ' or \.
    * @param modelName to validate
    * @throws IllegalArgumentException if validation fails
    */
-  public void validateRepairPeriodsModelName(final String modelName) throws 
+  public void validateRepairPeriodsModelName(String modelName) throws 
                                                                         IllegalArgumentException {
-    if (modelName == null || modelName.equals("")) {
+    modelName = modelName == null ? "" : modelName.trim();
+    if (modelName.equals("")) {
       logger.warn(modelName + " failed model name validation: it can not be empty or NULL");
       throw new IllegalArgumentException("Invalid locomotive model name: cannot be empty or NULL");
     }
