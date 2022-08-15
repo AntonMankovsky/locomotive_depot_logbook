@@ -35,7 +35,7 @@ public class DbManagerSqliteImp implements DbManager {
   private boolean archiveInitialized;
   
   /**
-   * Gives methods for working with database.
+   * Provides methods for working with database.
    * <br>
    * Any data manipulation must be done only through methods of this object.
    * @param connection to the database
@@ -55,7 +55,7 @@ public class DbManagerSqliteImp implements DbManager {
     updateRequiredRepairValues();
   }
   
-  //========================== Methods for repair records table ==========================
+  // ============================= Methods for repair records table =============================
 
   /**
    * The method provides convenient access to up-to-date information about the data and should not 
@@ -168,7 +168,7 @@ public class DbManagerSqliteImp implements DbManager {
     return overdueRepairsMap;
   }
 
-  // ========================== Methods for repair periods table ==========================
+  // ============================= Methods for repair periods table =============================
   
   @Override
   public Map<String, List<Integer>> getAllRepairPeriodData() {
@@ -259,7 +259,7 @@ public class DbManagerSqliteImp implements DbManager {
     return names;
   }
   
-  //========================== Methods for records archive table ==========================
+  // ============================= Methods for records archive table =============================
   
   public List<List<String>> getAllRecordsArchiveData() {
     if (!archiveInitialized) {
@@ -307,7 +307,7 @@ public class DbManagerSqliteImp implements DbManager {
       return false;
     }
   }
-  
+
 // ====================================== Utility methods ======================================
   
   private Map<String, List<Integer>> loadDataFromRepairPeriodsTable() {

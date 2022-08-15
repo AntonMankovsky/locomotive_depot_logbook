@@ -35,10 +35,10 @@ public class IndexToColumnNameTranslator {
    * Converts given index to corresponding column name in {@code repair_records} table.
    * <p>
    * Column {@code id} is not included. Example: for value 0 it will return
-   * {@code "loco_model_name"},  and for index 14 it will return {@code "notes"}.
+   * {@code "loco_model_name"}, and for index 18 it will return {@code "notes"}.
    * @param index of column from list that represents database table columns
    * @return corresponding column name
-   * @throws IllegalArgumentException if index is not in range [0:14] inclusive
+   * @throws IllegalArgumentException if index is not in range [0:18] inclusive
    */
   public static String translateForRepairRecordsTable(final int index)
                                                                   throws IllegalArgumentException {
