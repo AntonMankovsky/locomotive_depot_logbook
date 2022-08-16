@@ -222,6 +222,24 @@ public class DbManagerSqliteImpTest {
   @DisplayName("getRecordsCount returns correct value")
   void getRecordsCountReturnsCorrectValue() throws SQLException {
     setUpDbManager();
+    // After initialization
+    assertEquals(1, dbManager.getRecordsCount());
+    
+    // After insertion
+    final List<String> testRow = new ArrayList<>(19);
+    testRow.add("ТЭМ");
+    testRow.add("0150");
+    Stream.generate(() -> "").limit(17).forEach(testRow::add);
+    dbManager.insertNewRepairRecord(testRow);
+    
+    assertEquals(2, dbManager.getRecordsCount());
+    
+    // After deletion
+    final String sqlStatement = "DELETE FROM repair_records WHERE id = 2";
+    final PreparedStatement prepStatementMockDeleteRecord = mock(PreparedStatement.class);
+    when(connectionMock.prepareStatement(sqlStatement)).thenReturn(prepStatementMockDeleteRecord);
+    dbManager.deleteRepairRecord(2);
+    
     assertEquals(1, dbManager.getRecordsCount());
   }
   
@@ -356,17 +374,26 @@ public class DbManagerSqliteImpTest {
   }
   
   @Test
-  @DisplayName("getAllModelNames returns correct names after row insertion")
-  void getAllModelNamesReturnsCorrectNamesAfterRowInsertion() throws SQLException {
+  @DisplayName("getAllModelNames returns correct names after row insertion and deletion")
+  void getAllModelNamesReturnsCorrectNamesAfterRowInsertionAndDeletion() throws SQLException {
     setUpDbManager();
     final List<Integer> testRow = new ArrayList<>(6);
     Stream.generate(() -> 1).limit(6).forEach(testRow::add);
     dbManager.insertNewModelRepairPeriods("ТГМ", testRow);
     
-    final String[] actualNames = dbManager.getAllModelNames();
+    String[] actualNames = dbManager.getAllModelNames();
     assertTrue(actualNames.length == 2);
     assertTrue(actualNames[0].equals("ТЭМ"));
     assertTrue(actualNames[1].equals("ТГМ"));
+    
+    final String sqlStatement = "DELETE FROM repair_periods WHERE loco_model_name = " + "\"ТГМ\"";
+    final PreparedStatement prepStatementMockDeleteRecord = mock(PreparedStatement.class);
+    when(connectionMock.prepareStatement(sqlStatement)).thenReturn(prepStatementMockDeleteRecord);
+    dbManager.deleteRepairPeriods("ТГМ");
+    
+    actualNames = dbManager.getAllModelNames();
+    assertTrue(actualNames.length == 1);
+    assertTrue(actualNames[0].equals("ТЭМ"));
   }
   
   // ============================== Tests for archive records table ==============================
