@@ -10,6 +10,9 @@ import java.util.Map;
 public class ModelNamesComparator implements Comparator<String> {
   private final Map<String, Integer> priority;
   
+  /**
+   * Customizes model names in preferred order.
+   */
   public ModelNamesComparator() {
     priority = new HashMap<>(12);
     setPriorities();
@@ -40,4 +43,8 @@ public class ModelNamesComparator implements Comparator<String> {
     return priority1 - priority2;
   }
 
+  @Override
+  public String toString() {
+    return "ModelNamesComparator [priority=" + priority + "]";
+  }
 }
