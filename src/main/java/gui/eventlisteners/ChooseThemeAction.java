@@ -53,7 +53,7 @@ public class ChooseThemeAction extends AbstractAction {
       notifyOnSuccess();
     } catch (final IOException exception) {
       logger.warn(
-          "Failed to write \"UITheme.txt\" file."
+          "Failed to write in \"UITheme.txt\" file."
           + exception.getMessage());
       notifyOnFailure();
     }
@@ -66,8 +66,8 @@ public class ChooseThemeAction extends AbstractAction {
   
   private void notifyOnFailure() {
     dialogWindow.showErrorMessage(
-        guiManager.getMainFrame(), "Не удалось изменить файл с названием темы.",
-                                   "Ошибка записи в файл");
+        guiManager.getMainFrame(), "Ошибка записи в файл",
+                                   "Не удалось изменить файл с названием темы.");
   }
 
   @Override

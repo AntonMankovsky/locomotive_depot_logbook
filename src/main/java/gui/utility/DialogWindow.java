@@ -48,5 +48,32 @@ public class DialogWindow {
       throws HeadlessException {
     JOptionPane.showMessageDialog(frame, title, message, JOptionPane.INFORMATION_MESSAGE);
   }
+  
+  /**
+   * Shows to a user dialog window with OK and CANCEL options.
+   * <p>
+   * Replace a direct {@code JOptionPane.showConfirmDialog} method call with this method for
+   * tests convenience.
+   * @param frame in which the dialog window is displayed
+   * @param title of dialog window
+   * @param message of dialog window
+   * @param messageType primarily used to determine the icon from the pluggable Look and Feel:
+   *        ERROR_MESSAGE, INFORMATION_MESSAGE, WARNING_MESSAGE, QUESTION_MESSAGE, or PLAIN_MESSAGE
+   * @return an integer indicating the option selected by the user (0 if user has selected OK)
+   * @throws HeadlessException if GraphicsEnvironment.isHeadless returns true
+   */
+  public int showConfirmDialog(
+      final Component frame, final String title, final String message, final int messageType) 
+      throws HeadlessException {
+    
+    return JOptionPane.showConfirmDialog(
+        frame,
+        message,
+        title,
+        JOptionPane.OK_CANCEL_OPTION,
+        messageType
+        );
+
+  }
 
 }

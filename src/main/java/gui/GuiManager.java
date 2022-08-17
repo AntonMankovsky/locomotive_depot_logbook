@@ -73,7 +73,7 @@ public class GuiManager {
     mainFrameWidth = (int) (screenSize.width * 0.90);
     mainFrameHeight = (int) (screenSize.height * 0.80);
     modelsFrame = new ModelsFrame(this, dbManager);
-    archiveFrame = new ArchiveFrame(this, dbManager);
+    archiveFrame = new ArchiveFrame(this, dbManager, dialogWindow);
     columnsWidth = new int[11];
     
     buildNewRecordSubmenu();

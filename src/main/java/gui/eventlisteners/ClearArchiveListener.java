@@ -8,16 +8,19 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 /**
  * Reacts to clear command from user.
  */
 public class ClearArchiveListener implements ActionListener {
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
 
-  public ClearArchiveListener(final GuiManager guiManager) {
+  public ClearArchiveListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
   }
 
   @Override
@@ -34,23 +37,18 @@ public class ClearArchiveListener implements ActionListener {
     if (archiveCleared) {
       fireArchiveWasCleared();
     } else {
-      JOptionPane.showMessageDialog(
-          guiManager.getArchiveFrame(),
-          "Не удалось очистить архив",
-          "Ошибка при очистке архива",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(
+          guiManager.getArchiveFrame(), "Ошибка при очистке архива", "Не удалось очистить архив");
     }
   }
   
   private int getUserConfirmation() {
-    return JOptionPane.showConfirmDialog(
-        guiManager.getArchiveFrame(),
-        "Это действие удалит все записи из архива",
-        "Очистить архив",
-        JOptionPane.OK_CANCEL_OPTION,
-        JOptionPane.WARNING_MESSAGE
-        );
+    return dialogWindow.showConfirmDialog(
+           guiManager.getArchiveFrame(),
+           "Очистить архив",
+           "Это действие удалит все записи из архива",
+           JOptionPane.WARNING_MESSAGE
+           );
   }
   
   private void fireArchiveWasCleared() {
@@ -59,6 +57,11 @@ public class ClearArchiveListener implements ActionListener {
       final AbstractTableModel archiveModel = (AbstractTableModel) tm;
       archiveModel.fireTableDataChanged();
     }
+  }
+
+  @Override
+  public String toString() {
+    return "ClearArchiveListener [guiManager=" + guiManager + "]";
   }
 
 }

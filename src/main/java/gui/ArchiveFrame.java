@@ -20,6 +20,7 @@ import dbapi.DbManager;
 import gui.eventlisteners.ClearArchiveListener;
 import gui.tablemodels.RecordsArchiveTableModel;
 import gui.tablerenderers.RecordsArchiveTableRenderer;
+import gui.utility.DialogWindow;
 
 /**
  * Manages frame with records archive table.
@@ -27,6 +28,7 @@ import gui.tablerenderers.RecordsArchiveTableRenderer;
 public class ArchiveFrame extends JFrame {
   private final DbManager dbManager;
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
   private int archiveFrameWidth;
   private int archiveFrameHeight;
   private JMenuBar archiveMenuBar;
@@ -43,11 +45,14 @@ public class ArchiveFrame extends JFrame {
    * it will use lazy GUI and data initialization.
    * @param guiManager the core GUI class of application with important GUI fields and methods
    * @param dbManager class that contains database API
+   * @param dialogWindow for interactions with user
    */
-  public ArchiveFrame(final GuiManager guiManager, final DbManager dbManager) {
+  public ArchiveFrame(
+      final GuiManager guiManager, final DbManager dbManager, DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
+    this.dialogWindow = dialogWindow;
     initialized = false;
   }
   
@@ -80,7 +85,7 @@ public class ArchiveFrame extends JFrame {
     archiveMenu = new JMenu("Действия");
     
     JMenuItem tempItem = new JMenuItem("Очистить архив"); 
-    tempItem.addActionListener(new ClearArchiveListener(guiManager));
+    tempItem.addActionListener(new ClearArchiveListener(guiManager, dialogWindow));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
     archiveMenu.add(tempItem);
     
