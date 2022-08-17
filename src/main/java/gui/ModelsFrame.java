@@ -20,6 +20,7 @@ import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
 import gui.tablemodels.RepairPeriodsTableModel;
 import gui.tablerenderers.RepairPeriodsTableRenderer;
+import gui.utility.DialogWindow;
 
 /**
  * Manages frame with repair periods table.
@@ -27,6 +28,7 @@ import gui.tablerenderers.RepairPeriodsTableRenderer;
 public class ModelsFrame extends JFrame {
   private final DbManager dbManager;
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
   private int modelFrameWidth;
   private int modelFrameHeight;
   private JMenuBar modelMenuBar;
@@ -39,10 +41,12 @@ public class ModelsFrame extends JFrame {
    * @param guiManager the core GUI class of application with important GUI fields and methods
    * @param dbManager class that contains database API
    */
-  public ModelsFrame(final GuiManager guiManager, final DbManager dbManager) {
+  public ModelsFrame(
+      final GuiManager guiManager, final DbManager dbManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
+    this.dialogWindow = dialogWindow;
     createGui();
   }
   
@@ -70,7 +74,7 @@ public class ModelsFrame extends JFrame {
     modelMenu.addSeparator();
     
     tempItem = new JMenuItem("Удалить выбранную модель");
-    tempItem.addActionListener(new DeleteModelListener(guiManager));
+    tempItem.addActionListener(new DeleteModelListener(guiManager, dialogWindow));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     modelMenu.add(tempItem);
     

@@ -72,7 +72,7 @@ public class GuiManager {
     final Dimension screenSize = kit.getScreenSize();
     mainFrameWidth = (int) (screenSize.width * 0.90);
     mainFrameHeight = (int) (screenSize.height * 0.80);
-    modelsFrame = new ModelsFrame(this, dbManager);
+    modelsFrame = new ModelsFrame(this, dbManager, dialogWindow);
     archiveFrame = new ArchiveFrame(this, dbManager, dialogWindow);
     columnsWidth = new int[11];
     

@@ -110,8 +110,8 @@ public abstract interface DbManager {
   public abstract boolean setRepairPeriodCell(String modelName, int columnIndex, int value);
   
   /**
-   * Deletes rows from repair periods table.
-   * @param rowId array of rows that should be deleted
+   * Deletes row from repair periods table.
+   * @param modelName to delete
    * @return {@code false} if operation fails and {@code true} if operation succeeds
    */
   public abstract boolean deleteRepairPeriods(String modelName);

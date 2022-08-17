@@ -48,7 +48,7 @@ public class ArchiveFrame extends JFrame {
    * @param dialogWindow for interactions with user
    */
   public ArchiveFrame(
-      final GuiManager guiManager, final DbManager dbManager, DialogWindow dialogWindow) {
+      final GuiManager guiManager, final DbManager dbManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;

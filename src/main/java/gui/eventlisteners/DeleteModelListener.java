@@ -5,22 +5,24 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import dbapi.DbManager;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 /**
  * Reacts to delete model command from user.
  */
 public class DeleteModelListener implements ActionListener {
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
 
-  public DeleteModelListener(final GuiManager guiManager) {
+  public DeleteModelListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
   }
 
   @Override
@@ -34,18 +36,14 @@ public class DeleteModelListener implements ActionListener {
         (String) guiManager.getModelsFrame().getRepairPeriodsTable().getValueAt(selectedRow, 0);
     
     if (isModelInUse(modelName)) {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Модель " + modelName + " используется в журнале учёта ремонтов",
-          "Ошибка при удалении записи",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(guiManager.getModelsFrame(), "Ошибка при удалении записи",
+                           "Модель " + modelName + " используется в журнале учёта ремонтов");
       return;
     }
     
     try {
     guiManager.getModelsFrame().getRepairPeriodsTable().getCellEditor().cancelCellEditing();
-    } catch (final NullPointerException e) {
+    } catch (final NullPointerException exception) {
       // This construction is needed to prevent a graphical bug that occurs 
       // when a row is deleted while it`s cell is in editing state.
     }
@@ -61,18 +59,16 @@ public class DeleteModelListener implements ActionListener {
         recordsModel.fireTableRowsDeleted(selectedRow, selectedRow);
         
         if (recordsModel.getRowCount() > 0) {
+          final int rowToSelect = selectedRow != 0 ? selectedRow - 1 : 0;
           guiManager.getModelsFrame()
               .getRepairPeriodsTable()
-              .setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
+              .setRowSelectionInterval(rowToSelect, rowToSelect);
         }
       }
     } else {
-      JOptionPane.showMessageDialog(
-          guiManager.getModelsFrame(),
-          "Не удалось удалить выбранную запись",
-          "Ошибка при удалении записи",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(guiManager.getModelsFrame(), 
+                                    "Ошибка при удалении записи",
+                                    "Не удалось удалить выбранную запись");
     }
   }
   
@@ -89,4 +85,10 @@ public class DeleteModelListener implements ActionListener {
     }
     return false;
   }
+
+  @Override
+  public String toString() {
+    return "DeleteModelListener [guiManager=" + guiManager + "]";
+  }
+  
 }
