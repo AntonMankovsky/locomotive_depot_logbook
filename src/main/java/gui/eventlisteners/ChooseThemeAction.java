@@ -15,10 +15,12 @@ import org.apache.logging.log4j.Logger;
 
 import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 public class ChooseThemeAction extends AbstractAction {
   private static final Logger logger = LogManager.getLogger();
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
   
   /**
    * Overrides color theme name in UI configuration file.
@@ -26,11 +28,13 @@ public class ChooseThemeAction extends AbstractAction {
    * @param guiManager to provide access to application main frame
    * @throws IllegalArgumentException if theme with given name is not supported
    */
-  public ChooseThemeAction(final String name, final GuiManager guiManager)
+  public ChooseThemeAction(
+      final String name, final GuiManager guiManager, final DialogWindow dialogWindow)
       throws IllegalArgumentException {
     
     super();
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
     
     if (name.equals("Светлая") || name.equals("Тёмная")) {
       putValue(Action.NAME, name);
@@ -49,27 +53,25 @@ public class ChooseThemeAction extends AbstractAction {
       notifyOnSuccess();
     } catch (final IOException exception) {
       logger.warn(
-          "Failed to read \"UITheme.txt\" file. Application will use default color theme."
+          "Failed to write \"UITheme.txt\" file."
           + exception.getMessage());
       notifyOnFailure();
     }
   }
   
   private void notifyOnSuccess() {
-    JOptionPane.showMessageDialog(
-        guiManager.getMainFrame(),
-        "Изменения вступят в силу при следующем запуске программы",
-        "Выбор темы ",
-        JOptionPane.INFORMATION_MESSAGE
-        );
+    dialogWindow.showInfoMessage(guiManager.getMainFrame(),
+        "Выбор темы", "Изменения вступят в силу при следующем запуске программы");
   }
   
   private void notifyOnFailure() {
-    JOptionPane.showMessageDialog(
-        guiManager.getMainFrame(),
-        "Нет доступа к файлу конфигурации",
-        "Не удалось выбрать тему",
-        JOptionPane.ERROR_MESSAGE
-        );
+    dialogWindow.showErrorMessage(
+        guiManager.getMainFrame(), "Не удалось изменить файл с названием темы.",
+                                   "Ошибка записи в файл");
+  }
+
+  @Override
+  public String toString() {
+    return "ChooseThemeAction=" + getValue(Action.NAME) + "[guiManager=" + guiManager + "]";
   }
 }

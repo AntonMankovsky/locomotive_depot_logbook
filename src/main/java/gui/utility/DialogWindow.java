@@ -33,5 +33,20 @@ public class DialogWindow {
       throws HeadlessException {
     JOptionPane.showMessageDialog(frame, title, message, JOptionPane.ERROR_MESSAGE);
   }
+  
+  /**
+   * Shows to a user dialog window with informative message.
+   * <p>
+   * Replace a direct {@code JOptionPane.showMessageDialog} method call with this method for
+   * tests convenience.
+   * @param frame in which the dialog window is displayed
+   * @param title of dialog window
+   * @param message of dialog window
+   * @throws HeadlessException if GraphicsEnvironment.isHeadless returns true
+   */
+  public void showInfoMessage(final Component frame, final String title, final String message) 
+      throws HeadlessException {
+    JOptionPane.showMessageDialog(frame, title, message, JOptionPane.INFORMATION_MESSAGE);
+  }
 
 }

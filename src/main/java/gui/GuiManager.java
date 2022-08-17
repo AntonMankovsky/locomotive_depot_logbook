@@ -96,8 +96,8 @@ public class GuiManager {
   
   private void buildChooseThemeSubmenu() {
     chooseThemeSubmenu = new JMenu("Выбрать тему");
-    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Светлая", this)));
-    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Тёмная", this)));
+    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Светлая", this, dialogWindow)));
+    chooseThemeSubmenu.add(new JMenuItem(new ChooseThemeAction("Тёмная", this, dialogWindow)));
   }
   
   private void buildMainMenu() {
