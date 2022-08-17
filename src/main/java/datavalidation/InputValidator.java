@@ -20,7 +20,7 @@ public class InputValidator {
   private final DbManager dbManager;
   
   /**
-   * Contains methods for validate data.
+   * Contains methods for data validation.
    */
   public InputValidator(final DbManager dbManager) {
     super();

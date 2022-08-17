@@ -30,13 +30,14 @@ import gui.GuiManager;
  * Application entry point. 
  * <p>
  * Custom FlatLaf theme by JFormDesigner open source project: 
- * https://github.com/JFormDesigner/FlatLaf
+ * @see <a href=https://github.com/JFormDesigner/FlatLaf>FlatLaf LAF</a>
  */
 @SpringBootApplication(scanBasePackageClasses = {gui.GuiManager.class, dbapi.DbManager.class})
 public class LocomotiveDepotLogbookApplication {
   private static final Logger logger = LogManager.getLogger();
   private static final Path UI_CONFIG_PATH = Paths.get(".", "UITheme.txt");
   private static String uiTheme;
+  
   /**
    * Runs spring application. Initialize GuiManager bean.
    * <p>
@@ -69,15 +70,22 @@ public class LocomotiveDepotLogbookApplication {
       FlatDarkLaf.setup();
       break;
     default:
-      try {
-        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      } catch (ClassNotFoundException | InstantiationException
-              | IllegalAccessException | UnsupportedLookAndFeelException exception) {
-        logger.fatal("Unable to set any look and feel theme.");
-        System.exit(0);
+      // If defineUiTheme method failed to read theme name from file,
+      // first try to set up light theme, and only if it fails use default "metal" theme.
+      if (FlatIntelliJLaf.setup()) {
+        uiTheme = "light";
+      } else {
+        try {
+          UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException exception) {
+          logger.fatal("Unable to set any look and feel theme.");
+          System.exit(0);
+        }
+        break;
       }
-      break;
-    }
+	  }
+	  logger.info("Look and feel: " + uiTheme + " theme.");
 	}
 	
 	private static void defineUiTheme() {
@@ -87,15 +95,15 @@ public class LocomotiveDepotLogbookApplication {
       firstLine = reader.readLine().trim();
     } catch (final NoSuchFileException noFileException) {
       logger.warn(
-          "File \"UITheme.txt\" does not exist! Application will use default color theme."
+          "File \"UITheme.txt\" does not exist!"
           + noFileException.getMessage());
     } catch (final IOException ioException) {
       logger.warn(
-          "Failed to read \"UITheme.txt\" file. Application will use default color theme."
+          "Failed to read \"UITheme.txt\" file."
           + ioException.getMessage());
     } catch (final NullPointerException npe) {
       logger.warn(
-          "File \"UITheme.txt\" is empty. Application will use default color theme."
+          "File \"UITheme.txt\" is empty."
           + npe.getMessage());
     }
 	  
@@ -113,7 +121,7 @@ public class LocomotiveDepotLogbookApplication {
 	}
 	
 	 /**
-   * Provides information of user interface theme (light or dark).
+   * Provides information of user interface theme (light, dark, or default).
    * @return string representing chosen user interface theme
    */
   public static String getUiTheme() {

@@ -1,7 +1,5 @@
 package gui.utility;
 
-import javax.swing.JOptionPane;
-
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import datecalculations.LastRepairHandler;
@@ -16,15 +14,20 @@ public class RecordUpdateHandler {
   private final GuiManager guiManager;
   private final DateCalculationsHandler dateCalculationsHandler;
   private final LastRepairHandler lastRepairHandler;
+  private final InputValidator validator;
+  private final DialogWindow dialogWindow;
   
   public RecordUpdateHandler(final DbManager dbManager, final GuiManager guiManager,
                              final DateCalculationsHandler dateCalculationsHandler,
-                             final LastRepairHandler lastRepairHandler) {
+                             final LastRepairHandler lastRepairHandler,
+                             final InputValidator validator, final DialogWindow dialogWindow) {
     super();
     this.dbManager = dbManager;
     this.guiManager = guiManager;
     this.dateCalculationsHandler = dateCalculationsHandler;
     this.lastRepairHandler = lastRepairHandler;
+    this.validator = validator;
+    this.dialogWindow = dialogWindow;
   }
   
   public void handleCellNewValue(final String value, final int rowIndex, final int colIndex) {
@@ -39,16 +42,11 @@ public class RecordUpdateHandler {
   }
   
   private void editRepairDateCase(final String value, final int rowIndex, final int colIndex) {
-    final InputValidator validator = new InputValidator(dbManager);
     try {
       validator.validateRepairDate(value);
     } catch (final IllegalArgumentException err) {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Запись должна быть в формате дд.ММ.гггг и указывать на существующую дату",
-          "Некорректный ввод",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(guiManager.getMainFrame(), "Некорректный ввод",
+          "Запись должна быть в формате дд.ММ.гггг и указывать на существующую дату");
       return;
     }
     
@@ -64,16 +62,11 @@ public class RecordUpdateHandler {
   }
 
   private void editNumberCase(final String value, final int rowIndex) {
-    final InputValidator validator = new InputValidator(dbManager);
     try {
       validator.validateLocoNumber(value);
     } catch (final IllegalArgumentException err) {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Номер должен состоять из цифр",
-          "Операция отменена",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(
+          guiManager.getMainFrame(), "Операция отменена", "Номер должен состоять только из цифр");
       return;
     }
     
@@ -91,11 +84,27 @@ public class RecordUpdateHandler {
   }
   
   private void notifyUserOnOperationFailure() {
-    JOptionPane.showMessageDialog(
-        guiManager.getMainFrame(),
-        "Не удалось обновить значение",
-        "Ошибка при изменении ячейки",
-        JOptionPane.ERROR_MESSAGE
-        );
+    dialogWindow.showErrorMessage(
+        guiManager.getMainFrame(), "Ошибка при изменении ячейки", "Не удалось обновить значение");
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("RecordUpdateHandler - coordinator of changes in repair records table."
+        + "[dbManager=");
+    builder.append(dbManager);
+    builder.append(", guiManager=");
+    builder.append(guiManager);
+    builder.append(", dateCalculationsHandler=");
+    builder.append(dateCalculationsHandler);
+    builder.append(", lastRepairHandler=");
+    builder.append(lastRepairHandler);
+    builder.append(", validator=");
+    builder.append(validator);
+    builder.append(", dialogWindow=");
+    builder.append(dialogWindow);
+    builder.append("]");
+    return builder.toString();
   }
 }

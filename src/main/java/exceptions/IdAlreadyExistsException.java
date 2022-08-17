@@ -9,9 +9,6 @@ package exceptions;
  * This kind of situation could potentially lead to inconsistent data.
  */
 public class IdAlreadyExistsException extends RuntimeException {
-  /**
-   * 
-   */
   private static final long serialVersionUID = 1L;
 
   /**

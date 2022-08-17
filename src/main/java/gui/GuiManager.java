@@ -12,6 +12,7 @@ import javax.swing.table.TableColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import datecalculations.LastRepairHandler;
 import datecalculations.RequiredRepairHandler;
@@ -23,6 +24,7 @@ import gui.eventlisteners.NewRecordAction;
 import gui.tablemodels.RepairRecordsTableModel;
 import gui.tablerenderers.RepairRecordsHeaderRenderer;
 import gui.tablerenderers.RepairRecordsTableRenderer;
+import gui.utility.DialogWindow;
 import gui.utility.RecordUpdateHandler;
 
 /**
@@ -42,6 +44,8 @@ public class GuiManager {
   private JMenu chooseThemeSubmenu;
   private JTable repairRecordsTable;
   private JPanel repairRecordsTablePane;
+  private InputValidator validator;
+  private DialogWindow dialogWindow;
   private boolean showNextRepairsDates;
   private int[] columnsWidth;
   
@@ -54,6 +58,8 @@ public class GuiManager {
   public GuiManager(final DbManager dbManager) {
     super();
     this.dbManager = dbManager;
+    dialogWindow = new DialogWindow();
+    validator = new InputValidator(dbManager);
     showNextRepairsDates = false;
     createAndShowGui();
   }
@@ -216,8 +222,8 @@ public class GuiManager {
         new DateCalculationsHandler(this, dbManager, requiredRepairHandler);
     final LastRepairHandler lastRepairHandler = new LastRepairHandler(this, dbManager);
     
-    final RecordUpdateHandler recordUpdateHandler =
-        new RecordUpdateHandler(dbManager, this, dateCalculationsHandler, lastRepairHandler);
+    final RecordUpdateHandler recordUpdateHandler = new RecordUpdateHandler(
+            dbManager, this, dateCalculationsHandler, lastRepairHandler, validator, dialogWindow);
     return recordUpdateHandler;
   }
   
