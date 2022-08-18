@@ -1,7 +1,6 @@
 package gui.tablemodels;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -34,7 +33,7 @@ public class RecordsArchiveTableModel extends AbstractTableModel {
      * Enables editing mode to allow user to copy value of particular cell.
      * <p>
      * Without overriding setValue method it provides read-only mode.
-     * Changing archive values is not allowed by design.
+     * Changing archive values is not allowed by application design.
      */
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
@@ -50,6 +49,7 @@ public class RecordsArchiveTableModel extends AbstractTableModel {
     public int getRowCount() {
       return dbManager.getAllRecordsArchiveData().size() * 2;
     }
+    
     @Override
     public int getColumnCount() {
       return 9;
@@ -95,6 +95,8 @@ public class RecordsArchiveTableModel extends AbstractTableModel {
     
     @Override
     public String toString() {
-      return "Model for records archive table, performs core operations on data in the table.";
+      return "RecordsArchiveTableModel [dbManager=" + dbManager + "]"
+           + "\nModel for records archive table, performs core operations on data in the table.";
     }
+    
 }

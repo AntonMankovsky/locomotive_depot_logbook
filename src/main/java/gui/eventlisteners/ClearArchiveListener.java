@@ -33,6 +33,13 @@ public class ClearArchiveListener implements ActionListener {
       return;
     }
     
+    try {
+    guiManager.getArchiveFrame().getRecordsArchiveTable().getCellEditor().cancelCellEditing();
+    } catch (final NullPointerException npe) {
+      // This construction is needed to prevent a graphical bug that occurs 
+      // when a row is deleted while it`s cell is in editing state.
+    }
+    
     final boolean archiveCleared = guiManager.getDbManager().clearArchive();
     if (archiveCleared) {
       fireArchiveWasCleared();
