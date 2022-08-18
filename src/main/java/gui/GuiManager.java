@@ -124,7 +124,7 @@ public class GuiManager {
     mainMenu.add(tempItem);
     
     tempItem = new JMenuItem("Удалить выбранную запись");
-    tempItem.addActionListener(new DeleteRecordListener(this));
+    tempItem.addActionListener(new DeleteRecordListener(this, dialogWindow));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     mainMenu.add(tempItem);
     

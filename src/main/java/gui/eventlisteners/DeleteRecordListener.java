@@ -8,13 +8,16 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 public class DeleteRecordListener implements ActionListener {
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
   
-  public DeleteRecordListener(final GuiManager guiManager) {
+  public DeleteRecordListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
   }
   
   @Override
@@ -26,7 +29,7 @@ public class DeleteRecordListener implements ActionListener {
     
     try {
     guiManager.getRepairRecordsTable().getCellEditor().cancelCellEditing();
-    } catch (final NullPointerException e) {
+    } catch (final NullPointerException npe) {
       // This construction is needed to prevent a graphical bug that occurs 
       // when a row is deleted while it`s cell is in editing state.
     }
@@ -63,12 +66,9 @@ public class DeleteRecordListener implements ActionListener {
       }
 
     } else {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Не удалось удалить выбранную запись",
+      dialogWindow.showErrorMessage(guiManager.getMainFrame(), 
           "Ошибка при удалении записи",
-          JOptionPane.ERROR_MESSAGE
-          );
+          "Не удалось удалить выбранную запись");
     }
   }
   
@@ -81,4 +81,8 @@ public class DeleteRecordListener implements ActionListener {
     }
   }
 
+  @Override
+  public String toString() {
+    return "DeleteRecordListener [guiManager=" + guiManager + "]";
+  }
 }
