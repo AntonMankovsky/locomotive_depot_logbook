@@ -3,23 +3,29 @@ package gui.eventlisteners;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import datavalidation.InputValidator;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 public class NewRecordAction extends AbstractAction {
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
+  private final InputValidator validator;
   
-  public NewRecordAction(final String name, final GuiManager guiManager) {
+  public NewRecordAction(final String name, final GuiManager guiManager,
+                         final DialogWindow dialogWindow, final InputValidator validator) {
     super();
     putValue(Action.NAME, name);
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
+    this.validator = validator;
   }
   
   @Override
@@ -36,9 +42,8 @@ public class NewRecordAction extends AbstractAction {
     final List<String> newRow = new ArrayList<>(19);
     newRow.add((String) getValue(Action.NAME));
     newRow.add(locoNumber);
-    for (int j = 2; j < 19; j++) {
-      newRow.add("");
-    }
+    Stream.generate(() -> "").limit(17).forEach(newRow::add);
+    
     final boolean wasInserted = guiManager.getDbManager().insertNewRepairRecord(newRow);
     
     if (wasInserted) {
@@ -53,39 +58,34 @@ public class NewRecordAction extends AbstractAction {
             .setRowSelectionInterval(newNumberOfRowsInGuiTable - 2, newNumberOfRowsInGuiTable - 2);
       }
     } else {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Не удалось создать новую запись",
+      dialogWindow.showErrorMessage(guiManager.getMainFrame(), 
           "Ошибка при добавлении записи",
-          JOptionPane.ERROR_MESSAGE
-          );
+          "Не удалось создать новую запись");
     }
   }
   
   private String getUserInput() {
-    return JOptionPane.showInputDialog(
-        guiManager.getMainFrame(),
-        "Номер тепловоза",
-        (String) getValue(Action.NAME),
-        JOptionPane.PLAIN_MESSAGE
-        );
+    return dialogWindow.showInputDialog(
+           guiManager.getMainFrame(),
+           (String) getValue(Action.NAME),
+           "Номер тепловоза"
+           );
   }
   
   private boolean validateInput(final String locoNumber) {
-    final InputValidator validator = new InputValidator(guiManager.getDbManager());
     try {
       validator.validateLocoNumber(locoNumber);
       return true;
     } catch (final IllegalArgumentException err) {
-      JOptionPane.showMessageDialog(
-          guiManager.getMainFrame(),
-          "Номер должен состоять из цифр",
-          "Операция отменена",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(
+          guiManager.getMainFrame(), "Операция отменена", "Номер должен состоять только из цифр");
       return false;
     }
   }
   
+  @Override
+  public String toString() {
+    return "NewRecordAction [guiManager=" + guiManager + "; Name=" + getValue(Action.NAME) + "]";
+  }
 
 }

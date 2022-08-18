@@ -45,8 +45,8 @@ public class NewModelListener implements ActionListener {
         guiManager.getDbManager().insertNewModelRepairPeriods(modelName, periods);
     
     if (wasInserted) {
-      guiManager
-          .getNewRecordSubmenu().add(new JMenuItem(new NewRecordAction(modelName, guiManager)));
+      guiManager.getNewRecordSubmenu().add(
+              new JMenuItem(new NewRecordAction(modelName, guiManager, dialogWindow, validator)));
       
       final TableModel tm = guiManager.getModelsFrame().getRepairPeriodsTable().getModel();
       if (tm instanceof AbstractTableModel) {

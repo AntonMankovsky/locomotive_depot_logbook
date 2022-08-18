@@ -90,7 +90,8 @@ public class GuiManager {
     newRecordSubmenu = new JMenu("Новая запись");
     String[] modelNames = dbManager.getAllModelNames();
     for (String model : modelNames) {
-      newRecordSubmenu.add(new JMenuItem(new NewRecordAction(model, this)));
+      newRecordSubmenu.add(
+          new JMenuItem(new NewRecordAction(model, this, dialogWindow, validator)));
     }
   }
   
@@ -237,7 +238,8 @@ public class GuiManager {
     newRecordSubmenu.removeAll();
     String[] modelNames = dbManager.getAllModelNames();
     for (String model : modelNames) {
-      newRecordSubmenu.add(new JMenuItem(new NewRecordAction(model, this)));
+      newRecordSubmenu.add(
+          new JMenuItem(new NewRecordAction(model, this, dialogWindow, validator)));
     }
   }
   
