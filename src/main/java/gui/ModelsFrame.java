@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
+import datavalidation.InputValidator;
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
@@ -29,6 +30,7 @@ public class ModelsFrame extends JFrame {
   private final DbManager dbManager;
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
+  private final InputValidator validator;
   private int modelFrameWidth;
   private int modelFrameHeight;
   private JMenuBar modelMenuBar;
@@ -42,11 +44,13 @@ public class ModelsFrame extends JFrame {
    * @param dbManager class that contains database API
    */
   public ModelsFrame(
-      final GuiManager guiManager, final DbManager dbManager, final DialogWindow dialogWindow) {
+      final GuiManager guiManager, final DbManager dbManager,
+      final DialogWindow dialogWindow, final InputValidator validator) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
     this.dialogWindow = dialogWindow;
+    this.validator = validator;
     createGui();
   }
   
@@ -67,7 +71,7 @@ public class ModelsFrame extends JFrame {
     modelMenu = new JMenu("Действия");
     
     JMenuItem tempItem = new JMenuItem("Новая модель");
-    tempItem.addActionListener(new NewModelListener(guiManager));
+    tempItem.addActionListener(new NewModelListener(guiManager, dialogWindow, validator));
     tempItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
     modelMenu.add(tempItem);
     

@@ -73,7 +73,22 @@ public class DialogWindow {
         JOptionPane.OK_CANCEL_OPTION,
         messageType
         );
-
   }
-
+  
+  /**
+   * Shows to a user dialog window with line to write text.
+   * <p>
+   * Replace a direct {@code JOptionPane.showInputDialog} method call with this method for
+   * tests convenience.
+   * @param frame in which the dialog window is displayed
+   * @param title of dialog window
+   * @param message of dialog window
+   * @return a string with user`s input
+   * @throws HeadlessException if GraphicsEnvironment.isHeadless returns true
+   */
+  public String showInputDialog(
+      final Component frame, final String title, final String message) 
+      throws HeadlessException {
+    return JOptionPane.showInputDialog(frame, title, message, JOptionPane.PLAIN_MESSAGE);
+  }
 }
