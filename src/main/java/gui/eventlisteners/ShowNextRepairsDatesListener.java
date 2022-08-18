@@ -33,9 +33,14 @@ public class ShowNextRepairsDatesListener implements ItemListener {
     
     try {
       guiManager.getRepairRecordsTable().getCellEditor().cancelCellEditing();
-      } catch (final NullPointerException exception) {
-        // This construction is needed to prevent default behavior that automatically enters
+      } catch (final NullPointerException npe) {
+        // This construction is needed to override default behavior that automatically enters
         // cell editing mode on current focused cell after table cell updated has fired.
       }
+  }
+  
+  @Override
+  public String toString() {
+    return "ShowNextRepairsDatesListener [guiManager=" + guiManager + "]";
   }
 }
