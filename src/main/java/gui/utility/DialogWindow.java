@@ -31,7 +31,7 @@ public class DialogWindow {
    */
   public void showErrorMessage(final Component frame, final String title, final String message) 
       throws HeadlessException {
-    JOptionPane.showMessageDialog(frame, title, message, JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(frame, message, title, JOptionPane.ERROR_MESSAGE);
   }
   
   /**
@@ -46,7 +46,7 @@ public class DialogWindow {
    */
   public void showInfoMessage(final Component frame, final String title, final String message) 
       throws HeadlessException {
-    JOptionPane.showMessageDialog(frame, title, message, JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(frame, message, title, JOptionPane.INFORMATION_MESSAGE);
   }
   
   /**
@@ -89,6 +89,6 @@ public class DialogWindow {
   public String showInputDialog(
       final Component frame, final String title, final String message) 
       throws HeadlessException {
-    return JOptionPane.showInputDialog(frame, title, message, JOptionPane.PLAIN_MESSAGE);
+    return JOptionPane.showInputDialog(frame, message, title, JOptionPane.PLAIN_MESSAGE);
   }
 }
