@@ -9,6 +9,7 @@ import javax.swing.table.TableModel;
 
 import dbapi.DbManager;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 public class DateCalculationsHandler {
   private final GuiManager guiManager;
@@ -17,18 +18,21 @@ public class DateCalculationsHandler {
   private List<String> recordData;
   private List<Integer> periodsData;
   private final DateTimeFormatter formatter;
+  private final DialogWindow dialogWindow;
   
   public DateCalculationsHandler(final GuiManager guiManager, final DbManager dbManager,
-                                 final RequiredRepairHandler requiredRepairHandler) {
+                                 final RequiredRepairHandler requiredRepairHandler,
+                                 final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dbManager = dbManager;
     this.requiredRepairHandler = requiredRepairHandler;
+    this.dialogWindow = dialogWindow;
     formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   }
 
-  public void handleDateCalculations(
-      final String lastRepairString, final int rowIndex, final int colIndex ) {
+  public void handleDateCalculations(final String lastRepairString, final int rowIndex,
+                                     final int colIndex, final LocalDate today ) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
     recordData = dbManager.getAllRepairRecords().get(rowId);
     periodsData = dbManager.getAllRepairPeriodData().get(recordData.get(0));
@@ -56,6 +60,7 @@ public class DateCalculationsHandler {
     }
     
     updateRequiredRepairColumn(rowIndex);
+    informUserIfLastRepairDateIsAfterToday(lastRepairDate, today);
   }
   
   private void threeMaintenanceCase(
@@ -291,6 +296,20 @@ public class DateCalculationsHandler {
     requiredRepairHandler.updateRequiredRepairValues(rowId, LocalDate.now());
     fireCellUpdated(rowIndex, 9, 9);
     fireCellUpdated(rowIndex + 1, 9, 9);
+  }
+  
+  private void informUserIfLastRepairDateIsAfterToday(
+      final LocalDate lastRepairDate, final LocalDate today) {
+    if (lastRepairDate.isAfter(today)) {
+      dialogWindow.showInfoMessage(guiManager.getMainFrame(),
+            "Потенциальная опечатка", "Введённая дата ремонта больше сегодняшней");
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "DateCalculationsHandler [guiManager=" + guiManager + ", dbManager=" + dbManager
+            + ", requiredRepairHandler=" + requiredRepairHandler + "]";
   }
   
 }

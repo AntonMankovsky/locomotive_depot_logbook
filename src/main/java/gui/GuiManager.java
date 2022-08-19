@@ -220,7 +220,7 @@ public class GuiManager {
   private RecordUpdateHandler initRecordUpdateHandler() {
     final RequiredRepairHandler requiredRepairHandler = new RequiredRepairHandler(dbManager);
     final DateCalculationsHandler dateCalculationsHandler =
-        new DateCalculationsHandler(this, dbManager, requiredRepairHandler);
+        new DateCalculationsHandler(this, dbManager, requiredRepairHandler, dialogWindow);
     final LastRepairHandler lastRepairHandler = new LastRepairHandler(this, dbManager);
     
     final RecordUpdateHandler recordUpdateHandler = new RecordUpdateHandler(

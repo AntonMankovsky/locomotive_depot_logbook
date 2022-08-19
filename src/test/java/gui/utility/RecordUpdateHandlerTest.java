@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
@@ -87,7 +88,8 @@ public class RecordUpdateHandlerTest {
     setDbManagerReturnsTrue();
     updateHandler.handleCellNewValue("16.08.2022", rowIndex, colIndex);
     
-    verify(dateCalculationsHandlerMock).handleDateCalculations("16.08.2022", rowIndex, colIndex);
+    verify(dateCalculationsHandlerMock)
+        .handleDateCalculations("16.08.2022", rowIndex, colIndex, LocalDate.now());
   }
 
   @ParameterizedTest
@@ -99,7 +101,7 @@ public class RecordUpdateHandlerTest {
     updateHandler.handleCellNewValue(null, rowIndex, colIndex);
     
     verify(dateCalculationsHandlerMock, never())
-          .handleDateCalculations(anyString(), anyInt(), anyInt());
+          .handleDateCalculations(anyString(), anyInt(), anyInt(), any());
   }
   
   @ParameterizedTest
@@ -110,7 +112,7 @@ public class RecordUpdateHandlerTest {
     
     verify(lastRepairHandlerMock, never()).updateLastRepairColumn(anyInt());
     verify(dateCalculationsHandlerMock, never())
-          .handleDateCalculations(any(), anyInt(), anyInt());
+          .handleDateCalculations(any(), anyInt(), anyInt(), any());
     
     verify(dialogWindowMock).showErrorMessage(any(), any(), any());
   }

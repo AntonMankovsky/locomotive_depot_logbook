@@ -1,5 +1,7 @@
 package gui.utility;
 
+import java.time.LocalDate;
+
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import datecalculations.LastRepairHandler;
@@ -56,7 +58,7 @@ public class RecordUpdateHandler {
     } else {
       lastRepairHandler.updateLastRepairColumn(rowIndex);
       if (value != null && !value.equals("")){
-      dateCalculationsHandler.handleDateCalculations(value, rowIndex, colIndex);
+      dateCalculationsHandler.handleDateCalculations(value, rowIndex, colIndex, LocalDate.now());
       }
     }
   }

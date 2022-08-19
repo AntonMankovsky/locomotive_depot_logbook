@@ -2,14 +2,18 @@ package datecalculations;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,16 +27,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 
 import dbapi.DbManager;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 /*
  * TODO: add tests for cases in which data should not be updated (when new next repair date is
@@ -43,6 +46,7 @@ public class DateCalculationsHandlerTest {
   private static GuiManager guiManagerMock;
   private static DbManager dbManagerMock;
   private static RequiredRepairHandler requiredRepairHandlerMock;
+  private static DialogWindow dialogWindowMock;
   private static Map<Integer, List<String>> repairRecordsMock;
   private static Map<String, List<Integer>> repairPeriodsMock;
   private static AbstractTableModel repairRecordsTableModelMock;
@@ -54,6 +58,9 @@ public class DateCalculationsHandlerTest {
   private static List<String> expectedStrings2;
   private static List<Integer> expectedColumnIndices;
   private static List<String> recordData;
+  // Purposely take a date so old that it does not possibly interfere with most tests that test
+  // functionality which is independent of the current date. Used only to match method signature.
+  private static LocalDate today = LocalDate.of(1960, 1, 01);
   
   /**
    * Initializes list of repair periods and lists with expected data for assertions.
@@ -104,6 +111,7 @@ public class DateCalculationsHandlerTest {
   protected void setUp() throws Exception {
     requiredRepairHandlerMock = mock(RequiredRepairHandler.class);
     dbManagerMock = mock(DbManager.class);
+    dialogWindowMock = mock(DialogWindow.class);
     repairRecordsMock = mock(HashMap.class);
     repairPeriodsMock = mock(HashMap.class);
     
@@ -119,8 +127,8 @@ public class DateCalculationsHandlerTest {
     when(guiManagerMock.getRepairRecordsTable()).thenReturn(repairRecordsTableMock);
     when(repairRecordsTableMock.getModel()).thenReturn(repairRecordsTableModelMock);
     
-    dateCalculationsHandler =
-        new DateCalculationsHandler(guiManagerMock, dbManagerMock, requiredRepairHandlerMock);
+    dateCalculationsHandler = new DateCalculationsHandler(
+        guiManagerMock, dbManagerMock, requiredRepairHandlerMock, dialogWindowMock);
     rowIndex = (int) (Math.random() * 100);
     rowIndex = rowIndex % 2 == 0 ? rowIndex : rowIndex + 1;
   }
@@ -181,7 +189,7 @@ public class DateCalculationsHandlerTest {
   @MethodSource("provideInvalidIndices")
   @DisplayName("Check does nothing on invalid column index")
   void checkDoesNothingOnInvalidColumnIndex(final int colIndex) {
-    dateCalculationsHandler.handleDateCalculations("01.01.2000", rowIndex, colIndex);
+    dateCalculationsHandler.handleDateCalculations("01.01.2000", rowIndex, colIndex, today);
     verify(dbManagerMock, never()).setRepairRecordCell(anyInt(), anyInt(), anyString());
   }
   
@@ -228,7 +236,7 @@ public class DateCalculationsHandlerTest {
   }
   
   private void verifyCorrectnessAlgorithm(final String lastRepairString, final int colIndex) {
-    dateCalculationsHandler.handleDateCalculations(lastRepairString, rowIndex, colIndex);
+    dateCalculationsHandler.handleDateCalculations(lastRepairString, rowIndex, colIndex, today);
     
     final ArgumentCaptor<String> strArg = ArgumentCaptor.forClass(String.class);
     final ArgumentCaptor<Integer> intArg = ArgumentCaptor.forClass(Integer.class);
@@ -265,7 +273,7 @@ public class DateCalculationsHandlerTest {
   @MethodSource("provideColumnsIndices")
   @DisplayName("Check fire table invocations")
   void checkFireTableInvocations(final int columnIndex) {
-    dateCalculationsHandler.handleDateCalculations("01.01.2000", rowIndex, columnIndex);
+    dateCalculationsHandler.handleDateCalculations("01.01.2000", rowIndex, columnIndex, today);
     final ArgumentCaptor<Integer> rowCaptor = ArgumentCaptor.forClass(Integer.class);
     final ArgumentCaptor<Integer> colCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(repairRecordsTableModelMock, times(columnIndex + 1))
@@ -324,10 +332,35 @@ public class DateCalculationsHandlerTest {
     when(dbManager.getAllRepairRecords()).thenReturn(repairRecords);
     when(dbManager.getAllRepairPeriodData()).thenReturn(repairPeriods);
     
-    final DateCalculationsHandler handler =
-        new DateCalculationsHandler(guiManagerMock, dbManager, requiredRepairHandlerMock);
-    handler.handleDateCalculations("01.01.2000", rowIndex, columnIndex);
+    final DateCalculationsHandler handler = new DateCalculationsHandler(
+                  guiManagerMock, dbManager, requiredRepairHandlerMock, dialogWindowMock);
+    handler.handleDateCalculations("01.01.2000", rowIndex, columnIndex, today);
     
     verify(dbManager, times(1)).setRepairRecordCell(anyInt(), anyInt(), anyString());
+  }
+  
+  @ParameterizedTest
+  @MethodSource("provideColumnsIndices")
+  @DisplayName("Check user informed if lastRepairDate is after today")
+  void checkUserInformedIfLastRepairDateIsAfterToday(final int columnIndex) {
+    dateCalculationsHandler
+        .handleDateCalculations("02.01.2000", rowIndex, columnIndex, LocalDate.of(2000, 1, 01));
+    verify(dialogWindowMock).showInfoMessage(any(), anyString(), anyString());
+  }
+  
+  @ParameterizedTest
+  @MethodSource("provideColumnsIndices")
+  @DisplayName("Check no dialog window if lastRepairDate is not after today")
+  void checkNoDialogWindowIfLastRepairDateIsNotAfterToday(final int columnIndex) {
+    dateCalculationsHandler
+        .handleDateCalculations("01.01.2000", rowIndex, columnIndex, LocalDate.of(2000, 1, 02));
+    verifyNoInteractions(dialogWindowMock);
+  }
+  
+  @Test
+  @DisplayName("Check toString is overriden")
+  void checkToStringIsOverriden() {
+    final String description = dateCalculationsHandler.toString().toLowerCase();
+    assertTrue(description.contains("dbmanager="));
   }
 }
