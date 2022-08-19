@@ -1,11 +1,11 @@
 package gui.tablemodels;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import datavalidation.InputValidator;
 import dbapi.DbManager;
 import gui.GuiManager;
+import gui.utility.DialogWindow;
 
 public class RepairPeriodsTableModel extends AbstractTableModel {
   private static final String[] COLUMN_NAMES = {
@@ -19,17 +19,25 @@ public class RepairPeriodsTableModel extends AbstractTableModel {
                                                   };
   private final DbManager dbManager;
   private final GuiManager guiManager;
+  private final DialogWindow dialogWindow;
+  private final InputValidator validator;
 
   /**
    * Provides methods for core operations with repair records table.
    * <p>
    * Actively interacts with database API and data validation classes. 
    * @param dbManager that provides API for working with database
+   * @param guiManager to provide access to ModelsFrame
+   * @param dialogWindow to show error notifications to the user
+   * @param validator to validate repair period from user`s input
    */
-  public RepairPeriodsTableModel(final DbManager dbManager, final GuiManager guiManager) {
+  public RepairPeriodsTableModel(final DbManager dbManager, final GuiManager guiManager,
+                                 final DialogWindow dialogWindow, final InputValidator validator) {
     super();
     this.dbManager = dbManager;
     this.guiManager = guiManager;
+    this.dialogWindow = dialogWindow;
+    this.validator = validator;
   }
   
   @Override
@@ -80,32 +88,26 @@ public class RepairPeriodsTableModel extends AbstractTableModel {
       return;
     }
 
-    final InputValidator validator = new InputValidator(dbManager);
     try {
       validator.validateRepairPeriod(valueInt);
     } catch (final IllegalArgumentException err) {
-      JOptionPane.showMessageDialog(
-          guiManager.getModelsFrame(),
-          "Период ремонта должен быть положительным числом",
-          "Недопустимый ввод",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(guiManager.getModelsFrame(), 
+                                    "Недопустимый ввод",
+                                    "Период ремонта должен быть положительным числом");
       return;
     }
 
     if (!dbManager.setRepairPeriodCell((String) getValueAt(rowIndex, 0), colIndex - 1, valueInt)) {
-      JOptionPane.showMessageDialog(
-          guiManager.getModelsFrame(),
-          "Не удалось обновить значение",
-          "Ошибка при изменении ячейки",
-          JOptionPane.ERROR_MESSAGE
-          );
+      dialogWindow.showErrorMessage(guiManager.getModelsFrame(), 
+                                    "Ошибка при изменении ячейки",
+                                    "Не удалось обновить значение");
     }
   }
-  
+
   @Override
   public String toString() {
-    return "Model for repair periods table, performs core operations on data in the table.";
+    return "RepairPeriodsTableModel [dbManager=" + dbManager + ", guiManager=" + guiManager + "]"
+         + "Model for repair periods table, performs core operations on data in the table.";
   }
 
 }

@@ -42,6 +42,8 @@ public class ModelsFrame extends JFrame {
    * Builds components for JFrame for models table and registers listeners for them.
    * @param guiManager the core GUI class of application with important GUI fields and methods
    * @param dbManager class that contains database API
+   * @param dialogWindow for interactions with user
+   * @param validator for user`s input validation
    */
   public ModelsFrame(
       final GuiManager guiManager, final DbManager dbManager,
@@ -96,7 +98,8 @@ public class ModelsFrame extends JFrame {
   }
   
   private void buildRepairPeriodsTable() {
-    repairPeriodsTable = new JTable(new RepairPeriodsTableModel(dbManager, guiManager));
+    repairPeriodsTable = new JTable(
+        new RepairPeriodsTableModel(dbManager, guiManager, dialogWindow, validator));
     repairPeriodsTable.setPreferredScrollableViewportSize(
         new Dimension(modelFrameWidth, modelFrameHeight));
     repairPeriodsTable.setFillsViewportHeight(true);
@@ -131,6 +134,6 @@ public class ModelsFrame extends JFrame {
   
   @Override
   public String toString() {
-    return "The object represents models frame of applciation";
+    return "The object that represents models frame of the applciation";
   }
 }
