@@ -125,7 +125,7 @@ public class RecordsArchiveTableModelTest {
               .forEach(testArchiveRecord::add); 
   }
   
-  private static void initExpectedTestValues(){
+  private static void initExpectedTestValues() {
     // Values that correspond to testArchiveRecord values.
     // Change expected values if testArchiveRecord values was changed.
     expectedTestValues = new String[2][9];

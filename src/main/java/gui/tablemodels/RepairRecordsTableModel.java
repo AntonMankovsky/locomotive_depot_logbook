@@ -90,7 +90,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
     final Map<Integer, List<String>> data = dbManager.getAllRepairRecords();
     if (columnIndex <= 1) {                                     // loco_model_name or loco_number
       result = data.get(rowId).get(columnIndex);
-    } else if (columnIndex == 10) {                              // notes
+    } else if (columnIndex == 10) {                             // notes
       result = data.get(rowId).get(18);
     } else {                                                    // last repairs and repair types
       final int requiredIndex = columnIndex * 2 - 2;
@@ -104,7 +104,7 @@ public class RepairRecordsTableModel extends AbstractTableModel {
       return "";
     }
     
-    if (columnIndex > 1 && columnIndex < 8 && !guiManager.isShowNextRepairsDates()) {
+    if (columnIndex < 8 && !guiManager.isShowNextRepairsDates()) {      // ghost: columnIndex > 1
       return "";
     }
     
@@ -115,16 +115,16 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   @Override
   public void setValueAt(final Object value, final int rowIndex, final int colIndex) {
     String valueString = (String) value;
-    valueString = valueString != null ? valueString.trim() : null;
+    valueString = valueString != null ? valueString.trim() : "";
     
     if (rowIndex % 2 == 0 && !valueString.equals(getValueAt(rowIndex, colIndex))) {
       updateHandler.handleCellNewValue(valueString, rowIndex, colIndex);
     }
   }
-
+  
   @Override
   public String toString() {
-    return "Model for repair records table, performs core operations on data in the table.";
+    return "RepairRecordsTableModel [dbManager=" + dbManager + ", guiManager=" + guiManager + "]"
+         + "Model for repair records table, performs core operations on data in the table.";
   }
-
 }
