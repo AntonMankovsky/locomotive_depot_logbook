@@ -8,6 +8,7 @@ import gui.GuiManager;
 import gui.utility.DialogWindow;
 
 public class RepairPeriodsTableModel extends AbstractTableModel {
+  private static final long serialVersionUID = 1L;
   private static final String[] COLUMN_NAMES = {
                                                   "Модель",
                                                   "ТО-3",

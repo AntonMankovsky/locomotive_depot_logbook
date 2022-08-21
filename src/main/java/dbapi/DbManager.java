@@ -2,7 +2,6 @@ package dbapi;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Provides functionality for working with database.

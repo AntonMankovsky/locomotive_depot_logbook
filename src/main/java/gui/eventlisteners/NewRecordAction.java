@@ -15,6 +15,7 @@ import gui.GuiManager;
 import gui.utility.DialogWindow;
 
 public class NewRecordAction extends AbstractAction {
+  private static final long serialVersionUID = 1L;
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
   private final InputValidator validator;

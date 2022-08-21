@@ -13,6 +13,7 @@ import gui.utility.RecordUpdateHandler;
  * Provides methods for core operations with repair records table.
  */
 public class RepairRecordsTableModel extends AbstractTableModel {
+  private static final long serialVersionUID = 1L;
   private static final String[] COLUMN_NAMES = {
                                                   "Модель",
                                                   "Номер",

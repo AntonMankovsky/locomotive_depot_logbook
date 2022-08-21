@@ -28,6 +28,7 @@ import gui.utility.DialogWindow;
  * Manages frame with records archive table.
  */
 public class ArchiveFrame extends JFrame {
+  private static final long serialVersionUID = 1L;
   private final DbManager dbManager;
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;

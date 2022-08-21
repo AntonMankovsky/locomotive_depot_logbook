@@ -8,7 +8,6 @@ import java.nio.file.Files;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import gui.GuiManager;
 import gui.utility.DialogWindow;
 
 public class ChooseThemeAction extends AbstractAction {
+  private static final long serialVersionUID = 1L;
   private static final Logger logger = LogManager.getLogger();
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;

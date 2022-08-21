@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import dbapi.DbManager;
 
 public class RecordsArchiveTableModel extends AbstractTableModel {
+    private static final long serialVersionUID = 1L;
     private static final String[] COLUMN_NAMES = {
                                                     "Модель",
                                                     "Номер",

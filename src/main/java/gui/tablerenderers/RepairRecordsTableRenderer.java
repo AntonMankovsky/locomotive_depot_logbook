@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import dbapi.DbManager;
@@ -16,6 +14,7 @@ import gui.lookandfeel.BorderManager;
 import gui.lookandfeel.ColorManager;
 
 public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
+  private static final long serialVersionUID = 1L;
   private final DbManager dbManager;
   private final ColorManager colorManager;
   private final BorderManager borderManager;

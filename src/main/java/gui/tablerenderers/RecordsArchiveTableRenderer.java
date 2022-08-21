@@ -2,7 +2,6 @@ package gui.tablerenderers;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -13,6 +12,7 @@ import gui.lookandfeel.BorderManager;
 import gui.lookandfeel.ColorManager;
 
 public class RecordsArchiveTableRenderer extends DefaultTableCellRenderer {
+  private static final long serialVersionUID = 1L;
   private final ColorManager colorManager;
   private final BorderManager borderManager;
   

@@ -11,6 +11,7 @@ import gui.lookandfeel.BorderManager;
 import gui.lookandfeel.ColorManager;
 
 public class RepairPeriodsTableRenderer extends DefaultTableCellRenderer {
+  private static final long serialVersionUID = 1L;
   private final ColorManager colorManager;
   private final BorderManager borderManager;
   
