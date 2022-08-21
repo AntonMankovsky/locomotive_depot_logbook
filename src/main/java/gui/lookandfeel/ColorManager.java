@@ -6,6 +6,7 @@ import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 
 public final class ColorManager {
   private static ColorManager colorManager;
+  private final Color recordsTableHeaderDefaultColor;
   private final Color recordsTableHeaderMediumRepairColor;
   private final Color recordsTableHeaderOverhaulColor;
   private final Color recordsTableModelNameColor;
@@ -44,6 +45,7 @@ public final class ColorManager {
     default:
       // fall through
     case "light":
+      recordsTableHeaderDefaultColor = new Color(255, 255, 255);
       recordsTableHeaderMediumRepairColor = new Color(100, 150, 250);
       recordsTableHeaderOverhaulColor = new Color(255, 150, 100);
       recordsTableModelNameColor = new Color(68, 203, 199);
@@ -63,13 +65,14 @@ public final class ColorManager {
       modelsTableSecondaryRowColor = recordsTablePrimaryRowColor;
       break;
     case "dark":
+      recordsTableHeaderDefaultColor = new Color(25, 25, 25);
       recordsTableHeaderMediumRepairColor = new Color(0, 0, 50);
       recordsTableHeaderOverhaulColor = new Color(50, 0, 0);
-      recordsTableModelNameColor = new Color(80, 80, 80);
+      recordsTableModelNameColor = new Color(90, 80, 110);
       recordsTableLocoNumberColor = recordsTableModelNameColor;
-      recordsTablePrimaryRowColor = new Color(50, 50, 50);
-      recordsTableSecondaryRowColor = new Color(75, 75, 75);
-      recordsTableNextOverhaulWithValueColor = new Color(25, 25, 25);
+      recordsTablePrimaryRowColor = new Color(40, 40, 70);
+      recordsTableSecondaryRowColor = new Color(40, 40, 40);
+      recordsTableNextOverhaulWithValueColor = new Color(90, 50, 50);
       recordsTableLastRepairColor = recordsTablePrimaryRowColor;
       recordsTableRequiredRepairColor = recordsTableSecondaryRowColor;
       recordsTableOverdueRequiredRepairTypeColor = new Color(75, 35, 35);
@@ -78,8 +81,8 @@ public final class ColorManager {
       recordsArchiveTablePrimaryRowColor = recordsTablePrimaryRowColor;
       recordsArchiveTableSecondaryRowColor = recordsTableSecondaryRowColor;
       
-      modelsTablePrimaryRowColor = recordsTableSecondaryRowColor;
-      modelsTableSecondaryRowColor = recordsTablePrimaryRowColor;
+      modelsTablePrimaryRowColor = recordsTablePrimaryRowColor;
+      modelsTableSecondaryRowColor = recordsTableSecondaryRowColor;
       break;
     }
   }
@@ -143,5 +146,10 @@ public final class ColorManager {
   public Color getModelsTableSecondaryRowColor() {
     return modelsTableSecondaryRowColor;
   }
+
+  public Color getRecordsTableHeaderDefaultColor() {
+    return recordsTableHeaderDefaultColor;
+  }
+  
   
 }

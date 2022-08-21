@@ -21,6 +21,7 @@ import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
 import gui.tablemodels.RepairPeriodsTableModel;
+import gui.tablerenderers.ArhiveAndModelsHeaderRenderer;
 import gui.tablerenderers.RepairPeriodsTableRenderer;
 import gui.utility.DialogWindow;
 
@@ -108,6 +109,8 @@ public class ModelsFrame extends JFrame {
     repairPeriodsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     repairPeriodsTable.setDefaultRenderer(Object.class, new RepairPeriodsTableRenderer());
     repairPeriodsTable.setDefaultRenderer(Integer.class, new RepairPeriodsTableRenderer());
+    repairPeriodsTable.getTableHeader()
+        .setDefaultRenderer(new ArhiveAndModelsHeaderRenderer(repairPeriodsTable));
   }
   
   private void buildRepairPeriodsTablePane() {

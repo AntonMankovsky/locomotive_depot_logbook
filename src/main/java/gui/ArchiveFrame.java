@@ -20,6 +20,7 @@ import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import dbapi.DbManager;
 import gui.eventlisteners.ClearArchiveListener;
 import gui.tablemodels.RecordsArchiveTableModel;
+import gui.tablerenderers.ArhiveAndModelsHeaderRenderer;
 import gui.tablerenderers.RecordsArchiveTableRenderer;
 import gui.utility.DialogWindow;
 
@@ -111,6 +112,8 @@ public class ArchiveFrame extends JFrame {
     recordsArchiveTable.getTableHeader().setReorderingAllowed(false);
     recordsArchiveTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     recordsArchiveTable.setDefaultRenderer(Object.class, new RecordsArchiveTableRenderer());
+    recordsArchiveTable.getTableHeader()
+        .setDefaultRenderer(new ArhiveAndModelsHeaderRenderer(recordsArchiveTable));
   }
   
   private void buildRecordsArchiveTablePane() {

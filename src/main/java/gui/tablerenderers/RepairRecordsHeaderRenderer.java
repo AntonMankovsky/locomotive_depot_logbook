@@ -37,8 +37,8 @@ public class RepairRecordsHeaderRenderer implements TableCellRenderer {
 
   @Override
   public Component getTableCellRendererComponent(
-      final JTable table, final Object value, final boolean isSelected, final boolean hasFocus
-      , final int row, final int column) {
+      final JTable table, final Object value, final boolean isSelected, final boolean hasFocus,
+      final int row, final int column) {
     final JLabel label = (JLabel)
         renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     
@@ -49,9 +49,18 @@ public class RepairRecordsHeaderRenderer implements TableCellRenderer {
       label.setBackground(colorManager.getRecordsTableHeaderMediumRepairColor());
     } else if (column == 7) {
       label.setBackground(colorManager.getRecordsTableHeaderOverhaulColor());
+    } else {
+      label.setBackground(colorManager.getRecordsTableHeaderDefaultColor());
     }
     
     return label;
   }
-
+  
+  @Override
+  public String toString() {
+    return "RepairRecordsHeaderRenderer - sets up tooltips, border and background color for"
+        + "repair records table header."
+        + "[colorManager=" + colorManager + ", borderManager=" + borderManager + "]";
+  }
+  
 }
