@@ -70,8 +70,8 @@ public class ArchiveFrame extends JFrame {
   }
   
   private void createGui() {
-    archiveFrameWidth = (int) (guiManager.getMainFrameWidth() * 0.6);
-    archiveFrameHeight = (int) (guiManager.getMainFrameHeight() * 0.6);
+    archiveFrameWidth = (int) (guiManager.getMainFrameWidth() * 0.85);
+    archiveFrameHeight = (int) (guiManager.getMainFrameHeight() * 0.85);
     columnsWidth = new int[9];
     
     buildArchiveMenu();
