@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
+import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import datavalidation.InputValidator;
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
@@ -122,6 +123,7 @@ public class ModelsFrame extends JFrame {
     setJMenuBar(modelMenuBar);
     setContentPane(repairPeriodsTablePane);
     setMinimumSize(new Dimension((int) (modelFrameWidth * 0.25), 0));
+    setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
   }
   
   /**

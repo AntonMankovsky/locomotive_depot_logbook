@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
 
+import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import dbapi.DbManager;
 import gui.eventlisteners.ClearArchiveListener;
 import gui.tablemodels.RecordsArchiveTableModel;
@@ -125,6 +126,7 @@ public class ArchiveFrame extends JFrame {
     setJMenuBar(archiveMenuBar);
     setContentPane(recordsArchiveTablePane);
     setMinimumSize(new Dimension((int) (archiveFrameWidth * 0.40), 0));
+    setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
   }
   
   private void setСolumnsWidth() {

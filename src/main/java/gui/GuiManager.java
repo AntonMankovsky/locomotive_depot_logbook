@@ -12,6 +12,7 @@ import javax.swing.table.TableColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import datecalculations.LastRepairHandler;
@@ -172,6 +173,7 @@ public class GuiManager {
     mainFrame.setJMenuBar(mainMenuBar);
     mainFrame.setContentPane(repairRecordsTablePane);
     mainFrame.setMinimumSize(new Dimension((int) (mainFrameWidth * 0.40), 0));
+    mainFrame.setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
     
     mainFrame.setVisible(true);
   }
