@@ -4,10 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import dbapi.DbManager;
 
 /**
@@ -18,7 +16,7 @@ public class InputValidator {
   private final DbManager dbManager;
   
   /**
-   * Contains methods for data validation.
+   * Object that contains methods for data validation.
    */
   public InputValidator(final DbManager dbManager) {
     super();
@@ -109,16 +107,18 @@ public class InputValidator {
   /**
    * Validates repair period value.
    * <p>
-   * Repair period must be a positive integer.
+   * Repair period must be a positive integer less than 36400 days.
    * @param period value to validate
    * @throws IllegalArgumentException if period is not a positive number
    */
   public void validateRepairPeriod(final int period) throws IllegalArgumentException {
-    if (period > 0) {
+    if (period > 0 && period < 36400) {
       logger.info("Repair period value " + period +  " passed the validation.");
     } else {
-      logger.warn("Repair period value " + period + " failed validation cause it`s not positive" );
-      throw new IllegalArgumentException("Repair period " + period + " is not a positive number");
+      logger.warn("Repair period value " + period
+                + " failed validation cause it`s not positive or it`s too big");
+      throw new IllegalArgumentException(
+          "Repair period " + period + " is not a positive number or it`s too big");
     }
   }
   

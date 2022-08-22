@@ -4,7 +4,7 @@ package exceptions;
  * An exception for id duplicate situation.
  * <p>
  * Should be used in situation when data structure which represents database table information 
- * is asked to put {@code id} key that already exists. 
+ * is asked to put {@code id} key that already exists in the map. 
  * <br>
  * This kind of situation could potentially lead to inconsistent data.
  */

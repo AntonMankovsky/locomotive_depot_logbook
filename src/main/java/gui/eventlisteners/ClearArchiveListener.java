@@ -2,27 +2,34 @@ package gui.eventlisteners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
 /**
- * Reacts to clear command from user.
+ * Reacts to "Clear archive" command from user.
  */
 public class ClearArchiveListener implements ActionListener {
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
 
+  /**
+   * Object that reacts to "Clear archive" event.
+   * @param guiManager to access required application components
+   * @param dialogWindow to communicate with user
+   */
   public ClearArchiveListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dialogWindow = dialogWindow;
   }
 
+  /**
+   * If user confirms, deletes all {@code records_archive} table rows.
+   * @param
+   */
   @Override
   public void actionPerformed(final ActionEvent event) {
     if (guiManager.getArchiveFrame().getRecordsArchiveTable().getRowCount() == 0) {

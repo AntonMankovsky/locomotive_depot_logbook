@@ -1,9 +1,11 @@
 package gui.lookandfeel;
 
 import java.awt.Color;
-
 import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 
+/**
+ * Defines values and provides access to custom colors for GUI table components.
+ */
 public final class ColorManager {
   private static ColorManager colorManager;
   private final Color recordsTableHeaderDefaultColor;
@@ -151,5 +153,10 @@ public final class ColorManager {
     return recordsTableHeaderDefaultColor;
   }
   
+  @Override
+  public String toString() {
+    return
+        "Color manager that provides colors for GUI components based on application color theme.";
+  }
   
 }

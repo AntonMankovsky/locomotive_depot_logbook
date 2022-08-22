@@ -1,12 +1,13 @@
 package gui.lookandfeel;
 
 import java.awt.Color;
-
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
-
 import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 
+/**
+ * Defines values and provides access to custom borders for GUI table components.
+ */
 public final class BorderManager {
   private static BorderManager borderManager;
   private final Border headerBorder;
@@ -100,6 +101,12 @@ public final class BorderManager {
 
   public Border getArchiveTablePrimaryRowBorder() {
     return archiveTablePrimaryRowBorder;
+  }
+
+  @Override
+  public String toString() {
+    return
+        "BorderManager that provides borders for GUI components based on application color theme.";
   }
   
 }

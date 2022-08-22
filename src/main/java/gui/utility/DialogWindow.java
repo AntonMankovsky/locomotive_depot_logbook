@@ -2,11 +2,10 @@ package gui.utility;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
-
 import javax.swing.JOptionPane;
 
 /**
- * This class is nothing but wrapper for JOptionPane.
+ * Wrapper class for JOptionPane.
  * <p>
  * Allows to mock dialog windows in unit tests.
  */
@@ -91,4 +90,10 @@ public class DialogWindow {
       throws HeadlessException {
     return JOptionPane.showInputDialog(frame, message, title, JOptionPane.PLAIN_MESSAGE);
   }
+
+  @Override
+  public String toString() {
+    return "DialogWindow [] - wrapper class for JOptionPane.";
+  }
+  
 }

@@ -33,6 +33,11 @@ public class ModelNamesComparator implements Comparator<String> {
     priority.put("ТГМ4Бл", 12);
   }
 
+  /**
+   * Arranges the preset models in the desired order.
+   * <p>
+   * Any non-standard model will be placed at the end of the list.
+   */
   @Override
   public int compare(final String modelName1, final String modelName2 ) {
     final int priority1 =

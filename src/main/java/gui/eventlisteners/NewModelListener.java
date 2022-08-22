@@ -5,20 +5,28 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import javax.swing.JMenuItem;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
 import datavalidation.InputValidator;
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
+/**
+ * Reacts to new model command from user.
+ */
 public class NewModelListener implements ActionListener {
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
   private final InputValidator validator;
   
+  /**
+   * Object that reacts to "New model" event.
+   * @param guiManager to access required application components
+   * @param dialogWindow to communicate with user
+   * @param validator to validate new model name and create {@code NewRecordAction} object for
+   * "create new record" submenu
+   */
   public NewModelListener(final GuiManager guiManager,
                           final DialogWindow dialogWindow, final InputValidator validator) {
     super();
@@ -27,6 +35,10 @@ public class NewModelListener implements ActionListener {
     this.validator = validator;
   }
 
+  /**
+   * Creates new row in {@code repair_periods} table and new "create new record" submenu item
+   * if model name passes the validation.
+   */
   @Override
   public void actionPerformed(final ActionEvent event) {
     String modelName = getUserInput();

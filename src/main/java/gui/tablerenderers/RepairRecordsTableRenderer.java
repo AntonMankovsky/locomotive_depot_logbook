@@ -3,22 +3,30 @@ package gui.tablerenderers;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
-
 import dbapi.DbManager;
 import gui.lookandfeel.BorderManager;
 import gui.lookandfeel.ColorManager;
 
+/**
+ * Custom table renderer for repair records table.
+ */
 public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
   private static final long serialVersionUID = 1L;
   private final DbManager dbManager;
   private final ColorManager colorManager;
   private final BorderManager borderManager;
 
+  /**
+   * Object that renders repair records table cells in application specific way.
+   * <p>
+   * Extends DefaultTableCellRenderer and overrides only one method, that returns customized JLabel,
+   * which is used by JTable to draw table cells.
+   * @param dbManager to define overdue repairs, which should have different background color.
+   */
   public RepairRecordsTableRenderer(final DbManager dbManager) {
     super();
     super.setHorizontalAlignment(JLabel.CENTER);
@@ -27,6 +35,10 @@ public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
     borderManager = BorderManager.getBorderManager();
   }
 
+  /**
+   * Sets up JLabel properties accordingly to application visual design so that every cell will
+   * have correct colors, borders, etc.
+   */
   @Override
   public Component getTableCellRendererComponent(
       final JTable table, Object value, final boolean isSelected, final boolean hasFocus,
@@ -147,4 +159,11 @@ public class RepairRecordsTableRenderer extends DefaultTableCellRenderer {
     }
     return border;
   }
+  
+  @Override
+  public String toString() {
+    return "RepairRecordsTableRenderer - sets up JLabel properties to desired values. "
+        + "[colorManager=" + colorManager + ", borderManager=" + borderManager + "]";
+  }
+  
 }

@@ -3,7 +3,7 @@ package dbapi;
 /**
  * Provides static methods to translate indices to corresponding column names.
  */
-public class IndexToColumnNameTranslator {
+public abstract class IndexToColumnNameTranslator {
   private static final String LOCO_MODEL_NAME = "loco_model_name";
   private static final String LOCO_NUMBER = "loco_number";
   private static final String LAST_THREE_MAINTENANCE = "last_three_maintenance";
@@ -90,10 +90,4 @@ public class IndexToColumnNameTranslator {
     }
   }
   
-  /**
-   * Translates indices to database tables column names.
-   */
- private IndexToColumnNameTranslator() {
-    super();
-  }
 }

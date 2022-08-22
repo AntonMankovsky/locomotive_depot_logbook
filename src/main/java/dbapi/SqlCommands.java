@@ -1,6 +1,9 @@
 package dbapi;
 
-public class SqlCommands {
+/**
+ * Provides string constants with statements to work with SQLite database. 
+ */
+public abstract class SqlCommands {
   
   /**
    * Select all rows and columns from periods table.

@@ -19,12 +19,22 @@ public class DeleteModelListener implements ActionListener {
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
 
+  /**
+   * Object that reacts to "Delete model" event.
+   * @param guiManager to access required application components
+   * @param dialogWindow to communicate with user
+   */
   public DeleteModelListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dialogWindow = dialogWindow;
   }
 
+  /**
+   * If model is not currently used by {@code repair_records} table, 
+   * deletes selected row from {@code repair_periods} table and selects for user another row
+   * if present.
+   */
   @Override
   public void actionPerformed(final ActionEvent event) {
     final int selectedRow = guiManager.getModelsFrame().getRepairPeriodsTable().getSelectedRow();

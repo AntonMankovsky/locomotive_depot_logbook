@@ -8,23 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-
-//import com.formdev.flatlaf.FlatDarkLaf;
-//import com.formdev.flatlaf.FlatLightLaf;
-
 import gui.GuiManager;
 
 /**
@@ -42,9 +35,9 @@ public class LocomotiveDepotLogbookApplication {
   private static String uiTheme;
   
   /**
-   * Runs spring application. Initialize GuiManager bean.
+   * Runs spring application. Defines UI color theme. Initializes GuiManager bean.
    * <p>
-   * Changes headless property to false cause the application is meant to run in environment that
+   * Changes headless property to false, cause the application is meant to run in environment that
    * supports GUI.
    */
 	public static void main(String[] args) {
@@ -64,6 +57,44 @@ public class LocomotiveDepotLogbookApplication {
 	  
 	}
 	
+	 /**
+	  * Reads UI configuration file and initializes {@code uiTheme} variable depending on read value.
+	  */
+	 private static void defineUiTheme() {
+	    String firstLine = "default";
+	    try (final BufferedReader reader =
+	        Files.newBufferedReader(UI_CONFIG_PATH, Charset.forName("UTF-8"))) {
+	      firstLine = reader.readLine().trim();
+	    } catch (final NoSuchFileException noFileException) {
+	      logger.warn(
+	          "File \"UITheme.txt\" does not exist!"
+	          + noFileException.getMessage());
+	    } catch (final IOException ioException) {
+	      logger.warn(
+	          "Failed to read \"UITheme.txt\" file."
+	          + ioException.getMessage());
+	    } catch (final NullPointerException npe) {
+	      logger.warn(
+	          "File \"UITheme.txt\" is empty."
+	          + npe.getMessage());
+	    }
+	    
+	    switch (firstLine) {
+	    case "uitheme=light":
+	      uiTheme = "light";
+	      break;
+	    case "uitheme=dark":
+	      uiTheme = "dark";
+	      break;
+	    default:
+	      uiTheme = "default";
+	      break;
+	    }
+	  }
+	
+	 /**
+	  * Sets up application look and feel depending on {@code uiTheme} value.
+	  */
 	private static void setLookAndFeel() {
 	  switch (uiTheme) {
     case "light":
@@ -91,38 +122,6 @@ public class LocomotiveDepotLogbookApplication {
 	  logger.info("Look and feel: " + uiTheme + " theme.");
 	}
 	
-	private static void defineUiTheme() {
-	  String firstLine = "default";
-	  try (final BufferedReader reader =
-	      Files.newBufferedReader(UI_CONFIG_PATH, Charset.forName("UTF-8"))) {
-      firstLine = reader.readLine().trim();
-    } catch (final NoSuchFileException noFileException) {
-      logger.warn(
-          "File \"UITheme.txt\" does not exist!"
-          + noFileException.getMessage());
-    } catch (final IOException ioException) {
-      logger.warn(
-          "Failed to read \"UITheme.txt\" file."
-          + ioException.getMessage());
-    } catch (final NullPointerException npe) {
-      logger.warn(
-          "File \"UITheme.txt\" is empty."
-          + npe.getMessage());
-    }
-	  
-	  switch (firstLine) {
-    case "uitheme=light":
-      uiTheme = "light";
-      break;
-    case "uitheme=dark":
-      uiTheme = "dark";
-      break;
-    default:
-      uiTheme = "default";
-      break;
-    }
-	}
-	
 	 /**
    * Provides information of user interface theme (light, dark, or default).
    * @return string representing chosen user interface theme
@@ -145,6 +144,11 @@ public class LocomotiveDepotLogbookApplication {
    */
   public static ImageIcon getAppIcon() {
     return APP_ICON;
+  }
+
+  @Override
+  public String toString() {
+    return "LocomotiveDepotLogbookApplication - application entry point.";
   }
 	
 }

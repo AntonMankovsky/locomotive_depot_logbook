@@ -4,22 +4,30 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
 import datavalidation.InputValidator;
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
+/**
+ * Reacts to new record command from user.
+ */
 public class NewRecordAction extends AbstractAction {
   private static final long serialVersionUID = 1L;
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
   private final InputValidator validator;
   
+  /**
+   * Object that reacts to "New record" event.
+   * @param name of model for new record
+   * @param guiManager to access required application components
+   * @param dialogWindow to communicate with user
+   * @param validator to validate {@code loco_number} value
+   */
   public NewRecordAction(final String name, final GuiManager guiManager,
                          final DialogWindow dialogWindow, final InputValidator validator) {
     super();
@@ -29,6 +37,12 @@ public class NewRecordAction extends AbstractAction {
     this.validator = validator;
   }
   
+  /**
+   * Creates new row in {@code repair_records table}.
+   * <p>
+   * Asks user for locomotive number, if valid, creates new row with name of this object,
+   * given locomotive number and empty strings as default values for other columns.
+   */
   @Override
   public void actionPerformed(final ActionEvent e) {
     String locoNumber = getUserInput();

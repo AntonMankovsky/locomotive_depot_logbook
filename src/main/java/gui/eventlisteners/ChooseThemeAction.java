@@ -5,13 +5,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import gui.GuiManager;
 import gui.utility.DialogWindow;
@@ -26,7 +23,8 @@ public class ChooseThemeAction extends AbstractAction {
    * Overrides color theme name in UI configuration file.
    * @param name of the theme
    * @param guiManager to provide access to application main frame
-   * @throws IllegalArgumentException if theme with given name is not supported
+   * @throws IllegalArgumentException if theme with given name is not supported.
+   * Supported themes=["Светлая", "Тёмная"]
    */
   public ChooseThemeAction(
       final String name, final GuiManager guiManager, final DialogWindow dialogWindow)
@@ -43,6 +41,9 @@ public class ChooseThemeAction extends AbstractAction {
     }
   }
 
+  /**
+   * Overrides color theme name in UI configuration file depending on name of the action.
+   */
   @Override
   public void actionPerformed(final ActionEvent event) {
     final String name = (String) getValue(Action.NAME);

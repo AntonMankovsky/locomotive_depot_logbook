@@ -1,11 +1,12 @@
 package gui.tablemodels;
 
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-
 import dbapi.DbManager;
 
+/**
+ * Custom table model for records archive table.
+ */
 public class RecordsArchiveTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private static final String[] COLUMN_NAMES = {

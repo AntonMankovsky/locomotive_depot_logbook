@@ -2,15 +2,13 @@ package gui.tablemodels;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.table.AbstractTableModel;
-
 import dbapi.DbManager;
 import gui.GuiManager;
 import gui.utility.RecordUpdateHandler;
 
 /**
- * Provides methods for core operations with repair records table.
+ * Custom table model for repair records table.
  */
 public class RepairRecordsTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 1L;
@@ -33,8 +31,6 @@ public class RepairRecordsTableModel extends AbstractTableModel {
   
   /**
    * Provides methods for core operations with repair records table.
-   * <p>
-   * Actively interacts with database API and data validation classes. 
    * @param dbManager that provides API for working with database
    */
   public RepairRecordsTableModel(final DbManager dbManager, final GuiManager guiManager, 
@@ -113,6 +109,12 @@ public class RepairRecordsTableModel extends AbstractTableModel {
       return dbManager.getAllRepairRecords().get(rowId).get(columnIndex * 2 - 1);
   }
   
+  /**
+   * Calls update handler to process new value.
+   * <p>
+   * Does nothing if new value is same as old value or if value was inserted in odd row, cause
+   * user can edit only certain cells in even rows by application design. 
+   */
   @Override
   public void setValueAt(final Object value, final int rowIndex, final int colIndex) {
     String valueString = (String) value;

@@ -1,12 +1,14 @@
 package gui.tablemodels;
 
 import javax.swing.table.AbstractTableModel;
-
 import datavalidation.InputValidator;
 import dbapi.DbManager;
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
+/**
+ * Custom table model for repair periods table.
+ */
 public class RepairPeriodsTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 1L;
   private static final String[] COLUMN_NAMES = {
@@ -25,8 +27,6 @@ public class RepairPeriodsTableModel extends AbstractTableModel {
 
   /**
    * Provides methods for core operations with repair records table.
-   * <p>
-   * Actively interacts with database API and data validation classes. 
    * @param dbManager that provides API for working with database
    * @param guiManager to provide access to ModelsFrame
    * @param dialogWindow to show error notifications to the user
@@ -93,8 +93,8 @@ public class RepairPeriodsTableModel extends AbstractTableModel {
       validator.validateRepairPeriod(valueInt);
     } catch (final IllegalArgumentException err) {
       dialogWindow.showErrorMessage(guiManager.getModelsFrame(), 
-                                    "Недопустимый ввод",
-                                    "Период ремонта должен быть положительным числом");
+                                   "Недопустимый ввод",
+                                   "Период ремонта должен быть умеренным положительным числом");
       return;
     }
 

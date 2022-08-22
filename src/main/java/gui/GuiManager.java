@@ -5,13 +5,19 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
-import javax.swing.*;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import anton.mankovsky.locomotivedepotlogbook.LocomotiveDepotLogbookApplication;
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
@@ -20,8 +26,8 @@ import datecalculations.RequiredRepairHandler;
 import dbapi.DbManager;
 import gui.eventlisteners.ChooseThemeAction;
 import gui.eventlisteners.DeleteRecordListener;
-import gui.eventlisteners.ShowNextRepairsDatesListener;
 import gui.eventlisteners.NewRecordAction;
+import gui.eventlisteners.ShowNextRepairsDatesListener;
 import gui.tablemodels.RepairRecordsTableModel;
 import gui.tablerenderers.RepairRecordsHeaderRenderer;
 import gui.tablerenderers.RepairRecordsTableRenderer;
@@ -187,6 +193,9 @@ public class GuiManager {
     }
   }
   
+  /**
+   *  Distributes main frame width between table columns.
+   */
   private void defineColumnsWidth() {
     for (int j = 0; j < columnsWidth.length; j++) {
       switch (j) {
@@ -233,8 +242,8 @@ public class GuiManager {
   /**
    * Updates submenu items by rebuilding it from scratch.
    * <p>
-   * Method suppose to be used when model was deleted form models table
-   * so submenu will not contain wrong option.
+   * Method suppose to be used when model was deleted from models table
+   * so that submenu will not contain not existing option.
    */
   public void rebuildNewRecordSubmenu() {
     newRecordSubmenu.removeAll();

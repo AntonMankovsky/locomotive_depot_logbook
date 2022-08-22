@@ -10,17 +10,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import datecalculations.RequiredRepairHandler;
 import exceptions.IdAlreadyExistsException;
 import gui.utility.ModelNamesComparator;
 
+/**
+ * Implements DbManager interface for SQLite database.
+ */
 @Service
 @Profile("SqliteDb")
 public class DbManagerSqliteImp implements DbManager {
@@ -58,7 +59,7 @@ public class DbManagerSqliteImp implements DbManager {
   // ============================= Methods for repair records table =============================
 
   /**
-   * The method provides convenient access to up-to-date information about the data and should not 
+   * Provides convenient access to up-to-date information about the data and should not 
    * be used by other classes other than to read the data.
    */
   @Override
@@ -164,6 +165,7 @@ public class DbManagerSqliteImp implements DbManager {
     return maxId;
   }
   
+  @Override
   public Map<Integer, Boolean> getOverdueRepairsMap() {
     return overdueRepairsMap;
   }
@@ -261,6 +263,7 @@ public class DbManagerSqliteImp implements DbManager {
   
   // ============================= Methods for records archive table =============================
   
+  @Override
   public List<List<String>> getAllRecordsArchiveData() {
     if (!archiveInitialized) {
       recordsArchiveTableData = loadDataFromRecordsArchiveTable();
@@ -269,6 +272,7 @@ public class DbManagerSqliteImp implements DbManager {
     return recordsArchiveTableData;
   }
   
+  @Override
   public void insertNewArchiveRecord(final List<String> rowToInsert) {
     try (final PreparedStatement insertRow =
           connection.getConnection().prepareStatement(SqlCommands.AT_INSERT_ROW)) {
@@ -294,6 +298,7 @@ public class DbManagerSqliteImp implements DbManager {
     }
   }
   
+  @Override
   public boolean clearArchive() {
     try (final PreparedStatement clearTable =
           connection.getConnection().prepareStatement("DELETE FROM records_archive;")) {
@@ -393,6 +398,13 @@ public class DbManagerSqliteImp implements DbManager {
     return tempString != null ? tempString : "";
   }
   
+  /**
+   * Obtains id of last inserted row from database, updates data structures with that id and data.
+   * @param row data that was inserted in repair_records database table
+   * @throws IdAlreadyExistsException if {@code repairRecordsTableData} map already has a key with
+   * same id
+   * @throws SQLException if a database access error occurs 
+   */
   private void updateRepairRecordsMapWithLastInsertedRow(final List<String> row)
                                                    throws IdAlreadyExistsException, SQLException {
     try (final PreparedStatement getMaxId =

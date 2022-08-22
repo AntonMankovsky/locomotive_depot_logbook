@@ -1,7 +1,6 @@
 package gui.utility;
 
 import java.time.LocalDate;
-
 import datavalidation.InputValidator;
 import datecalculations.DateCalculationsHandler;
 import datecalculations.LastRepairHandler;
@@ -19,6 +18,16 @@ public class RecordUpdateHandler {
   private final InputValidator validator;
   private final DialogWindow dialogWindow;
   
+  /**
+   * Object that handles user input in repair records table,
+   * depending on the column whose cell has been changed. 
+   * @param dbManager to obtain and write data into the database
+   * @param guiManager to access main frame that should be used to show dialog windows
+   * @param dateCalculationsHandler to handle automatic date calculations
+   * @param lastRepairHandler to update "last repair" column
+   * @param validator to validate cell value
+   * @param dialogWindow to communicate with user
+   */
   public RecordUpdateHandler(final DbManager dbManager, final GuiManager guiManager,
                              final DateCalculationsHandler dateCalculationsHandler,
                              final LastRepairHandler lastRepairHandler,
@@ -32,6 +41,17 @@ public class RecordUpdateHandler {
     this.dialogWindow = dialogWindow;
   }
   
+  /**
+   * Performs core operations with new cell value.
+   * <p>
+   * Depending on the column, validates the value with an appropriate method.
+   * <br>
+   * On validation success, writes a new value to the database or calls the necessary handlers;
+   * on validation failure, informs the user about it through dialog window.
+   * @param value to process
+   * @param rowIndex where value was inserted
+   * @param colIndex where value was inserted
+   */
   public void handleCellNewValue(final String value, final int rowIndex, final int colIndex) {
     if (colIndex > 1 && colIndex < 8) {
       editRepairDateCase(value, rowIndex, colIndex);

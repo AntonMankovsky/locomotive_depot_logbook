@@ -3,14 +3,12 @@ package datecalculations;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-
 import dbapi.DbManager;
 import gui.GuiManager;
 
 /**
- * Controls correctness of last_repair column.
+ * Controls correctness of {@code last_repair} column.
  */
 public class LastRepairHandler {
   private final GuiManager guiManager;
@@ -19,6 +17,11 @@ public class LastRepairHandler {
   private final DateTimeFormatter formatter;
   private static final String[] REPAIR_NAMES = {"ТО-3", "ТР-1", "ТР-2", "ТР-3", "СР", "КР"};
   
+  /**
+   * Object that encapsulates {@code last_repair} column business-logic.
+   * @param guiManager to access required GUI components
+   * @param dbManager to obtain and write data into the database
+   */
   public LastRepairHandler(final GuiManager guiManager, final DbManager dbManager) {
     super();
     this.guiManager = guiManager;
@@ -28,6 +31,11 @@ public class LastRepairHandler {
   
   /**
    * Guarantees that last repair column will always have the newest last repair date. 
+   * <p>
+   * Looks for all last repair dates in a given row and picks the one which is further on a time
+   * scale than others.
+   * <p>
+   * If a row does not contain any dates, value will be an empty string.
    * @param rowIndex where new last repair date was inserted
    */
   public void updateLastRepairColumn(final int rowIndex) {
@@ -84,4 +92,18 @@ public class LastRepairHandler {
     }
     return atLeastOneDate ? lastRepairsDates : null;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("LastRepairHandler to define last repair column values. \n[guiManager=");
+    builder.append(guiManager);
+    builder.append(", dbManager=");
+    builder.append(dbManager);
+    builder.append(", formatter=");
+    builder.append(formatter);
+    builder.append("]");
+    return builder.toString();
+  }
+  
 }

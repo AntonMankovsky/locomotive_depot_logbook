@@ -16,7 +16,7 @@ public abstract interface DbManager {
    * Returns all data from repair records table.
    * <p>
    * If the value of particular nullable cell is SQL {@code NULL}, it would be replaced with empty 
-   * string in resulting list. 
+   * string in a resulting list. 
    * @return map with rows {@code id} as keys and other columns in list of strings as values from
    * repair records database table.
    */
@@ -66,7 +66,7 @@ public abstract interface DbManager {
    * <p>
    * Although there are other (more expensive) ways to access this value,
    * the need for such a method is due to the huge number of calls to
-   * this value during the rendering of the GUI of the table.
+   * this value during the rendering of GUI table.
    * <br>
    * @return count of rows in {@code repair_record} table with minimal overhead
    */
@@ -75,7 +75,7 @@ public abstract interface DbManager {
   /**
    * Provides access to information about overdue repairs.
    * <p>
-   * The map contains record id integers as keys and isOverdue boolean as values.
+   * The map contains record id integers as keys and isOverdue booleans as values.
    * @return map that allows to get or set information about overdue repairs.
    */
   public abstract Map<Integer, Boolean> getOverdueRepairsMap();

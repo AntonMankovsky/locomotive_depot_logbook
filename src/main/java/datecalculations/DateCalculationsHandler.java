@@ -3,14 +3,15 @@ package datecalculations;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
 import dbapi.DbManager;
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
+/**
+ * Encapsulates methods for automatic next repair dates calculations (for new last repair values).
+ */
 public class DateCalculationsHandler {
   private final GuiManager guiManager;
   private final DbManager dbManager;
@@ -20,6 +21,13 @@ public class DateCalculationsHandler {
   private final DateTimeFormatter formatter;
   private final DialogWindow dialogWindow;
   
+  /**
+   * Object for handling dates calculations after user enters the date of last repair.
+   * @param guiManager to access required GUI components
+   * @param dbManager to obtain and write data into the database
+   * @param requiredRepairHandler to update {@code required_repair} values
+   * @param dialogWindow to notify user on potential typo in entered date
+   */
   public DateCalculationsHandler(final GuiManager guiManager, final DbManager dbManager,
                                  final RequiredRepairHandler requiredRepairHandler,
                                  final DialogWindow dialogWindow) {
@@ -30,7 +38,23 @@ public class DateCalculationsHandler {
     this.dialogWindow = dialogWindow;
     formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   }
-
+  
+  /**
+   * Calculates next repairs dates based on the received last repair date.
+   * <p>
+   * If user`s value has reached that part of a program, it definitely should be a valid date.
+   * <p>
+   * Will calculate and update next repair date for same repair type as last repair date, and for
+   * all other next repairs of smaller caliber types, if needed.
+   * <p>
+   * Updates {@code required_repair} column through {@code RequiredRepairHandler object}.
+   * <p>
+   * Writes new values to database and notifies repair records GUI table that values were changed.
+   * @param lastRepairString that represents a valid date from user`s input
+   * @param rowIndex for record in which last repair date was inserted
+   * @param colIndex for type of last repair
+   * @param today date to define potential typo of given date
+   */
   public void handleDateCalculations(final String lastRepairString, final int rowIndex,
                                      final int colIndex, final LocalDate today ) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
@@ -262,6 +286,12 @@ public class DateCalculationsHandler {
     fireCellUpdated(rowIndex + 1, colIndex, colIndex - 5);
   }
   
+  /**
+   * Notifies repair records table model that cells in certain range have been changed.
+   * @param rowIndex for row whose values were changed
+   * @param firstColIndex inclusive
+   * @param lastColIndex inclusive
+   */
   private void fireCellUpdated(
       final int rowIndex, final int firstColIndex, final int lastColIndex) {
     final TableModel tm = guiManager.getRepairRecordsTable().getModel();
@@ -291,6 +321,11 @@ public class DateCalculationsHandler {
     return false;
   }
   
+  /**
+   * Calls required repair handler and fireCellUpdated to handle possible required repair changes.
+   * @param rowIndex for record in which changes have been performed. Converts it to correct
+   * {@code rowId} for last repair handler.
+   */
   private void updateRequiredRepairColumn(final int rowIndex) {
     final int rowId = dbManager.getIdByOrdinalNumber(rowIndex / 2);
     requiredRepairHandler.updateRequiredRepairValues(rowId, LocalDate.now());
@@ -298,6 +333,11 @@ public class DateCalculationsHandler {
     fireCellUpdated(rowIndex + 1, 9, 9);
   }
   
+  /**
+   * Informs user if last repair date is after today, cause it`s not expected typical use case.
+   * @param lastRepairDate to compare with {@code today}
+   * @param today to compare with {@code lastRepairDate}
+   */
   private void informUserIfLastRepairDateIsAfterToday(
       final LocalDate lastRepairDate, final LocalDate today) {
     if (lastRepairDate.isAfter(today)) {

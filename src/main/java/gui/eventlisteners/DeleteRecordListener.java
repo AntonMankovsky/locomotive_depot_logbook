@@ -2,23 +2,36 @@ package gui.eventlisteners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
-
 import gui.GuiManager;
 import gui.utility.DialogWindow;
 
+/**
+ * Reacts to delete record command from user.
+ */
 public class DeleteRecordListener implements ActionListener {
   private final GuiManager guiManager;
   private final DialogWindow dialogWindow;
   
+  /**
+   * Object that reacts to "Delete record" event.
+   * @param guiManager to access required application components
+   * @param dialogWindow to communicate with user
+   */
   public DeleteRecordListener(final GuiManager guiManager, final DialogWindow dialogWindow) {
     super();
     this.guiManager = guiManager;
     this.dialogWindow = dialogWindow;
   }
   
+  /**
+   * Deletes selected row from {@code repair_records} table and selects for user another row
+   * if present.
+   * <p>
+   * Method makes adjustments to selected row index cause two rows in GUI table represents
+   * one row in database table.
+   */
   @Override
   public void actionPerformed(final ActionEvent event) {
     int selectedRecord = guiManager.getRepairRecordsTable().getSelectedRow();

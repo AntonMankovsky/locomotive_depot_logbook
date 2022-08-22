@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import dbapi.DbManager;
 
 /**
- * Handles values of required repair type and date.
+ * Handles values of {@code required_repair} type and date.
  */
 public class RequiredRepairHandler {
   private final DbManager dbManager;
@@ -17,6 +16,10 @@ public class RequiredRepairHandler {
   private final DateTimeFormatter formatter;
   private static final String[] REPAIR_NAMES = {"ТО-3", "ТР-1", "ТР-2", "ТР-3", "СР", "КР"};
 
+  /**
+   * Object that encapsulates {@code required_repair} column business-logic.
+   * @param dbManager to obtain and write data into the database
+   */
   public RequiredRepairHandler(final DbManager dbManager) {
     super();
     this.dbManager = dbManager;
@@ -24,9 +27,9 @@ public class RequiredRepairHandler {
   }
   
   /**
-   * Updates database values of 'required repair' columns for record with given rowId.
+   * Updates database values of {@code required_repair} columns for record with given rowId.
    * <p>
-   * Also updates DB Manager data structure of overdue repairs with relevant values.
+   * Updates DB Manager data structure of overdue repairs with relevant values.
    * @param rowId of database repair record
    * @param todayDate to detect overdue repair and define required repair date 
    */
@@ -51,8 +54,13 @@ public class RequiredRepairHandler {
   
   /**
    * Returns whether or not repair record has overdue repair.
-   * @param nextRepairsDates - array of next repair dates for particular repairs record
-   * @param rowId of particular repairs record
+   * <p>
+   * Updates {@code required_repair} values in the database.
+   * <p>
+   * Looks for given next repair dates and picks the one which is behind today date.
+   * If there is more than one overdue repair, the repair of a biggest caliber will be picked.
+   * @param nextRepairsDates to choose from
+   * @param rowId of repair record to write data into the database
    * @return {@code true} if there is overdue repair
    */
   private boolean checkOverdueRepair(final LocalDate[] nextRepairsDates, final int rowId) {
@@ -80,9 +88,21 @@ public class RequiredRepairHandler {
     return false;
   }
   
+  /**
+   * Defines next repair date and write corresponding values into the database.
+   * <p>
+   * Looks for given next repair dates and picks the one which is behind the others on a time scale.
+   * <br>
+   * {@code checkOverdueRepair} method should be called before this one, cause it is not accounting
+   * for the possible overdue repairs.
+   * <p>
+   * If two or more repairs fall within same month, repair with a bigger caliber will be picked.
+   * @param nextRepairsDates to choose from
+   * @param rowId of repair record to write data into the database
+   */
   private void findNextRequiredRepair(final LocalDate[] nextRepairsDates, final int rowId) {
     // find the nearest next repair
-    LocalDate nextRepairDate = today.plusYears(50);
+    LocalDate nextRepairDate = today.plusYears(100);
     for (int j = 0; j < 6; j++) {
       if (nextRepairsDates[j] != null && (nextRepairsDates[j].isBefore(nextRepairDate))) {
         nextRepairDate = nextRepairsDates[j];
@@ -130,4 +150,16 @@ public class RequiredRepairHandler {
     }
     return atLeastOneDate ? nextRepairsDates : null;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("RequiredRepairHandler to define required repair column values. \n[dbManager=");
+    builder.append(dbManager);
+    builder.append(", formatter=");
+    builder.append(formatter);
+    builder.append("]");
+    return builder.toString();
+  }
+  
 }
