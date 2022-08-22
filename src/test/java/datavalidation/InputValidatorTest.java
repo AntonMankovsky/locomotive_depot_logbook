@@ -129,11 +129,11 @@ public class InputValidatorTest {
   }
   
   private static Stream<Integer> provideBadRepairPeriods() {
-    return Stream.of(Integer.MIN_VALUE, Integer.MIN_VALUE / 2, 0);
+    return Stream.of(Integer.MIN_VALUE, Integer.MIN_VALUE / 2, 0, Integer.MAX_VALUE);
   }
   
   private static Stream<Integer> provideGoodRepairPeriods() {
-    return Stream.of(1, Integer.MAX_VALUE / 2, Integer.MAX_VALUE);
+    return Stream.of(1, 34_000);
   }
   
   private static Stream<String> provideBadModelNames() {
