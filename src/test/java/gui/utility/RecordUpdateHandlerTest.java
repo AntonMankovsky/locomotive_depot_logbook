@@ -121,9 +121,9 @@ public class RecordUpdateHandlerTest {
   @MethodSource("provideRepairsColumnIndices")
   @DisplayName("handleCellNewValue calls setRepairRecordCell on valid value")
   void handleCellNewValueCallsSetRepairRecordCellOnValidValue(final int colIndex) {
-    updateHandler.handleCellNewValue("17.08.2022", rowIndex, colIndex);
+    updateHandler.handleCellNewValue("5.8.22", rowIndex, colIndex);
     
-    verify(dbManagerMock).setRepairRecordCell(rowIndex / 2, colIndex * 2 - 2, "17.08.2022");
+    verify(dbManagerMock).setRepairRecordCell(rowIndex / 2, colIndex * 2 - 2, "05.08.2022");
   }
   
   @ParameterizedTest
@@ -176,7 +176,7 @@ public class RecordUpdateHandlerTest {
   @DisplayName("handleCellNewValue notifies user if notes not written to DB")
   void handleCellNewValueNotifiesUserIfNotesNotWrittenToDb() {
     updateHandler.handleCellNewValue("Some notes.", rowIndex, 10);
-    System.out.println(updateHandler);
+    
     verify(dialogWindowMock).showErrorMessage(any(), any(), any());
   }
   

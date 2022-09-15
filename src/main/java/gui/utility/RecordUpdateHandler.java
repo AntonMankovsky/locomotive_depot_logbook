@@ -63,12 +63,13 @@ public class RecordUpdateHandler {
     
   }
   
-  private void editRepairDateCase(final String value, final int rowIndex, final int colIndex) {
+  private void editRepairDateCase(String value, final int rowIndex, final int colIndex) {
+    value = convertDateFormat(value);
     try {
       validator.validateRepairDate(value);
     } catch (final IllegalArgumentException err) {
       dialogWindow.showErrorMessage(guiManager.getMainFrame(), "Некорректный ввод",
-          "Запись должна быть в формате дд.ММ.гггг и указывать на существующую дату");
+          "Запись должна быть в формате день.месяц.год и указывать на существующую дату");
       return;
     }
     
@@ -82,7 +83,7 @@ public class RecordUpdateHandler {
       }
     }
   }
-
+  
   private void editNumberCase(final String value, final int rowIndex) {
     try {
       validator.validateLocoNumber(value);
@@ -108,6 +109,71 @@ public class RecordUpdateHandler {
   private void notifyUserOnOperationFailure() {
     dialogWindow.showErrorMessage(
         guiManager.getMainFrame(), "Ошибка при изменении ячейки", "Не удалось обновить значение");
+  }
+  
+  /**
+   * Converts day and month values from one to two digits, and year from two to four digits format.
+   * <p>
+   * Does not perform any other string modifications.
+   * <p>
+   * <blockquote>
+   * <table class="plain">
+   * <caption style="display:none">Examples</caption>
+   * <thead>
+   * <tr>
+   * <th scope="col">Takes</th>
+   * <th scope="col">Returns</th>
+   * </tr>
+   * </thead>
+   * <tbody>
+   * <tr>
+   * <th scope="row" style="text-weight:normal">1.2.18</th>
+   * <td>{@code 01.02.2018}</td>
+   * </tr>
+   * <tr>
+   * <th scope="row" style="text-weight:normal">09.5.2020</th>
+   * <td>{@code 09.05.2020}</td>
+   * </tr>
+   * <tr>
+   * <th scope="row" style="text-weight:normal">foo.10.22</th>
+   * <td>{@code foo.10.2022}</td>
+   * </tr>
+   * </tbody>
+   * </table>
+   * </blockquote>
+   * Does nothing and returns exactly the same value if given string cannot be
+   * split on three strings with dot separator.
+   * @param value string to convert from short to long date format if possible
+   * @return the same value as was given, except for short-to-long format conversions
+   * (returns {@code null} for {@code null} parameter)
+   */
+  private String convertDateFormat(String value) {
+    if (value == null) {
+      return null;
+    }
+    
+    final String[] stringParts = value.split("\\.");
+    if (stringParts.length == 3) {
+      
+      String day = stringParts[0];
+      if (day.matches("[1-9]{1}")) {
+        day = "0" + day;
+      }
+      
+      String month = stringParts[1];
+      if (month.matches("[1-9]{1}")) {
+        month = "0" + month;
+      }
+      
+      String year = stringParts[2];
+      if (year.matches("[0-9]{2}")) {
+        year = "20" + year;
+      }
+      
+      value = day + "." + month + "." + year;
+    }
+    
+    return value;
   }
 
   @Override
