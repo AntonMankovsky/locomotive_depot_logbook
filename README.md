@@ -8,13 +8,14 @@
 * [Установка на Windows](#установка-на-windows)
 * [Установка на GNU/Linux](#установка-на-gnulinux)
 * [Работа с журналом](#работа-с-журналом-учёта)
+* [Сборка](#сборка)
 * [Версия](#версия)
 * [Использованные ресурсы](#использованные-ресурсы)
 
 ---
 
 ### Установка на Windows
-1. Загрузите [архив для *Windows*](https://drive.google.com/file/d/1HMSCg39xknf3PKG7aUw59k3DJZAEiQSp/view?usp=sharing).
+1. Загрузите [архив для *Windows*](https://drive.google.com/file/d/1njFuHKjtOpbPDnJkM05OYD9DBZ2NlWBH/view?usp=sharing).
 2. Распакуйте содержимое архива в любую папку.
 3. Запустите приложение.
 
@@ -34,7 +35,7 @@
 ---
 
 ### Установка на GNU\/Linux
-1. Загрузите [архив для *Linux*](https://drive.google.com/file/d/1rOKjXfkoe6Gt99TNTDkEWTjT-gIW_sX7/view?usp=sharing).
+1. Загрузите [архив для *Linux*](https://drive.google.com/file/d/15oYhv9de594bfqOdxGt4Y2eRhgWtkb80/view?usp=sharing).
 2. Распакуйте содержимое архива в любую папку.
 3. В папке приложения перейдите в директорию **bin** и запустите из терминала сценарий командной оболочки:
 `./Depo_Logbook_1.0`
@@ -97,8 +98,16 @@
 
 ---
 
+### Сборка
+1. Клонировать репозиторий: `git clone https://github.com/AntonMankovsky/locomotive_depot_logbook.git`
+2. В файле src/main/resources/flyway.properties изменить путь до директории locomotive_depot_logbook/ на ваш собственный (также заменить все / на \ для Windows).
+3. В корневой директории проекта выполнить задачу `./gradlew flywayMigrate`
+4. Запустить программу: `./gradlew bootRun` или выполнить полную сборку с выполнением тестов: `./gradlew build`
+
+---
+
 ### Версия
-1.0 — первая рабочая версия с основным необходимым функционалом.
+1.1 — улучшены механизмы редактирования ячеек, удалены некоторые предустановленные модели тепловозов.
 
 ---
 
