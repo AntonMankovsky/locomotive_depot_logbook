@@ -5,6 +5,10 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,6 +31,7 @@ import dbapi.DbManager;
 import gui.eventlisteners.ChooseThemeAction;
 import gui.eventlisteners.DeleteRecordListener;
 import gui.eventlisteners.NewRecordAction;
+import gui.eventlisteners.CellEditingStartListener;
 import gui.eventlisteners.ShowNextRepairsDatesListener;
 import gui.tablemodels.RepairRecordsTableModel;
 import gui.tablerenderers.RepairRecordsHeaderRenderer;
@@ -39,6 +44,8 @@ import gui.utility.RecordUpdateHandler;
  */
 @Service
 public class GuiManager {
+  private static final Path APP_ICON_PATH = Paths.get(".", "icon.png");
+  private static final ImageIcon APP_ICON = new ImageIcon(APP_ICON_PATH.toString());
   private DbManager dbManager;
   private int mainFrameWidth;
   private int mainFrameHeight;
@@ -162,8 +169,10 @@ public class GuiManager {
     repairRecordsTable.getTableHeader()
         .setDefaultRenderer(new RepairRecordsHeaderRenderer(repairRecordsTable));
     repairRecordsTable.setDefaultRenderer(Object.class, new RepairRecordsTableRenderer(dbManager));
+    repairRecordsTable
+        .addPropertyChangeListener(new CellEditingStartListener(repairRecordsTable));
   }
-  
+    
   private void buildRepairRecordsTablePane() {
     repairRecordsTablePane = new JPanel(new GridLayout(1, 0));
     repairRecordsTablePane.add(new JScrollPane(repairRecordsTable));
@@ -179,7 +188,7 @@ public class GuiManager {
     mainFrame.setJMenuBar(mainMenuBar);
     mainFrame.setContentPane(repairRecordsTablePane);
     mainFrame.setMinimumSize(new Dimension((int) (mainFrameWidth * 0.40), 0));
-    mainFrame.setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
+    mainFrame.setIconImage(APP_ICON.getImage());
     
     mainFrame.setVisible(true);
   }
@@ -252,6 +261,14 @@ public class GuiManager {
       newRecordSubmenu.add(
           new JMenuItem(new NewRecordAction(model, this, dialogWindow, validator)));
     }
+  }
+  
+  /**
+   * Returns icon of the application as Image Icon object.
+   * @return application icon
+   */
+  public ImageIcon getAppIcon() {
+    return APP_ICON;
   }
   
   public boolean isShowNextRepairsDates() {

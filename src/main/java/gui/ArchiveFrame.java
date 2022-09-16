@@ -128,7 +128,7 @@ public class ArchiveFrame extends JFrame {
     setJMenuBar(archiveMenuBar);
     setContentPane(recordsArchiveTablePane);
     setMinimumSize(new Dimension((int) (archiveFrameWidth * 0.40), 0));
-    setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
+    setIconImage(guiManager.getAppIcon().getImage());
   }
   
   private void setСolumnsWidth() {

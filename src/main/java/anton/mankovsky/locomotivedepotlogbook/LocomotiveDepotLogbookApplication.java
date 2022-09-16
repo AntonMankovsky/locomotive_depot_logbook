@@ -30,8 +30,6 @@ import gui.GuiManager;
 public class LocomotiveDepotLogbookApplication {
   private static final Logger logger = LogManager.getLogger();
   private static final Path UI_CONFIG_PATH = Paths.get(".", "UITheme.txt");
-  private static final Path APP_ICON_PATH = Paths.get(".", "icon.png");
-  private static final ImageIcon APP_ICON = new ImageIcon(APP_ICON_PATH.toString());
   private static String uiTheme;
   
   /**
@@ -138,14 +136,6 @@ public class LocomotiveDepotLogbookApplication {
     return UI_CONFIG_PATH;
   }
   
-  /**
-   * Returns icon of the application as Image Icon object.
-   * @return application icon
-   */
-  public static ImageIcon getAppIcon() {
-    return APP_ICON;
-  }
-
   @Override
   public String toString() {
     return "LocomotiveDepotLogbookApplication - application entry point.";

@@ -18,6 +18,7 @@ import datavalidation.InputValidator;
 import dbapi.DbManager;
 import gui.eventlisteners.DeleteModelListener;
 import gui.eventlisteners.NewModelListener;
+import gui.eventlisteners.CellEditingStartListener;
 import gui.tablemodels.RepairPeriodsTableModel;
 import gui.tablerenderers.ArhiveAndModelsHeaderRenderer;
 import gui.tablerenderers.RepairPeriodsTableRenderer;
@@ -110,6 +111,8 @@ public class ModelsFrame extends JFrame {
     repairPeriodsTable.setDefaultRenderer(Integer.class, new RepairPeriodsTableRenderer());
     repairPeriodsTable.getTableHeader()
         .setDefaultRenderer(new ArhiveAndModelsHeaderRenderer(repairPeriodsTable));
+    repairPeriodsTable
+        .addPropertyChangeListener(new CellEditingStartListener(repairPeriodsTable));
   }
   
   private void buildRepairPeriodsTablePane() {
@@ -125,7 +128,7 @@ public class ModelsFrame extends JFrame {
     setJMenuBar(modelMenuBar);
     setContentPane(repairPeriodsTablePane);
     setMinimumSize(new Dimension((int) (modelFrameWidth * 0.25), 0));
-    setIconImage(LocomotiveDepotLogbookApplication.getAppIcon().getImage());
+    setIconImage(guiManager.getAppIcon().getImage());
   }
   
   /**
