@@ -102,13 +102,17 @@
 1. Клонировать репозиторий:
 
   `git clone https://github.com/AntonMankovsky/locomotive_depot_logbook.git`
+  
 2. В файле *src/main/resources/flyway.properties* изменить путь до директории *locomotive_depot_logbook/* на ваш собственный (также заменить все / на \ для Windows).
-  3. В корневой директории проекта выполнить задачу
+
+3. В корневой директории проекта выполнить задачу
   
 `./gradlew flywayMigrate`
+
 4. Запустить программу:
 
   `./gradlew bootRun`
+  
   или выполнить полную сборку с запуском тестов:
   
   `./gradlew build`
